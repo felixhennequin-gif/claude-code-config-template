@@ -33,6 +33,14 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 │   │   └── lint-on-edit.sh           # Auto-lint after every edit
 │   └── rules/
 │       └── test-files.md             # Rules specific to test files
+├── examples/                         # Ready-to-adapt CLAUDE.md files per stack
+│   ├── express-api.CLAUDE.md
+│   └── nextjs-fullstack.CLAUDE.md
+├── .github/                          # Issue / PR templates, funding, workflows
+├── CONTRIBUTING.md                   # How to contribute a skill, rule, or hook
+├── CODE_OF_CONDUCT.md                # Contributor Covenant v2.1
+├── SECURITY.md                       # How to report a vulnerability
+├── CHANGELOG.md                      # Release history
 └── RESEARCH.md                       # Raw research data
 ```
 

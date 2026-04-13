@@ -1,14 +1,16 @@
 # claude-code-config-template
 
-A public, reusable Claude Code configuration template for Node.js / React / PostgreSQL projects. Downstream users copy `template/CLAUDE.md` and `.claude/` into their own repo and get hooks, agents, skills, commands, and rules out of the box.
+A public, reusable Claude Code configuration template for any project. The core — `template/CLAUDE.md`, hooks, agents, commands, rules, and the universal `coding-principles` skill — is stack-agnostic. Stack-specific conventions live under `.claude/skills/stacks/` and are optional: downstream users keep, prune, or replace them per project.
 
 This `CLAUDE.md` is **not** the downstream-facing template — it's the one Claude Code loads when working *on this repo*. The downstream template lives at [`template/CLAUDE.md`](./template/CLAUDE.md).
 
 ## What this repo ships
 
-- **`template/CLAUDE.md`** — the placeholder project context users copy into their own projects
+- **`template/CLAUDE.md`** — the stack-agnostic placeholder project context users copy into their own projects
 - **`template/CLAUDE.local.md.example`** — the personal-override template users copy to `CLAUDE.local.md` (which is gitignored)
-- **`.claude/`** — hooks, agents, skills, commands, and rules that get copied alongside
+- **`.claude/skills/coding-principles/`** — the one universal behavioral skill that ships with every install
+- **`.claude/skills/stacks/`** — optional stack-specific skills (currently `prisma-patterns`, `express-api`, `react-frontend`); users delete the whole directory or keep a subset
+- **`.claude/` (rest)** — hooks, agents, commands, and rules, all stack-agnostic
 - **`examples/*.CLAUDE.md`** — stack-specific ready-to-adapt alternatives to `template/CLAUDE.md`
 - **Community infra** — `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CHANGELOG.md`, `.github/` templates
 - **`RESEARCH.md`** — raw research data behind the template's design choices
@@ -25,7 +27,9 @@ template/
   settings.json                 # PreToolUse main-branch guard + PostToolUse lint hook
   agents/                       # reviewer, security-auditor
   commands/                     # /audit, /deploy, /test
-  skills/                       # prisma-patterns, express-api, react-frontend
+  skills/
+    coding-principles/          # Universal behavioral skill (always copy)
+    stacks/                     # Optional: prisma-patterns, express-api, react-frontend
   hooks/lint-on-edit.sh         # Stdin-parsing ESLint hook
   rules/test-files.md           # Scoped rules for *.test.*, *.spec.*
 examples/
@@ -62,6 +66,7 @@ echo '{"tool_name":"Edit","tool_input":{"file_path":"/tmp/x.js"}}' | bash .claud
 - **Keep `template/CLAUDE.md` under ~80 lines** and examples under ~80 lines — Claude Code drops context beyond that.
 - **Don't duplicate linters.** If ESLint / Prettier / the hook already enforces a rule, don't write it into a skill.
 - **Conventions across files must agree.** A contradiction between a skill and an agent is a bug (see past incident in `CHANGELOG.md` Unreleased: `reviewer` vs `express-api` on `try/catch`).
+- **Core vs. stacks/ split is load-bearing.** `coding-principles` and everything outside `.claude/skills/stacks/` must stay stack-agnostic so downstream users on any language can install them untouched. Anything Node/Python/Go/Rust-specific belongs under `.claude/skills/stacks/<name>/`.
 
 ## Git workflow
 

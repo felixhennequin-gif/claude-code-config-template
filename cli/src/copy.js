@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, copyFileSync, readdirSync, statSync, appendFileSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, copyFileSync, readdirSync, statSync, appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -39,6 +39,51 @@ function getSkipPaths(selectedStacks) {
   const allStacks = ['express-api', 'prisma-patterns', 'react-frontend', 'fastapi-backend'];
   const skipped = allStacks.filter((s) => !selectedStacks.includes(s));
   return new Set(skipped.map((s) => join('claude', 'skills', 'stacks', s)));
+}
+
+/**
+ * Map a stack key to the Bash permission entries typically needed for it.
+ */
+const STACK_PERMISSIONS = {
+  'express-api': ['Bash(npm:*)', 'Bash(npx:*)'],
+  'prisma-patterns': ['Bash(npm:*)', 'Bash(npx:*)'],
+  'react-frontend': ['Bash(npm:*)', 'Bash(npx:*)'],
+  'fastapi-backend': ['Bash(pytest:*)', 'Bash(ruff:*)', 'Bash(alembic:*)', 'Bash(pip:*)'],
+};
+
+/**
+ * Inject stack-specific permission entries into the copied settings.json.
+ * Returns the list of entries that were added (for reporting).
+ */
+function injectStackPermissions(targetDir, selectedStacks) {
+  const settingsPath = join(targetDir, '.claude', 'settings.json');
+  if (!existsSync(settingsPath)) return [];
+
+  const additions = new Set();
+  for (const stack of selectedStacks) {
+    for (const entry of STACK_PERMISSIONS[stack] || []) {
+      additions.add(entry);
+    }
+  }
+  if (additions.size === 0) return [];
+
+  try {
+    const settings = JSON.parse(readFileSync(settingsPath, 'utf8'));
+    settings.permissions ??= { allow: [], deny: [] };
+    settings.permissions.allow ??= [];
+    const existing = new Set(settings.permissions.allow);
+    const added = [];
+    for (const entry of additions) {
+      if (!existing.has(entry)) {
+        settings.permissions.allow.push(entry);
+        added.push(entry);
+      }
+    }
+    writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n');
+    return added;
+  } catch {
+    return [];
+  }
 }
 
 /**
@@ -106,6 +151,13 @@ export function copyTemplate(targetDir, selectedStacks) {
     }
     if (selectedStacks.length > 0) {
       results.push({ file: `stacks kept: ${selectedStacks.join(', ')}`, status: 'info' });
+    }
+
+    const addedPerms = injectStackPermissions(targetDir, selectedStacks);
+    if (addedPerms.length > 0) {
+      results.push({ file: '.claude/settings.json', status: 'updated', reason: `added permissions: ${addedPerms.join(', ')}` });
+    } else {
+      results.push({ file: '.claude/settings.json', status: 'info', reason: 'edit permissions.allow to add entries for your stack commands' });
     }
   }
 

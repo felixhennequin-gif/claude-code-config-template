@@ -51,13 +51,9 @@
       "Read",
       "Grep",
       "Glob",
-      "Bash(npm test:*)",
-      "Bash(npm run lint:*)",
-      "Bash(npx prisma:*)",
       "Bash(git:*)"
     ],
     "deny": [
-      "Bash(rm -rf:*)",
       "Bash(sudo:*)"
     ]
   }

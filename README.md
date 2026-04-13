@@ -57,7 +57,21 @@ This gives you the stack-agnostic baseline: hooks, commands, rules, and the univ
 
 > The hook in `settings.json` blocks edits on `main` and `master`. If your project uses a different protected branch, update the branch name in `.claude/settings.json`.
 
-> The permissions in `settings.json` include Node.js commands (`npm test`, `npx prisma`, etc.) by default. If your project uses a different stack, edit the `permissions.allow` entries to match your commands.
+> `settings.json` ships with a stack-agnostic `permissions.allow` list (`Read`, `Grep`, `Glob`, `Bash(git:*)`). Add entries for your own stack's commands — examples:
+>
+> ```jsonc
+> // Node.js
+> "Bash(npm:*)", "Bash(npx:*)"
+>
+> // Python
+> "Bash(pytest:*)", "Bash(ruff:*)", "Bash(alembic:*)", "Bash(pip:*)"
+>
+> // Go
+> "Bash(go:*)", "Bash(golangci-lint:*)"
+>
+> // Rust
+> "Bash(cargo:*)"
+> ```
 
 ### Add stack skills (optional)
 

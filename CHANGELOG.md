@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `bash-safety.sh`: replaced literal-substring matching with surgical regex so `rm -rf ./dist`, `git push --force-with-lease`, and `npm publish --dry-run` no longer false-positive. Hook now fails closed on empty/unparseable stdin instead of silently passing.
+- `.claude/settings.json`: stripped Node-specific entries from `permissions.allow` and the redundant `Bash(rm -rf:*)` deny entry. Template now ships truly stack-agnostic permissions. README documents how to add stack-specific entries; the CLI injects them automatically based on selected stacks.
+
+### Removed
+- `fastapi-backend` skill (`.claude/skills/stacks/fastapi-backend/`) — quality was below the template bar (0 code examples, missing modern patterns like `lifespan` and `Annotated[]` DI). Kept `examples/fastapi-backend.CLAUDE.md` as a reference; contributions welcome for a rewrite that matches the Express/React skills.
+
+### Added
+- `.claude/skills/core/debugging/SKILL.md` — second core behavioral skill enforcing a structured debugging workflow (reproduce → read → trace → one-change → three-strike rule). Activates on bugs, errors, and failed test investigations.
+- `.claude/hooks/notification.sh` + `Notification` event registration — desktop notification when Claude needs attention during long autonomous tasks. Cross-platform (notify-send / osascript / silent fallback).
+- `template/.claudeignore` — stack-agnostic ignore list for `node_modules`, build output, lockfiles, and other noise. The single highest-ROI token-saving measure. The CLI now copies it alongside `CLAUDE.md`.
+
 ## [0.5.0] — 2026-04-13
 
 ### Added

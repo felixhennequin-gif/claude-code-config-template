@@ -39,7 +39,6 @@ template/
       prisma-patterns/          # Optional
       express-api/              # Optional
       react-frontend/           # Optional
-      fastapi-backend/          # Optional — Python/FastAPI stack (added v0.3.0)
   hooks/
     lint-on-edit.sh             # Stdin-parsing ESLint hook (PostToolUse)
     session-start.sh            # Injects git context (SessionStart)

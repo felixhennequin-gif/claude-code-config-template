@@ -95,9 +95,8 @@ Available stack skills:
 | [`stacks/prisma-patterns`](./.claude/skills/stacks/prisma-patterns/SKILL.md) | Prisma 7 schema, migrations, queries, services |
 | [`stacks/express-api`](./.claude/skills/stacks/express-api/SKILL.md) | Express 5 routes, controllers, middleware, validators |
 | [`stacks/react-frontend`](./.claude/skills/stacks/react-frontend/SKILL.md) | React 19 + Vite + Tailwind v4 components, hooks, pages |
-| [`stacks/fastapi-backend`](./.claude/skills/stacks/fastapi-backend/SKILL.md) | FastAPI + SQLAlchemy + Alembic routes, models, services |
 
-Missing your stack? Contributions for Django, Rails, Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+Missing your stack? Contributions for FastAPI, Django, Rails, Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Principles
 
@@ -136,8 +135,7 @@ Missing your stack? Contributions for Django, Rails, Rust (axum), Laravel, Phoen
 │   │   └── stacks/                        # Optional — delete what you don't use
 │   │       ├── prisma-patterns/SKILL.md   # Prisma 7 conventions
 │   │       ├── express-api/SKILL.md       # Express 5 patterns
-│   │       ├── react-frontend/SKILL.md    # React 19 + Tailwind v4
-│   │       └── fastapi-backend/SKILL.md   # FastAPI + SQLAlchemy 2.x + Alembic
+│   │       └── react-frontend/SKILL.md    # React 19 + Tailwind v4
 │   ├── hooks/
 │   │   ├── lint-on-edit.sh                # Auto-lint after every edit
 │   │   ├── session-start.sh               # Injects git context at session start

@@ -30,9 +30,10 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 │   │   ├── audit.md                  # /audit — full quality audit
 │   │   └── test.md                   # /test — run tests + coverage
 │   ├── skills/
-│   │   ├── prisma-patterns/SKILL.md  # Prisma 7 conventions
-│   │   ├── express-api/SKILL.md      # Express 5 patterns
-│   │   └── react-frontend/SKILL.md   # React 19 + Tailwind v4 patterns
+│   │   ├── coding-principles/SKILL.md # Stack-agnostic behavioral rules (think, simplify, surgical, goal-driven)
+│   │   ├── prisma-patterns/SKILL.md   # Prisma 7 conventions
+│   │   ├── express-api/SKILL.md       # Express 5 patterns
+│   │   └── react-frontend/SKILL.md    # React 19 + Tailwind v4 patterns
 │   ├── hooks/
 │   │   └── lint-on-edit.sh           # Auto-lint after every edit
 │   └── rules/

@@ -11,13 +11,12 @@ For each project, we:
 
 ## Project 1: Node.js REST API (Express + Prisma + React)
 
-<!-- TODO: Replace with actual results from testing on cocktail-app / Écume -->
-
-- **Stack**: Node.js 22, Express 5, Prisma 7, PostgreSQL, React 19, Tailwind v4
-- **Tasks tested**: "Add a new API endpoint with validation", "Fix a failing test", "Refactor a 300-line controller"
-- **Without template**: [time to first useful output, conventions missed, errors]
-- **With template**: [time to first useful output, conventions followed, errors caught by hooks]
-- **Key difference**: [what changed most — e.g. "Claude stopped wrapping Express 5 controllers in try/catch"]
+- **Stack**: Node.js, Express 5, Prisma 7, PostgreSQL, React 19, Tailwind v4
+- **Install method**: `npx create-claude-code-config@0.8.0`
+- **Tasks tested**: Fresh install on existing project (LeCabanon), immediate `--update` run
+- **Install result**: 22 files tracked in manifest, npm/npx permissions auto-injected, `.gitignore` updated automatically. Time to install: ~30 seconds including npx download.
+- **Update result**: 0 updated, 1 skipped (`settings.json`, excluded by design), 20 already up to date. Correct behavior — no false positives, no data loss.
+- **Key difference vs bare setup**: Stack conventions, hooks, and commands available immediately after install with no manual configuration.
 
 ## Project 2: [Different stack]
 
@@ -29,12 +28,9 @@ For each project, we:
 
 ## What we learned
 
-<!-- TODO: Fill after testing -->
-
-- The hooks (branch guard, bash safety, lint-on-edit) provided the most consistent value — they work regardless of skill quality
-- Skills were most useful for [specific pattern]
-- The debugging skill prevented [specific failure mode]
-- We had to customize [what] for project-specific needs
+- The `--update` manifest detection works correctly: files untouched since install are detected via SHA-256 hash comparison, customized files are left intact.
+- `settings.json` exclusion from `--update` is the right call — it contains injected permissions that vary per project.
+- Install time is under 30 seconds including npx package download on first run.
 
 ## What broke
 

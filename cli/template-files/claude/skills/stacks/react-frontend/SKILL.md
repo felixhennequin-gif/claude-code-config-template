@@ -52,7 +52,7 @@ function ItemCard(props) {
 - **`useActionState`** — wire forms to async actions, track pending/error state without manual `useState`.
 - **`useFormStatus`** — read parent form's pending state from a child submit button, no prop drilling.
 - **Server Components awareness** — even in a client-heavy Vite app, know the `"use client"` boundary. Eases any later migration to Next.js or React Router framework mode.
-- **React Compiler / React Forget** — when enabled, it auto-memoizes. Stop reaching for `useMemo`/`useCallback` preemptively; add them only when the profiler shows a need.
+- **React Compiler / React Forget** — when enabled, it auto-memoizes and you can skip manual `useMemo`/`useCallback`. Check if the project has it enabled (look for `babel-plugin-react-compiler` or the `reactCompiler` Vite plugin). If it's NOT enabled, use `useMemo`/`useCallback` where the profiler shows a real need — don't add them preemptively, but don't ignore measurable perf issues either.
 
 ## Tailwind v4
 

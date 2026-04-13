@@ -48,11 +48,9 @@
 
 ## Gotchas
 
-<!-- Project-specific pitfalls — the highest-value section. -->
-<!-- Examples: -->
-<!-- - Seed script requires an empty DB, otherwise unique constraint error -->
-<!-- - `.env` is not copied by the deploy script — must be synced manually -->
-<!-- - Framework X dropped API Y in version Z; use W instead -->
+- Environment variables are not copied by deploy scripts — verify `.env` matches the target
+- Database seeds assume an empty database — running on existing data may cause constraint errors
+<!-- Add project-specific gotchas below -->
 
 ## References
 

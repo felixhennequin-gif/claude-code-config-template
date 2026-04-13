@@ -54,7 +54,9 @@ examples/
   express-api.CLAUDE.md         # Under 80 lines, concrete gotchas
   nextjs-fullstack.CLAUDE.md    # Under 80 lines, concrete gotchas
   fastapi-backend.CLAUDE.md     # Python/FastAPI example (added v0.3.0)
+  go-api.CLAUDE.md              # Go/Chi/sqlc example (added v0.4.0)
   agents/
+    README.md                   # Index of example agents (added v0.4.0)
     reviewer.md                 # Node/React/PostgreSQL example subagent
     security-auditor.md         # Node/React/PostgreSQL example subagent
 .github/

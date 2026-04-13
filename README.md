@@ -14,6 +14,21 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 
 > The root `CLAUDE.md` in this repo describes the template project itself — it's what Claude Code reads when working *on* this template. The blank file you copy into *your* project lives at [`template/CLAUDE.md`](./template/CLAUDE.md).
 
+## What this changes vs bare Claude Code
+
+Without this template, Claude Code starts every session with zero project context. Here's what's different:
+
+| Without template | With template |
+|-----------------|---------------|
+| Claude asks "what's your stack?" every session | Stack, conventions, and commands loaded automatically |
+| No branch protection — Claude can edit `main` | Hook blocks edits on `main`/`master` automatically |
+| No safety net for destructive commands | Bash safety hook blocks `rm -rf /`, `git push --force`, etc. |
+| Claude forgets your conventions between sessions | Skills enforce patterns (naming, architecture, error handling) |
+| No dynamic context | SessionStart hook shows branch, last commit, uncommitted changes |
+| You re-explain testing/deploy workflow each time | `/test` and `/deploy` commands available instantly |
+
+Setup takes 2 minutes. See [Installation](#installation).
+
 ## Installation
 
 ### Quick start — core (always)
@@ -63,7 +78,7 @@ Available stack skills:
 | [`stacks/react-frontend`](./.claude/skills/stacks/react-frontend/SKILL.md) | React 19 + Vite + Tailwind v4 components, hooks, pages |
 | [`stacks/fastapi-backend`](./.claude/skills/stacks/fastapi-backend/SKILL.md) | FastAPI + SQLAlchemy + Alembic routes, models, services |
 
-Missing your stack? Contributions for Django, Rails, Go (chi/gin), Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+Missing your stack? Contributions for Django, Rails, Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Principles
 
@@ -114,7 +129,8 @@ Missing your stack? Contributions for Django, Rails, Go (chi/gin), Rust (axum), 
 │   │   └── security-auditor.md            # Example: Node.js security auditor
 │   ├── express-api.CLAUDE.md
 │   ├── nextjs-fullstack.CLAUDE.md
-│   └── fastapi-backend.CLAUDE.md
+│   ├── fastapi-backend.CLAUDE.md
+│   └── go-api.CLAUDE.md
 ├── .github/                               # Issue/PR templates, CI workflow
 ├── CONTRIBUTING.md
 ├── CHANGELOG.md
@@ -156,6 +172,19 @@ See [Anthropic MCP docs](https://docs.anthropic.com/en/docs/claude-code/mcp) for
 ## Credits
 
 Research based on analysis of: Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 official skills), OpenAI (openai-agents-python), and ~45 other open-source projects.
+
+## Compared to alternatives
+
+This template is an **opinionated starter kit** — not a framework, not a guide, not a marketplace.
+
+| Project | Approach | When to use it instead |
+|---------|----------|----------------------|
+| [ChrisWiles/claude-code-showcase](https://github.com/ChrisWiles/claude-code-showcase) | Comprehensive showcase with Actions, scheduled hooks | You want a batteries-included demo with more workflows |
+| [davila7/claude-code-templates](https://github.com/davila7/claude-code-templates) | CLI marketplace with 600+ components | You want to pick individual agents/commands from a catalog |
+| [serpro69/claude-toolbox](https://github.com/serpro69/claude-toolbox) | Plugin framework with sync infrastructure | You want a managed upgrade path across projects |
+| [abhishekray07/claude-md-templates](https://github.com/abhishekray07/claude-md-templates) | Teaching resource with before/after examples | You're learning Claude Code and want to understand the "why" |
+
+**This template** is for developers who want a clean starting point they can understand in 5 minutes, customize for their stack, and own completely. No dependencies, no CLI, no lock-in.
 
 ## Contributing
 

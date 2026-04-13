@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-04-13
+
+### Fixed (v0.3.1)
+- `stacks/README.md`: added fastapi-backend, removed from wanted list
+- `examples/agents/`: moved HTML comment after frontmatter (runtime parsing fix)
+- `session-start.sh`: fixed pipefail crash on repos with zero TODOs
+- `CONTRIBUTING.md`: fixed skill path references, removed `allowed-tools` from example
+- `deploy.md`: replaced hardcoded paths with placeholder variables
+- `test-files.md`: added `name:` field for consistency
+- `express-api` + `prisma-patterns`: removed `allowed-tools` (consistent with v0.2.0)
+- README: added note about editing stack-specific permissions
+
+### Added
+- "What this changes vs bare Claude Code" comparison table in README
+- "Compared to alternatives" section in README with competitive positioning
+- `examples/agents/README.md` explaining the example agents
+- `examples/go-api.CLAUDE.md` — Go/Chi/sqlc example (3rd stack coverage)
+- Starter gotchas in `template/CLAUDE.md` (no longer fully commented out)
+
+### Changed
+- README: directory tree updated with Go example
+- "Missing your stack?" list updated (removed Go and FastAPI)
+
 ## [0.3.0] — 2026-04-13
 
 ### Fixed (v0.2.1 scope)
@@ -116,7 +139,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.1...v0.1.2

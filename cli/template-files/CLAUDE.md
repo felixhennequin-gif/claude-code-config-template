@@ -52,6 +52,13 @@
 - Database seeds assume an empty database — running on existing data may cause constraint errors
 <!-- Add project-specific gotchas below -->
 
+## Off-limits
+
+<!-- List files and directories Claude should never modify -->
+- `[generated files — e.g. prisma/migrations/, dist/, __pycache__/]` — do not edit or delete
+- `[vendor/ or node_modules/]` — never touch
+- `[any already-applied migration files]` — migrations are append-only
+
 ## References
 
 - See `CONTRIBUTING.md` for the contribution workflow

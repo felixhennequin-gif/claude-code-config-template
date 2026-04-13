@@ -10,7 +10,8 @@ description: Prisma 7 conventions and patterns. Activates when working on the Pr
 - One model per domain entity. No technical tables surfaced in the schema (except sessions / tokens).
 - Explicit relations via `@relation`. Always name the relation when there's ambiguity.
 - `@updatedAt` on every model whose content can change.
-- `@default(cuid())` for string IDs, `@default(autoincrement())` for int IDs.
+- String IDs: prefer `@default(ulid())` (Prisma 7+) or `@default(uuid(7))` for new projects. `@default(cuid())` still works but cuid is in maintenance mode — avoid it in new schemas.
+- Int IDs: `@default(autoincrement())`.
 - Enums for fixed values (roles, statuses, visibility).
 
 ## Queries

@@ -32,7 +32,6 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 │   │   └── lint-on-edit.sh           # Auto-lint after every edit
 │   └── rules/
 │       └── test-files.md             # Rules specific to test files
-├── examples/                         # Reference CLAUDE.md files for real projects
 └── RESEARCH.md                       # Raw research data
 ```
 
@@ -53,8 +52,6 @@ echo ".claude/settings.local.json" >> your-project/.gitignore
 
 # Edit CLAUDE.md with your project info
 ```
-
-The `examples/` folder contains filled-in `CLAUDE.md` files from real projects you can read for inspiration.
 
 ## Optional: global config
 

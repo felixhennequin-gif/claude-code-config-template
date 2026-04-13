@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-04-13
+
+### Added
+- `--update` flag for the CLI — `npx create-claude-code-config --update [dir]` updates template files in an existing project. Files the user has customized are detected via a SHA-256 manifest (`.claude/.template-manifest.json`) written at install time and left untouched. `settings.json` and `CLAUDE.local.md.example` are always excluded from auto-update.
+
 ## [0.7.0] — 2026-04-13
 
 ### Added
@@ -203,7 +208,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.4.0...v0.5.0

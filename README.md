@@ -59,8 +59,9 @@ Available stack skills:
 | [`stacks/prisma-patterns`](./.claude/skills/stacks/prisma-patterns/SKILL.md) | Prisma 7 schema, migrations, queries, services |
 | [`stacks/express-api`](./.claude/skills/stacks/express-api/SKILL.md) | Express 5 routes, controllers, middleware, validators |
 | [`stacks/react-frontend`](./.claude/skills/stacks/react-frontend/SKILL.md) | React 19 + Vite + Tailwind v4 components, hooks, pages |
+| [`stacks/fastapi-backend`](./.claude/skills/stacks/fastapi-backend/SKILL.md) | FastAPI + SQLAlchemy + Alembic routes, models, services |
 
-Missing your stack? Contributions for Django, FastAPI, Rails, Go (chi/gin), Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+Missing your stack? Contributions for Django, Rails, Go (chi/gin), Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Principles
 
@@ -70,45 +71,53 @@ Missing your stack? Contributions for Django, FastAPI, Rails, Go (chi/gin), Rust
 4. **Build / test / lint commands are the minimum viable.**
 5. **Skills are the best ROI.** A well-written skill gets reused automatically every time its trigger matches.
 6. **Hooks are token-free.** Block main, auto-format — deterministic, no model involvement.
+7. **Know your token budget.** Every skill costs tokens — see [docs/CONTEXT-BUDGET.md](docs/CONTEXT-BUDGET.md).
 
 ## What's in this template
 
 ```
 .
-├── CLAUDE.md                         # Context for working on this repo itself
+├── CLAUDE.md                              # Context for working on this repo itself
 ├── template/
-│   ├── CLAUDE.md                     # Downstream-facing project context (copy this into your project)
-│   └── CLAUDE.local.md.example       # Template for personal overrides (copy to your project as CLAUDE.local.md)
+│   ├── CLAUDE.md                          # Downstream project context (copy this)
+│   └── CLAUDE.local.md.example            # Personal overrides template
 ├── .claude/
-│   ├── settings.json                 # Deterministic hooks (block main/master, auto-lint, bash safety, session-start)
-│   ├── agents/                       # Empty by default — see examples/agents/
+│   ├── settings.json                      # Hooks config (branch guard, lint, session-start, bash-safety)
+│   ├── agents/
+│   │   └── README.md                      # Empty by default — see examples/agents/
 │   ├── commands/
-│   │   ├── deploy.md                 # /deploy — deployment workflow
-│   │   ├── audit.md                  # /audit — full quality audit
-│   │   └── test.md                   # /test — run tests + coverage
+│   │   ├── deploy.md                      # /deploy — deployment workflow
+│   │   ├── audit.md                       # /audit — full quality audit
+│   │   └── test.md                        # /test — run tests + coverage
 │   ├── skills/
 │   │   ├── core/
-│   │   │   └── coding-principles/SKILL.md  # Universal behavioral rules (think, simplify, surgical, goal-driven)
-│   │   └── stacks/                         # Optional — keep only the ones you use
-│   │       ├── prisma-patterns/SKILL.md    # Prisma 7 conventions
-│   │       ├── express-api/SKILL.md        # Express 5 patterns
-│   │       └── react-frontend/SKILL.md     # React 19 + Tailwind v4 patterns
+│   │   │   └── coding-principles/SKILL.md # Universal behavioral rules
+│   │   └── stacks/                        # Optional — delete what you don't use
+│   │       ├── prisma-patterns/SKILL.md   # Prisma 7 conventions
+│   │       ├── express-api/SKILL.md       # Express 5 patterns
+│   │       ├── react-frontend/SKILL.md    # React 19 + Tailwind v4
+│   │       └── fastapi-backend/SKILL.md   # FastAPI + SQLAlchemy 2.x + Alembic
 │   ├── hooks/
-│   │   ├── lint-on-edit.sh           # Auto-lint after every edit
-│   │   ├── session-start.sh          # Inject dynamic git context at session start
-│   │   └── bash-safety.sh            # Block destructive bash commands
+│   │   ├── lint-on-edit.sh                # Auto-lint after every edit
+│   │   ├── session-start.sh               # Injects git context at session start
+│   │   └── bash-safety.sh                 # Blocks dangerous shell commands
 │   └── rules/
-│       └── test-files.md             # Rules specific to test files
-├── examples/                         # Ready-to-adapt CLAUDE.md files + example agents
+│       ├── test-files.md                  # Rules specific to test files
+│       └── banned-patterns.md             # Universal + JS/TS + Python anti-patterns
+├── docs/
+│   └── CONTEXT-BUDGET.md                  # Token estimates and budget profiles
+├── examples/
+│   ├── agents/
+│   │   ├── reviewer.md                    # Example: Node.js code reviewer
+│   │   └── security-auditor.md            # Example: Node.js security auditor
 │   ├── express-api.CLAUDE.md
 │   ├── nextjs-fullstack.CLAUDE.md
-│   └── agents/                       # Example subagents (Node-specific — copy into .claude/agents/)
-├── .github/                          # Issue / PR templates, funding, workflows
-├── CONTRIBUTING.md                   # How to contribute a skill, rule, or hook
-├── CODE_OF_CONDUCT.md                # Contributor Covenant v2.1
-├── SECURITY.md                       # How to report a vulnerability
-├── CHANGELOG.md                      # Release history
-└── RESEARCH.md                       # Raw research data
+│   └── fastapi-backend.CLAUDE.md
+├── .github/                               # Issue/PR templates, CI workflow
+├── CONTRIBUTING.md
+├── CHANGELOG.md
+├── RESEARCH.md
+└── README.md
 ```
 
 ## Optional: global config

@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-04-13
+
+### Fixed (v0.2.1 scope)
+- README: directory tree now matches actual v0.2.0+ structure (was still showing v0.1.x layout)
+- Fixed git remote URL (was pointing to the old `ai-config-template.git` name)
+- Cleaned up stale feature branches (`feat/v0.2.0`, `fix/ci-frontmatter`)
+- Verified no remaining "production-ready" references in non-historic tracked files
+
+### Added
+- **Python/FastAPI support** — new stack skill at `.claude/skills/stacks/fastapi-backend/SKILL.md` (SQLAlchemy 2.x async, Alembic, Pydantic v2 conventions) and example config at `examples/fastapi-backend.CLAUDE.md`.
+- **Context budget guide** (`docs/CONTEXT-BUDGET.md`) — per-component token estimates, three budget profiles (minimal/standard/full), and rules of thumb for pruning skills.
+- **Banned-patterns rule** (`.claude/rules/banned-patterns.md`) — universal + JS/TS + Python anti-patterns, scoped via `globs:` to the matching file types.
+- **"Adding a new stack" section in CONTRIBUTING.md** — three-step recipe (skill → example → optional agent) and the 80-line rule.
+- Principle #7 in README: "Know your token budget" with a pointer to `docs/CONTEXT-BUDGET.md`.
+
+### Changed
+- **RESEARCH.md rewritten in full** — replaced the "55 repos with star counts" credibility padding with six concrete findings, each tied to a template decision (CLAUDE.md length, skills beat inline, hooks underused, agents need project context, core/stacks split, repo rot), an anti-patterns-avoided list, and a focused sources table.
+- README: added FastAPI to the stack skills table, removed FastAPI from the "contributions welcome" list.
+- Root `CLAUDE.md`: directory tree and rules listing updated for `banned-patterns.md`, `fastapi-backend`, and `docs/`.
+
 ## [0.2.0] — 2026-04-13
 
 ### Changed
@@ -96,7 +116,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.0...v0.1.1

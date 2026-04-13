@@ -39,15 +39,21 @@ template/
       prisma-patterns/          # Optional
       express-api/              # Optional
       react-frontend/           # Optional
+      fastapi-backend/          # Optional — Python/FastAPI stack (added v0.3.0)
   hooks/
     lint-on-edit.sh             # Stdin-parsing ESLint hook (PostToolUse)
     session-start.sh            # Injects git context (SessionStart)
     bash-safety.sh              # Blocks destructive commands (PreToolUse Bash)
-  rules/test-files.md           # Scoped rules for *.test.*, *.spec.*
+  rules/
+    test-files.md               # Scoped rules for *.test.*, *.spec.*
+    banned-patterns.md          # Universal + JS/TS + Python anti-patterns
+docs/
+  CONTEXT-BUDGET.md             # Token estimates per component + budget profiles
 examples/
   README.md                     # Index + usage instructions
   express-api.CLAUDE.md         # Under 80 lines, concrete gotchas
   nextjs-fullstack.CLAUDE.md    # Under 80 lines, concrete gotchas
+  fastapi-backend.CLAUDE.md     # Python/FastAPI example (added v0.3.0)
   agents/
     reviewer.md                 # Node/React/PostgreSQL example subagent
     security-auditor.md         # Node/React/PostgreSQL example subagent
@@ -108,6 +114,7 @@ echo '{"tool_name":"Bash","tool_input":{"command":"ls -la"}}' | bash .claude/hoo
 ## References
 
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — what the quality bar is for skills, agents, commands, examples
-- [`RESEARCH.md`](./RESEARCH.md) — the raw data that shaped the template's design
+- [`RESEARCH.md`](./RESEARCH.md) — findings from analyzing ~55 Claude Code configs (rewritten in v0.3.0 to focus on conclusions instead of raw repo lists)
+- [`docs/CONTEXT-BUDGET.md`](./docs/CONTEXT-BUDGET.md) — per-component token estimates and budget profiles for pruning skills
 - [`CHANGELOG.md`](./CHANGELOG.md) — what changed, including the `[Unreleased]` section for in-flight work
 - [Claude Code docs](https://docs.claude.com/en/docs/claude-code) — upstream source of truth for hook/settings/agent syntax

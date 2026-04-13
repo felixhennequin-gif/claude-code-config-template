@@ -132,6 +132,16 @@ model: sonnet
 - ❌ Examples pulled from closed-source projects without sanitization
 - ❌ Binary files, screenshots, or generated artifacts
 
+### Adding a new stack
+
+To add support for a new framework/stack:
+
+1. **Skill** — Create `.claude/skills/stacks/<name>/SKILL.md` with proper frontmatter (`name`, `description` that names concrete trigger situations). See any existing stack skill for the format.
+2. **Example CLAUDE.md** — Create `examples/<name>.CLAUDE.md` showing a realistic project config for that stack. Include commands, conventions, structure, and gotchas.
+3. **(Optional) Example agent** — If the stack has specific review/audit concerns, add an agent in `examples/agents/`.
+
+The skill should be under 80 lines and focus on conventions Claude wouldn't know from its training data — things specific to the framework version, common mistakes, and patterns your team enforces.
+
 ## Questions
 
 Open a GitHub Discussion or an issue with the `question` label before starting

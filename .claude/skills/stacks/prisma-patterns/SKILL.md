@@ -17,6 +17,14 @@ description: Prisma 7 conventions and patterns. Activates when working on the Pr
 ## Queries
 
 - **Always use an explicit `select` or `include`.** Never `findMany()` without a filter on a large table.
+- **`omit` for sensitive fields** (Prisma 5.13+/7) — exclude fields like `password` or `secret` at the query level instead of manual `select`:
+  ```js
+  const user = await prisma.user.findUnique({
+    where: { id },
+    omit: { password: true },
+  });
+  ```
+  Prefer this over `select`-ing every field individually when you only want to hide one or two.
 - **Avoid N+1:** use `include` with the needed relations rather than loops calling `findUnique`.
 - **Cursor-based pagination** for long lists (feed, search results). Pattern:
   ```js

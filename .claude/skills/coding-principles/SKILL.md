@@ -10,8 +10,8 @@ allowed-tools: Read, Grep, Glob
 # Coding principles
 
 Four rules that apply to every code change in this repo, regardless of stack.
-Stack-specific conventions live in `express-api`, `prisma-patterns`,
-`react-frontend`, and `.claude/rules/test-files.md` — this skill is about
+Stack-specific conventions live under `.claude/skills/stacks/` (one skill
+per framework) and in `.claude/rules/test-files.md` — this skill is about
 *how* to change code, not *what* to write inside each framework.
 
 ## 1. Think before coding
@@ -74,6 +74,5 @@ is too vague — sharpen it first.
 These rules bias toward caution over speed. Trivial edits (typo fixes,
 obvious one-liners) don't need the full rigor — use judgment.
 
-For stack-specific conventions, see `.claude/skills/express-api/`,
-`.claude/skills/prisma-patterns/`, `.claude/skills/react-frontend/`,
-and `.claude/rules/test-files.md`.
+For stack-specific conventions, see whichever skills ship under
+`.claude/skills/stacks/` in your project, and `.claude/rules/test-files.md`.

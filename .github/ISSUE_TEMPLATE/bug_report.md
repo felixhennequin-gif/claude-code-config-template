@@ -12,7 +12,7 @@ assignees: ''
 
 ## Which file
 
-<!-- Path inside the template, e.g. `.claude/hooks/lint-on-edit.sh` or `.claude/skills/prisma-patterns/SKILL.md`. -->
+<!-- Path inside the template, e.g. `.claude/hooks/lint-on-edit.sh` or `.claude/skills/stacks/prisma-patterns/SKILL.md`. -->
 
 ## Expected behavior
 

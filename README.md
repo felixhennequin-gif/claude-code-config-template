@@ -80,6 +80,12 @@ Keep it under 15 lines. Anything project-specific belongs in the project's own `
 
 Research based on analysis of: Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 official skills), OpenAI (openai-agents-python), and ~45 other open-source projects.
 
+## Contributing
+
+Contributions are welcome — new skills, rules, hooks, or fixes to existing ones. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the workflow, file conventions, and how to test changes with Claude Code.
+
+Questions, bug reports, and ideas belong in [GitHub Issues](https://github.com/felixhennequin-gif/ai-config-template/issues). Open-ended discussions go in [Discussions](https://github.com/felixhennequin-gif/ai-config-template/discussions).
+
 ## License
 
 MIT

@@ -7,14 +7,14 @@ globs: ["**/*.test.*", "**/*.spec.*", "**/tests/**", "**/__tests__/**"]
 # Test file conventions
 
 ## Framework
-- Vitest for backend and frontend unit tests
-- Supertest for API integration tests
-- Testing Library for React component tests (if applicable)
+- Use the project's existing test runner — don't switch frameworks without asking
+- Check `package.json` scripts, `Makefile`, `pyproject.toml`, or CI config for the correct test command
+- If no test infrastructure exists, ask the user which framework to use before creating test files
 
 ## Structure
 - Test files colocated next to source OR in a `tests/` directory — pick one per project, be consistent
-- Name: `[module].test.js` or `[module].spec.js`
-- Group with `describe()` by function/method, nest for variants
+- Name: `[module].test.js` or `[module].spec.js` — adapt the extension to match the project's language (`.test.ts`, `test_module.py`, `_test.go`, etc.)
+- Group with `describe()` (or the equivalent in your framework) by function/method, nest for variants
 
 ## Patterns
 

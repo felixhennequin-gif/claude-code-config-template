@@ -140,7 +140,8 @@ Missing your stack? Contributions for FastAPI, Django, Rails, Rust (axum), Larav
 │   ├── hooks/
 │   │   ├── lint-on-edit.sh                # Auto-lint after every edit
 │   │   ├── session-start.sh               # Injects git context at session start
-│   │   └── bash-safety.sh                 # Blocks dangerous shell commands
+│   │   ├── bash-safety.sh                 # Blocks dangerous shell commands
+│   │   └── notification.sh                # Desktop alert when Claude waits for input
 │   └── rules/
 │       ├── test-files.md                  # Rules specific to test files
 │       └── banned-patterns.md             # Universal + JS/TS + Python anti-patterns

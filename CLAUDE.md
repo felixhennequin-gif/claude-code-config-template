@@ -44,6 +44,7 @@ template/
     lint-on-edit.sh             # Stdin-parsing ESLint hook (PostToolUse)
     session-start.sh            # Injects git context (SessionStart)
     bash-safety.sh              # Blocks destructive commands (PreToolUse Bash)
+    notification.sh             # Desktop alert when Claude waits for input (Notification)
   rules/
     test-files.md               # Scoped rules for *.test.*, *.spec.*
     banned-patterns.md          # Universal + JS/TS + Python anti-patterns

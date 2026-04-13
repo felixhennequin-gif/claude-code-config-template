@@ -213,7 +213,7 @@ This template is an **opinionated starter kit** — not a framework, not a guide
 | [serpro69/claude-toolbox](https://github.com/serpro69/claude-toolbox) | Plugin framework with sync infrastructure | You want a managed upgrade path across projects |
 | [abhishekray07/claude-md-templates](https://github.com/abhishekray07/claude-md-templates) | Teaching resource with before/after examples | You're learning Claude Code and want to understand the "why" |
 
-**This template** is for developers who want a clean starting point they can understand in 5 minutes, customize for their stack, and own completely. No dependencies, no CLI, no lock-in.
+**This template** is for developers who want a clean starting point they can understand in 5 minutes, customize for their stack, and own completely. Use the CLI to scaffold in 30 seconds, or copy files manually — either way, there are no runtime dependencies and nothing to update.
 
 ## Contributing
 

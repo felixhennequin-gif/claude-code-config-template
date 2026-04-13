@@ -4,7 +4,7 @@ import { askQuestions } from './prompts.js';
 import { copyTemplate } from './copy.js';
 
 export async function run() {
-  console.log('\n⚡ create-claude-config\n');
+  console.log('\n⚡ create-claude-code-config\n');
 
   const { targetDir, stacks } = await askQuestions();
   const resolvedDir = resolve(targetDir);

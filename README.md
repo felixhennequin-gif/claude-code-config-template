@@ -31,23 +31,26 @@ Setup takes 2 minutes. See [Installation](#installation).
 
 ## Installation
 
-### Quick start — core (always)
+### Option A: CLI (recommended)
 
 ```bash
-# Clone this template somewhere
-git clone <this-repo-url> /tmp/ai-template
+npx create-claude-config
+```
+
+Prompts for your project directory and stack. Copies only the files you need.
+
+### Option B: Manual
+
+```bash
+git clone https://github.com/felixhennequin-gif/claude-code-config-template.git /tmp/ai-template
 cd /tmp/ai-template
 
-# Copy the core files into your project
 cp template/CLAUDE.md your-project/CLAUDE.md
 cp template/CLAUDE.local.md.example your-project/CLAUDE.local.md
 cp -r .claude your-project/.claude
 
-# Ignore personal files (if not already in your .gitignore)
 echo "CLAUDE.local.md" >> your-project/.gitignore
 echo ".claude/settings.local.json" >> your-project/.gitignore
-
-# Edit CLAUDE.md with your project info
 ```
 
 This gives you the stack-agnostic baseline: hooks, commands, rules, and the universal `coding-principles` skill.
@@ -57,6 +60,8 @@ This gives you the stack-agnostic baseline: hooks, commands, rules, and the univ
 > The permissions in `settings.json` include Node.js commands (`npm test`, `npx prisma`, etc.) by default. If your project uses a different stack, edit the `permissions.allow` entries to match your commands.
 
 ### Add stack skills (optional)
+
+> If you used the CLI, stacks were already selected during setup. This section is for manual installs.
 
 The `.claude/skills/stacks/` directory ships with skills for a few common frameworks. Delete the whole folder if you don't use any of them, or remove just the ones you don't need:
 
@@ -95,6 +100,11 @@ Missing your stack? Contributions for Django, Rails, Rust (axum), Laravel, Phoen
 ```
 .
 ├── CLAUDE.md                              # Context for working on this repo itself
+├── cli/                                   # npx create-claude-config (scaffolding CLI)
+│   ├── package.json
+│   ├── bin/
+│   ├── src/
+│   └── template-files/                    # Embedded copy of template files
 ├── template/
 │   ├── CLAUDE.md                          # Downstream project context (copy this)
 │   └── CLAUDE.local.md.example            # Personal overrides template

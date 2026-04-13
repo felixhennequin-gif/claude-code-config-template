@@ -65,9 +65,19 @@ examples/
   FUNDING.yml
 ```
 
+## CLI (`cli/`)
+
+The `create-claude-config` npm package lives here. It's published independently but shares this repo.
+
+- Entry point: `cli/bin/create-claude-config.js`
+- Template files are embedded in `cli/template-files/` — these are copies of `template/` and `.claude/`
+- After any change to template files, skills, hooks, rules, or commands: run `bash cli/sync-templates.sh` to re-copy them into `cli/template-files/`
+- The CLI has one dependency: `prompts`
+- Test locally with `cd cli && node bin/create-claude-config.js`
+
 ## Working on this repo
 
-No build step, no package.json — every file is Markdown, JSON, or shell. Most changes are content quality, not code.
+No build step in the root — every file is Markdown, JSON, or shell. The `cli/` subdirectory has its own `package.json`. Most changes are content quality, not code.
 
 ```bash
 # Validate settings.json

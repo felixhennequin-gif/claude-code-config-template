@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-04-13
+
+### Added
+- **`create-claude-config` CLI** — interactive scaffolding tool
+  - `npx create-claude-config` to scaffold a Claude Code config
+  - Prompts for project directory + stack selection (Express, Prisma, React, FastAPI)
+  - Copies CLAUDE.md, .claude/ (hooks, commands, rules, skills), CLAUDE.local.md
+  - Removes unselected stack skills automatically
+  - Updates .gitignore with personal file entries
+  - Ships template files embedded — no runtime git clone
+- `cli/sync-templates.sh` script to keep CLI templates in sync with repo
+
+### Changed
+- README: installation now offers CLI (Option A) and manual (Option B)
+- README: directory tree updated with `cli/`
+- Root CLAUDE.md: added CLI section with contributor guidance
+
 ## [0.4.0] — 2026-04-13
 
 ### Fixed (v0.3.1)
@@ -139,7 +156,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.2...v0.2.0

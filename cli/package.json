@@ -1,0 +1,35 @@
+{
+  "name": "create-claude-config",
+  "version": "0.5.0",
+  "description": "Interactive CLI to scaffold a Claude Code config (CLAUDE.md + .claude/) for any project",
+  "type": "module",
+  "bin": {
+    "create-claude-config": "./bin/create-claude-config.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "template-files/",
+    "README.md"
+  ],
+  "keywords": [
+    "claude-code",
+    "claude-md",
+    "ai-config",
+    "scaffolding",
+    "cli"
+  ],
+  "author": "Félix Hennequin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felixhennequin-gif/claude-code-config-template.git",
+    "directory": "cli"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

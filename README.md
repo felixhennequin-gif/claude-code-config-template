@@ -16,8 +16,8 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 .
 ├── CLAUDE.md                         # Context for working on this repo itself
 ├── template/
-│   └── CLAUDE.md                     # Downstream-facing project context (copy this into your project)
-├── CLAUDE.local.md.example           # Template for personal overrides
+│   ├── CLAUDE.md                     # Downstream-facing project context (copy this into your project)
+│   └── CLAUDE.local.md.example       # Template for personal overrides (copy to your project as CLAUDE.local.md)
 ├── .claude/
 │   ├── settings.json                 # Deterministic hooks (block main, auto-lint)
 │   ├── settings.local.json           # Personal overrides (gitignored)
@@ -56,7 +56,7 @@ git clone <this-repo-url> /tmp/ai-template
 # Copy into your project
 cp /tmp/ai-template/template/CLAUDE.md your-project/CLAUDE.md
 cp -r /tmp/ai-template/.claude your-project/.claude
-cp /tmp/ai-template/CLAUDE.local.md.example your-project/CLAUDE.local.md
+cp /tmp/ai-template/template/CLAUDE.local.md.example your-project/CLAUDE.local.md
 
 # Ignore personal files (if not already in your .gitignore)
 echo "CLAUDE.local.md" >> your-project/.gitignore

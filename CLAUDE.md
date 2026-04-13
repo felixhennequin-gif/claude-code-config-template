@@ -7,7 +7,7 @@ This `CLAUDE.md` is **not** the downstream-facing template — it's the one Clau
 ## What this repo ships
 
 - **`template/CLAUDE.md`** — the placeholder project context users copy into their own projects
-- **`CLAUDE.local.md.example`** — the personal-override template users copy to `CLAUDE.local.md` (which is gitignored)
+- **`template/CLAUDE.local.md.example`** — the personal-override template users copy to `CLAUDE.local.md` (which is gitignored)
 - **`.claude/`** — hooks, agents, skills, commands, and rules that get copied alongside
 - **`examples/*.CLAUDE.md`** — stack-specific ready-to-adapt alternatives to `template/CLAUDE.md`
 - **Community infra** — `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CHANGELOG.md`, `.github/` templates
@@ -20,7 +20,7 @@ CLAUDE.md                       # You are here — context for working on this r
 README.md                       # User-facing landing page
 template/
   CLAUDE.md                     # Downstream-facing blank template
-CLAUDE.local.md.example         # Tracked template for personal overrides
+  CLAUDE.local.md.example       # Tracked template for personal overrides
 .claude/
   settings.json                 # PreToolUse main-branch guard + PostToolUse lint hook
   agents/                       # reviewer, security-auditor
@@ -73,7 +73,7 @@ echo '{"tool_name":"Edit","tool_input":{"file_path":"/tmp/x.js"}}' | bash .claud
 
 ## Gotchas
 
-- **`CLAUDE.local.md` is gitignored**, so it's absent from fresh clones. The downstream template users actually receive is `CLAUDE.local.md.example`. The install snippet in `README.md` must reflect this — don't regress it.
+- **`CLAUDE.local.md` is gitignored**, so it's absent from fresh clones. The downstream template users actually receive is `template/CLAUDE.local.md.example`. The install snippet in `README.md` must reflect this — don't regress it.
 - **`lint-on-edit.sh` parses its payload from stdin**, not env vars. Claude Code used to expose env vars, but no longer — the hook was fixed for this in commit `ca8ecf8`. If you refactor the hook, keep the stdin path.
 - **PreToolUse hook uses `git branch --show-current`** and short-circuits via `[ ... ] || { ...; exit 2; }`. A detached HEAD returns empty and passes the guard — intentional, don't "fix" it.
 - **Frontmatter in `.claude/rules/*.md` uses `globs:` (not `applyTo:`)** — this is the format Claude Code actually reads. Don't rename it.

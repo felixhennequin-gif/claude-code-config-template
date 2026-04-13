@@ -11,6 +11,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `.claude/skills/core/error-handling/SKILL.md` — universal error handling patterns (fail loudly, fix at root, typed errors). Activates when writing error handling code in any language.
+- `template/CLAUDE.md` and `cli/template-files/CLAUDE.md`: new `## Off-limits` section — placeholder for files and directories Claude should never modify (generated files, migrations, vendor directories).
+
+### Changed
+- `README.md`: dual-CLAUDE.md callout moved before `## Why` — now visible before any install instructions.
+- `README.md`: "test results from real projects" replaced with accurate "validation template — fill it after testing" to match actual VALIDATION.md content.
+- `README.md`: "No dependencies, no CLI, no lock-in" contradiction resolved — now reads "No framework, no lock-in — clone or use the CLI, the files are yours either way."
+- `.claude/skills/stacks/prisma-patterns/SKILL.md` + CLI copy: `@default(cuid())` replaced with ulid/uuid(7) recommendation and cuid maintenance-mode note.
+- `.claude/skills/stacks/prisma-patterns/SKILL.md` + CLI copy: added `omit` pattern for sensitive fields (Prisma 5.13+/7).
+- `.claude/hooks/session-start.sh` + CLI copy: added comment documenting intentional detached HEAD behavior — prevents contributors from "fixing" it.
+- `RESEARCH.md`: added observation date header (March–April 2026).
+- `cli/bin/create-claude-code-config.js`: renamed from `create-claude-config.js` to match package name.
+- `cli/src/index.js`: banner updated from `create-claude-config` to `create-claude-code-config`.
+- `.claude/skills/core/README.md`: added `error-handling` to the skill list.
+
 ## [0.6.0] — 2026-04-13
 
 ### Added

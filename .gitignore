@@ -1,0 +1,8 @@
+CLAUDE.local.md
+.claude/settings.local.json
+node_modules/
+.env
+.env.*
+!.env.example
+dist/
+coverage/

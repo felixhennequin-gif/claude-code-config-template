@@ -2,7 +2,7 @@
 
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
   console.log(`
-  Usage: npx create-claude-code-config
+  Usage: npx create-claude-code-config [--update [dir]]
 
   Interactive CLI to scaffold a Claude Code config for any project.
 
@@ -10,7 +10,9 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
   and sets up .gitignore entries.
 
   Options:
-    --help, -h    Show this help message
+    --update [dir]  Update template files in an existing project
+                    (skips files the user has customized)
+    --help, -h      Show this help message
 
   More info: https://github.com/felixhennequin-gif/claude-code-config-template
   `);

@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, copyFileSync, readdirSync, statSync, appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { hashContent, readManifest, writeManifest, MANIFEST_PATH } from './manifest.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_DIR = join(__dirname, '..', 'template-files');
@@ -90,7 +91,7 @@ function injectStackPermissions(targetDir, selectedStacks) {
  */
 function updateGitignore(targetDir) {
   const gitignorePath = join(targetDir, '.gitignore');
-  const entries = ['CLAUDE.local.md', '.claude/settings.local.json'];
+  const entries = ['CLAUDE.local.md', '.claude/settings.local.json', '.claude/.template-manifest.json'];
 
   let existing = '';
   if (existsSync(gitignorePath)) {
@@ -107,10 +108,45 @@ function updateGitignore(targetDir) {
 }
 
 /**
+ * Walk a directory recursively, returning file paths relative to `base`.
+ */
+function walkFiles(dir, base = dir) {
+  const out = [];
+  if (!existsSync(dir)) return out;
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) {
+      out.push(...walkFiles(full, base));
+    } else {
+      out.push(relative(base, full));
+    }
+  }
+  return out;
+}
+
+/**
+ * Build and persist the template manifest for every path that was just copied.
+ * `copiedPaths` is a list of target-relative paths.
+ */
+function persistManifest(targetDir, copiedPaths) {
+  if (copiedPaths.length === 0) return null;
+  const manifest = { ...readManifest(targetDir) };
+  for (const p of copiedPaths) {
+    if (p === MANIFEST_PATH) continue;
+    const full = join(targetDir, p);
+    if (!existsSync(full)) continue;
+    manifest[p] = hashContent(readFileSync(full, 'utf8'));
+  }
+  writeManifest(targetDir, manifest);
+  return copiedPaths.length;
+}
+
+/**
  * Main copy function.
  */
 export function copyTemplate(targetDir, selectedStacks) {
   const results = [];
+  const copiedPaths = [];
 
   // 1. Copy CLAUDE.md
   const claudeMdSrc = join(TEMPLATE_DIR, 'CLAUDE.md');
@@ -120,6 +156,7 @@ export function copyTemplate(targetDir, selectedStacks) {
   } else {
     copyFileSync(claudeMdSrc, claudeMdDest);
     results.push({ file: 'CLAUDE.md', status: 'copied' });
+    copiedPaths.push('CLAUDE.md');
   }
 
   // 2. Copy CLAUDE.local.md.example → CLAUDE.local.md
@@ -130,6 +167,7 @@ export function copyTemplate(targetDir, selectedStacks) {
   } else {
     copyFileSync(localSrc, localDest);
     results.push({ file: 'CLAUDE.local.md', status: 'copied' });
+    copiedPaths.push('CLAUDE.local.md');
   }
 
   // 2b. Copy .claudeignore (context-budget ignore list)
@@ -141,6 +179,7 @@ export function copyTemplate(targetDir, selectedStacks) {
     } else {
       copyFileSync(ignoreSrc, ignoreDest);
       results.push({ file: '.claudeignore', status: 'copied' });
+      copiedPaths.push('.claudeignore');
     }
   }
 
@@ -154,6 +193,9 @@ export function copyTemplate(targetDir, selectedStacks) {
   } else {
     copyDirRecursive(claudeDirSrc, claudeDirDest, skipPaths);
     results.push({ file: '.claude/', status: 'copied' });
+    for (const rel of walkFiles(claudeDirDest)) {
+      copiedPaths.push(join('.claude', rel));
+    }
 
     const skippedStacks = ['express-api', 'prisma-patterns', 'react-frontend']
       .filter((s) => !selectedStacks.includes(s));
@@ -176,6 +218,12 @@ export function copyTemplate(targetDir, selectedStacks) {
   const gitignoreAdded = updateGitignore(targetDir);
   if (gitignoreAdded.length > 0) {
     results.push({ file: '.gitignore', status: 'updated', reason: `added ${gitignoreAdded.join(', ')}` });
+  }
+
+  // 5. Persist manifest of everything we just wrote
+  const tracked = persistManifest(targetDir, copiedPaths);
+  if (tracked) {
+    results.push({ file: MANIFEST_PATH, status: 'updated', reason: `${tracked} files tracked for future --update` });
   }
 
   return results;

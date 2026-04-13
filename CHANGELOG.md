@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-04-13
+
+### Changed
+
+- **BREAKING**: Skills restructured — `coding-principles` moved to `.claude/skills/core/coding-principles/`. Core-vs-stacks split is now reflected on disk, so downstream users can prune `stacks/` wholesale without touching universal behavioral rules.
+- **BREAKING**: Default agents moved to `examples/agents/` — they were Node/React/PostgreSQL-specific and contradicted the "any project" positioning. `.claude/agents/` is now empty by default with a README explaining how to copy them back.
+- README: dropped "production-ready" framing, restructured for action-first flow (install snippet first, principles up top, then directory tree).
+- `.claude/settings.json`: `PreToolUse` branch guard now blocks edits on both `main` AND `master`.
+- `coding-principles` SKILL: removed the `allowed-tools: Read, Grep, Glob` frontmatter (contradicted its purpose as a behavioral skill for code edits) and cut generic advice already covered by Claude's training. Now 47 lines.
+- `react-frontend` SKILL: fixed the incorrect "no Zustand unless > 5 contexts" rule (Context re-renders every consumer on every update — Zustand's selectors are the right tool for high-frequency shared state). Added a React 19 section (`use()`, `useActionState`, `useFormStatus`, Server Components boundary, React Compiler).
+- `.claude/commands/audit.md` and `test.md`: replaced hardcoded `backend/`, `frontend/`, `prisma/schema.prisma`, and `npm test -- --coverage` paths with configurable placeholder variables and stack-agnostic instructions.
+
+### Added
+
+- `.claude/hooks/session-start.sh` + `SessionStart` hook registration — injects branch, last commit, uncommitted changes, and TODO count at session start.
+- `.claude/hooks/bash-safety.sh` + `PreToolUse` Bash matcher — blocks `rm -rf /`, `rm -rf ~`, `git push --force`, `npm publish`, `mkfs.`, `dd if=`, fork-bomb, etc. Merged alongside the existing main-branch guard, not overwriting it.
+- MCP integration section in README (pointer + example `.mcp.json`, explanation of why it's not shipped by default).
+- `.claude/skills/core/README.md`, `.claude/skills/stacks/README.md`, and `.claude/agents/README.md` — each explains the directory's purpose and how to prune or extend it.
+
+### Removed
+
+- Default `.claude/agents/reviewer.md` and `.claude/agents/security-auditor.md` (moved to `examples/agents/` with a "Node.js/React/PostgreSQL example — edit for your stack" comment at the top).
+- Generic advice from `coding-principles` that duplicated Claude's training (e.g. "state assumptions", explicit scope section).
+- `allowed-tools` frontmatter from `coding-principles` and `react-frontend` SKILL files.
+
 ## [0.1.2] — 2026-04-13
 
 ### Changed
@@ -23,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `.claude/skills/coding-principles/SKILL.md` — stack-agnostic behavioral skill condensing Andrej Karpathy's four coding principles (think before coding, simplicity first, surgical changes, goal-driven execution) into actionable rules with concrete "senior engineer" tests. Adapted from [forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills). Triggers on every coding task and cross-references the stack-specific skills.
+- `.claude/skills/core/coding-principles/SKILL.md` — stack-agnostic behavioral skill condensing Andrej Karpathy's four coding principles (think before coding, simplicity first, surgical changes, goal-driven execution) into actionable rules with concrete "senior engineer" tests. Adapted from [forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills). Triggers on every coding task and cross-references the stack-specific skills.
 
 ## [0.1.0] — 2026-04-13
 
@@ -71,7 +96,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/felixhennequin-gif/claude-code-config-template/releases/tag/v0.1.0

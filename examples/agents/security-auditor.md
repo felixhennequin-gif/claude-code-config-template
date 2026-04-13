@@ -1,3 +1,4 @@
+<!-- Example agent for Node.js/React/PostgreSQL. Edit the system prompt for your stack. -->
 ---
 name: security-auditor
 description: Security-focused auditor. Use when checking auth flows, API security, dependencies, or before deploying to production.

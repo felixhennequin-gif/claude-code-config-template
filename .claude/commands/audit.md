@@ -3,32 +3,33 @@
 
 Run a full quality audit on the codebase. Combines code review, security check, and convention compliance.
 
+<!-- Configure these paths for your project -->
+<!-- BACKEND_DIR: backend/ -->
+<!-- FRONTEND_DIR: frontend/ -->
+<!-- SCHEMA_PATH: prisma/schema.prisma -->
+
+> Edit the paths above to match your project structure. The steps below reference them as placeholders.
+
 ## Steps
 
 1. **Security scan**
-   - Run `cd backend && npm audit --audit-level=high`
-   - Check for hardcoded secrets: `grep -r "password\|secret\|api_key\|token" --include="*.js" --include="*.ts" -l`
-   - Review JWT implementation in auth middleware
-   - Check CORS, Helmet, rate limiting config
+   - Run the project's dependency audit (e.g. `npm audit --audit-level=high`, `pip-audit`, `cargo audit`) inside `BACKEND_DIR`.
+   - Check for hardcoded secrets: grep for `password`, `secret`, `api_key`, `token` in source files.
+   - Review auth/JWT implementation in the auth middleware.
+   - Check CORS, security headers, and rate limiting config.
 
 2. **Code quality**
-   - Run `cd backend && npm run lint` — report errors
-   - Find files > 300 lines: `find backend/src -name "*.js" | xargs wc -l | sort -rn | head -20`
-   - Find controllers with Prisma imports (should be in services only)
-   - Check for `console.log` in non-test files
+   - Run the project's linter (check `package.json` scripts, `Makefile`, or CI config) and report errors.
+   - Find oversized files (e.g. source files > 300 lines) and flag candidates for extraction.
+   - Check that controllers/routes don't import data-layer code directly (should go through services).
+   - Check for debug output (`console.log`, `print`, `dbg!`) in non-test files.
 
 3. **Database**
-   - Review `prisma/schema.prisma` for missing indexes, missing `@updatedAt`, inconsistent naming
-   - Check for N+1 patterns: grep for `findUnique` inside loops
-   - Verify seed is idempotent (uses `upsert`)
+   - Review `SCHEMA_PATH` for missing indexes, missing timestamps, inconsistent naming.
+   - Check for N+1 patterns: find single-row queries inside loops.
+   - Verify seed/fixture scripts are idempotent.
 
-4. **Frontend**
-   - Find components > 200 lines
-   - Check for `useEffect` with missing dependencies
-   - Verify all images have alt text
-   - Check for hardcoded colors (should use CSS variables)
-
-5. **Report**
+4. **Report**
    - Output a summary table: category | issues found | severity
    - List each issue with file, line, fix suggestion
    - Propose GitHub issues for P0 and P1 items

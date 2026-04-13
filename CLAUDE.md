@@ -1,6 +1,6 @@
 # claude-code-config-template
 
-A public, reusable Claude Code configuration template for any project. The core — `template/CLAUDE.md`, hooks, agents, commands, rules, and the universal `coding-principles` skill — is stack-agnostic. Stack-specific conventions live under `.claude/skills/stacks/` and are optional: downstream users keep, prune, or replace them per project.
+An opinionated Claude Code starter template for any project. The core — `template/CLAUDE.md`, hooks, commands, rules, and the universal `coding-principles` skill under `.claude/skills/core/` — is stack-agnostic. Stack-specific conventions live under `.claude/skills/stacks/` and are optional. Default subagents ship as examples under `examples/agents/` (Node/React/PostgreSQL-flavored) — `.claude/agents/` is empty by default so it never ships stack assumptions downstream.
 
 This `CLAUDE.md` is **not** the downstream-facing template — it's the one Claude Code loads when working *on this repo*. The downstream template lives at [`template/CLAUDE.md`](./template/CLAUDE.md).
 
@@ -8,10 +8,12 @@ This `CLAUDE.md` is **not** the downstream-facing template — it's the one Clau
 
 - **`template/CLAUDE.md`** — the stack-agnostic placeholder project context users copy into their own projects
 - **`template/CLAUDE.local.md.example`** — the personal-override template users copy to `CLAUDE.local.md` (which is gitignored)
-- **`.claude/skills/coding-principles/`** — the one universal behavioral skill that ships with every install
+- **`.claude/skills/core/coding-principles/`** — the one universal behavioral skill that ships with every install
 - **`.claude/skills/stacks/`** — optional stack-specific skills (currently `prisma-patterns`, `express-api`, `react-frontend`); users delete the whole directory or keep a subset
-- **`.claude/` (rest)** — hooks, agents, commands, and rules, all stack-agnostic
+- **`.claude/` (rest)** — hooks (lint-on-edit, session-start, bash-safety), commands, and rules, all stack-agnostic
+- **`.claude/agents/`** — empty by default, just a README pointing to `examples/agents/`
 - **`examples/*.CLAUDE.md`** — stack-specific ready-to-adapt alternatives to `template/CLAUDE.md`
+- **`examples/agents/`** — Node/React/PostgreSQL-flavored subagents (`reviewer`, `security-auditor`) users copy into `.claude/agents/` and edit for their stack
 - **Community infra** — `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CHANGELOG.md`, `.github/` templates
 - **`RESEARCH.md`** — raw research data behind the template's design choices
 
@@ -24,18 +26,31 @@ template/
   CLAUDE.md                     # Downstream-facing blank template
   CLAUDE.local.md.example       # Tracked template for personal overrides
 .claude/
-  settings.json                 # PreToolUse main-branch guard + PostToolUse lint hook
-  agents/                       # reviewer, security-auditor
-  commands/                     # /audit, /deploy, /test
+  settings.json                 # SessionStart + PreToolUse (main/master guard, bash safety) + PostToolUse lint
+  agents/
+    README.md                   # Empty by default — pointer to examples/agents/
+  commands/                     # /audit, /deploy, /test (stack-agnostic, configurable paths)
   skills/
-    coding-principles/          # Universal behavioral skill (always copy)
-    stacks/                     # Optional: prisma-patterns, express-api, react-frontend
-  hooks/lint-on-edit.sh         # Stdin-parsing ESLint hook
+    core/
+      README.md                 # What "core" means
+      coding-principles/        # Universal behavioral skill (always copy)
+    stacks/
+      README.md                 # What "stacks" means
+      prisma-patterns/          # Optional
+      express-api/              # Optional
+      react-frontend/           # Optional
+  hooks/
+    lint-on-edit.sh             # Stdin-parsing ESLint hook (PostToolUse)
+    session-start.sh            # Injects git context (SessionStart)
+    bash-safety.sh              # Blocks destructive commands (PreToolUse Bash)
   rules/test-files.md           # Scoped rules for *.test.*, *.spec.*
 examples/
   README.md                     # Index + usage instructions
   express-api.CLAUDE.md         # Under 80 lines, concrete gotchas
   nextjs-fullstack.CLAUDE.md    # Under 80 lines, concrete gotchas
+  agents/
+    reviewer.md                 # Node/React/PostgreSQL example subagent
+    security-auditor.md         # Node/React/PostgreSQL example subagent
 .github/
   ISSUE_TEMPLATE/               # bug_report, feature_request, new_skill
   PULL_REQUEST_TEMPLATE.md
@@ -50,11 +65,15 @@ No build step, no package.json — every file is Markdown, JSON, or shell. Most 
 # Validate settings.json
 python3 -c "import json; json.load(open('.claude/settings.json'))"
 
-# Syntax-check the hook
-bash -n .claude/hooks/lint-on-edit.sh
+# Syntax-check hooks
+bash -n .claude/hooks/lint-on-edit.sh .claude/hooks/session-start.sh .claude/hooks/bash-safety.sh
 
-# Smoke-test the hook with a sample payload
+# Smoke-test the lint hook with a sample payload
 echo '{"tool_name":"Edit","tool_input":{"file_path":"/tmp/x.js"}}' | bash .claude/hooks/lint-on-edit.sh
+
+# Smoke-test bash-safety (should exit 2 on the dangerous one, 0 on the safe one)
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf /"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"ls -la"}}' | bash .claude/hooks/bash-safety.sh
 ```
 
 ## Conventions specific to this repo
@@ -66,7 +85,8 @@ echo '{"tool_name":"Edit","tool_input":{"file_path":"/tmp/x.js"}}' | bash .claud
 - **Keep `template/CLAUDE.md` under ~80 lines** and examples under ~80 lines — Claude Code drops context beyond that.
 - **Don't duplicate linters.** If ESLint / Prettier / the hook already enforces a rule, don't write it into a skill.
 - **Conventions across files must agree.** A contradiction between a skill and an agent is a bug (see past incident in `CHANGELOG.md` Unreleased: `reviewer` vs `express-api` on `try/catch`).
-- **Core vs. stacks/ split is load-bearing.** `coding-principles` and everything outside `.claude/skills/stacks/` must stay stack-agnostic so downstream users on any language can install them untouched. Anything Node/Python/Go/Rust-specific belongs under `.claude/skills/stacks/<name>/`.
+- **Core vs. stacks/ split is load-bearing.** `.claude/skills/core/` (currently just `coding-principles`) and everything outside `.claude/skills/stacks/` must stay stack-agnostic so downstream users on any language can install them untouched. Anything Node/Python/Go/Rust-specific belongs under `.claude/skills/stacks/<name>/` or — for subagents — `examples/agents/`.
+- **`.claude/agents/` is empty by default.** Stack-flavored subagents live under `examples/agents/` and must include a `<!-- Example agent for <stack>... -->` header comment. Don't re-add defaults to `.claude/agents/` without making them truly stack-agnostic.
 
 ## Git workflow
 
@@ -74,13 +94,14 @@ echo '{"tool_name":"Edit","tool_input":{"file_path":"/tmp/x.js"}}' | bash .claud
 - Feature work on `feat/xxx`, fixes on `fix/xxx`, docs on `docs/xxx`.
 - Conventional commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`.
 - One logical change per commit — don't bundle a skill addition with an unrelated hook fix.
-- The PreToolUse hook in `.claude/settings.json` blocks edits while on `main`. This repo uses `master`, so the guard is currently inert here but real for downstream users.
+- The PreToolUse hook in `.claude/settings.json` blocks edits while on `main` or `master`. Since this repo's default branch is `master`, **all structural work must happen on a `feat/`, `fix/`, or `docs/` branch** — the guard is live here, not just for downstream users.
 
 ## Gotchas
 
 - **`CLAUDE.local.md` is gitignored**, so it's absent from fresh clones. The downstream template users actually receive is `template/CLAUDE.local.md.example`. The install snippet in `README.md` must reflect this — don't regress it.
 - **`lint-on-edit.sh` parses its payload from stdin**, not env vars. Claude Code used to expose env vars, but no longer — the hook was fixed for this in commit `ca8ecf8`. If you refactor the hook, keep the stdin path.
-- **PreToolUse hook uses `git branch --show-current`** and short-circuits via `[ ... ] || { ...; exit 2; }`. A detached HEAD returns empty and passes the guard — intentional, don't "fix" it.
+- **PreToolUse main/master guard uses `git branch --show-current`** inside a `case` statement. A detached HEAD returns empty and passes the guard — intentional, don't "fix" it.
+- **`bash-safety.sh` must not be "improved" to block more patterns without testing.** `grep -qF` is literal-match by design — regex escapes like `\.` will be treated as literal backslash-dot and miss real matches. Add a smoke test in `CLAUDE.md` → "Working on this repo" before any pattern additions.
 - **Frontmatter in `.claude/rules/*.md` uses `globs:` (not `applyTo:`)** — this is the format Claude Code actually reads. Don't rename it.
 - **The repo's root `CLAUDE.md` is this file, not the downstream template.** Don't accidentally blank it out when editing the downstream template at `template/CLAUDE.md`.
 

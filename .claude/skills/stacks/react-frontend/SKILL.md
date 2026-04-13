@@ -1,7 +1,6 @@
 ---
 name: react-frontend
 description: React 19 + Vite + Tailwind v4 frontend conventions. Activates when working on components, pages, hooks, state management, or styling.
-allowed-tools: Read, Grep, Glob
 ---
 
 # React 19 + Vite + Tailwind v4 — Frontend conventions
@@ -11,14 +10,10 @@ allowed-tools: Read, Grep, Glob
 ```
 frontend/src/
 ├── pages/           # Page components (one per route)
-├── components/      # Reusable components
-│   ├── ui/          # Primitives (Button, Input, Modal, Avatar)
-│   └── [feature]/   # Feature-scoped components (user/, post/, ...)
+├── components/      # ui/ primitives + [feature]/ folders
 ├── hooks/           # Custom hooks
 ├── services/        # API calls (fetch wrapper)
 ├── contexts/        # React contexts (auth, theme)
-├── i18n/            # Translations
-├── utils/           # Pure helpers
 └── styles/          # Global CSS, Tailwind variables
 ```
 
@@ -31,62 +26,54 @@ frontend/src/
 
 ```jsx
 // GOOD
-function ItemCard({ item, onFavorite, isFavorited = false }) {
-  // ...
-}
+function ItemCard({ item, onFavorite, isFavorited = false }) { /* ... */ }
 
 // BAD — unstructured props, component doing too much
 function ItemCard(props) {
   const [data, setData] = useState(null);
-  useEffect(() => { fetch(`/api/items/${props.id}`)/* ... */; }, []);
-  // 300 lines...
+  useEffect(() => { fetch(`/api/items/${props.id}`); }, []);
 }
 ```
 
 ## Hooks
 
-- Prefix with `use`: `useItems`, `useAuth`, `useDebounce`.
-- One hook = one responsibility. `useItems` handles fetch + cache + error — not `useItemsAndAuthAndTheme`.
-- Return a named object, not an array (except for simple two-value hooks like `useState`).
+- Prefix with `use`. One hook = one responsibility.
+- Return a named object, not an array (except simple two-value hooks).
 
 ## State management
 
-- **React Context** for lightweight global state (auth, theme, i18n).
-- **No Redux / Zustand** unless global state becomes complex (> 5 contexts).
+- **React Context** for low-frequency state (theme, auth, locale). Context re-renders every consumer on every change — fine when changes are rare.
+- **Zustand** (or similar) for high-frequency shared state that updates often. Selectors avoid the Context re-render problem.
 - **Local state by default.** Lift only when necessary.
+
+## React 19
+
+- **`use()`** — unwrap promises and contexts conditionally. Replaces most `useEffect` + `useState` fetch patterns.
+- **`useActionState`** — wire forms to async actions, track pending/error state without manual `useState`.
+- **`useFormStatus`** — read parent form's pending state from a child submit button, no prop drilling.
+- **Server Components awareness** — even in a client-heavy Vite app, know the `"use client"` boundary. Eases any later migration to Next.js or React Router framework mode.
+- **React Compiler / React Forget** — when enabled, it auto-memoizes. Stop reaching for `useMemo`/`useCallback` preemptively; add them only when the profiler shows a need.
 
 ## Tailwind v4
 
 - Use the design system's CSS variables — no hardcoded values.
-- Utility classes inline in JSX. No per-component CSS files.
-- `cn()` or `clsx()` for conditional classes.
-- Dark mode via the `class` strategy (not `media`).
-- Responsive: mobile-first (`sm:`, `md:`, `lg:`).
+- Utility classes inline in JSX. `cn()` / `clsx()` for conditionals.
+- Dark mode via `class` strategy. Mobile-first responsive.
 
-## Forms
+## Forms & API
 
-- React Hook Form + Zod resolver.
-- Share the Zod schema between frontend and backend when possible.
-- Inline feedback on fields — no global alerts.
-
-## API calls
-
-- A centralized `fetch` wrapper in `services/api.js` handles JWT tokens automatically.
-- No direct `fetch` inside components — always go through a hook or a service.
+- React Hook Form + Zod resolver; share the Zod schema between frontend and backend when possible.
+- Centralized `fetch` wrapper in `services/api.js` — no direct `fetch` inside components.
 - Every call exposes loading + error states.
 
 ## Accessibility (minimum)
 
-- `aria-label` on icon-only buttons.
-- Focus trapping inside modals.
-- Sufficient contrast (check dark mode too).
-- Keyboard navigation on interactive elements.
+- `aria-label` on icon-only buttons, focus trapping in modals, sufficient contrast, keyboard nav.
 
 ## Anti-patterns
 
 - ❌ `useEffect` to derive state — use `useMemo` or compute during render
-- ❌ Props drilling deeper than 3 levels — use a Context
+- ❌ Props drilling deeper than 3 levels — use a Context or store
 - ❌ `index` as key in dynamic lists
-- ❌ Unused hook imports (dead code)
 - ❌ Components over 200 lines without extraction
 - ❌ `any` in TypeScript / JSDoc

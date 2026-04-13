@@ -1,3 +1,4 @@
+<!-- Example agent for Node.js/React/PostgreSQL. Edit the system prompt for your stack. -->
 ---
 name: reviewer
 description: Code review specialist. Use when reviewing PRs, auditing code quality, or before merging. Checks for bugs, security issues, conventions, and performance.

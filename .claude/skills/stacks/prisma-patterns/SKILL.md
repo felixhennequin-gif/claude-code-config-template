@@ -28,6 +28,7 @@ description: Prisma 7 conventions and patterns. Activates when working on the Pr
   const hasMore = items.length > limit;
   if (hasMore) items.pop();
   ```
+- **`typedSql`** (Prisma 7+) — for complex queries that don't fit the query builder, use `prisma.$queryRawTyped()` with `.sql` files in `prisma/sql/`. This gives type-safe raw SQL without string interpolation. Prefer this over `$queryRaw` with template literals.
 - **Transactions** for multi-model operations that must be atomic.
 
 ## Migrations
@@ -43,7 +44,7 @@ description: Prisma 7 conventions and patterns. Activates when working on the Pr
 
 ## Anti-patterns
 
-- ❌ `prisma.$queryRaw` except in exceptional cases (full-text search, SQL-specific functions)
+- ❌ `prisma.$queryRaw` with template literals — use typedSql (`$queryRawTyped` + `.sql` files) instead. Only fall back to `$queryRaw` for truly dynamic queries that can't be expressed as static SQL files.
 - ❌ `deleteMany()` without a `where` — always spell out the filter
 - ❌ Deeply nested writes (> 2 levels) — split into sequential transactions
 - ❌ Missing `@@index` on fields that are frequently filtered

@@ -89,9 +89,26 @@ bash -n .claude/hooks/lint-on-edit.sh .claude/hooks/session-start.sh .claude/hoo
 # Smoke-test the lint hook with a sample payload
 echo '{"tool_name":"Edit","tool_input":{"file_path":"/tmp/x.js"}}' | bash .claude/hooks/lint-on-edit.sh
 
-# Smoke-test bash-safety (should exit 2 on the dangerous one, 0 on the safe one)
+# Smoke-test bash-safety — every case below must produce the expected exit code.
+# Should PASS (exit 0) — routine dev commands that previously false-positived:
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ./dist"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ./node_modules"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf .cache"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"git push --force-with-lease origin main"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"npm publish --dry-run"}}' | bash .claude/hooks/bash-safety.sh
+
+# Should BLOCK (exit 2) — genuinely dangerous:
 echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf /"}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"ls -la"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ~"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ."}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"git push --force origin main"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"git push -f origin main"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"npm publish"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"dd if=/dev/zero of=/dev/sda"}}' | bash .claude/hooks/bash-safety.sh
+
+# Should BLOCK (exit 2) — fail-closed on unparseable input:
+echo 'not json at all' | bash .claude/hooks/bash-safety.sh
+echo '' | bash .claude/hooks/bash-safety.sh
 ```
 
 ## Conventions specific to this repo

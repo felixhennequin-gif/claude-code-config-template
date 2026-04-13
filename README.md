@@ -109,7 +109,7 @@ Missing your stack? Contributions for FastAPI, Django, Rails, Rust (axum), Larav
 6. **Hooks are token-free.** Block main, auto-format — deterministic, no model involvement.
 7. **Know your token budget.** Every skill costs tokens — see [docs/CONTEXT-BUDGET.md](docs/CONTEXT-BUDGET.md).
 
-See [docs/VALIDATION.md](docs/VALIDATION.md) for test results from real projects.
+See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fill it after testing on your own project.
 
 ## What's in this template
 

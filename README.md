@@ -123,9 +123,10 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for test results from real projects
 │   └── template-files/                    # Embedded copy of template files
 ├── template/
 │   ├── CLAUDE.md                          # Downstream project context (copy this)
-│   └── CLAUDE.local.md.example            # Personal overrides template
+│   ├── CLAUDE.local.md.example            # Personal overrides template
+│   └── .claudeignore                      # Ignore list (node_modules, dist, lockfiles, …)
 ├── .claude/
-│   ├── settings.json                      # Hooks config (branch guard, lint, session-start, bash-safety)
+│   ├── settings.json                      # Hooks + permissions (branch guard, bash-safety, lint, notification)
 │   ├── agents/
 │   │   └── README.md                      # Empty by default — see examples/agents/
 │   ├── commands/
@@ -149,7 +150,8 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for test results from real projects
 │       ├── test-files.md                  # Rules specific to test files
 │       └── banned-patterns.md             # Universal + JS/TS + Python anti-patterns
 ├── docs/
-│   └── CONTEXT-BUDGET.md                  # Token estimates and budget profiles
+│   ├── CONTEXT-BUDGET.md                  # Token estimates and budget profiles
+│   └── VALIDATION.md                      # Real-world test results (template)
 ├── examples/
 │   ├── agents/
 │   │   ├── reviewer.md                    # Example: Node.js code reviewer

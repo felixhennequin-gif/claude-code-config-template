@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `SECURITY.md` — vulnerability reporting policy
+- `CODE_OF_CONDUCT.md` — Contributor Covenant v2.1
+- `CHANGELOG.md` — this file
+- `.github/ISSUE_TEMPLATE/{bug_report,feature_request,new_skill}.md`
+- `.github/PULL_REQUEST_TEMPLATE.md`
+- `.github/FUNDING.yml`
+- `examples/express-api.CLAUDE.md` — generic Express 5 + Prisma REST API template
+- `examples/nextjs-fullstack.CLAUDE.md` — generic Next.js 15 + Prisma + Tailwind template
+- `examples/README.md` — index and contribution notes for examples
+- `CLAUDE.local.md.example` — tracked template that clones actually receive
+- README "Contributing" and "Community" section
+
+### Changed
+
+- `reviewer` agent no longer asks for per-controller `try/catch` — aligned with the `express-api` skill, which forbids it under Express 5
+- `security-auditor` agent no longer hardcodes PM2 — it now follows the process-manager choice from `CLAUDE.md`
+- README structure tree now lists `examples/`, `CHANGELOG.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, and `.github/`
+- Install snippet now copies `CLAUDE.local.md.example` (the previous instructions copied a gitignored file that was absent from fresh clones)
+- `CODE_OF_CONDUCT.md` enforcement contact filled in (was `[INSERT CONTACT METHOD]`)
+
 ## [0.1.0] — 2026-04-13
 
 Initial release of the template.

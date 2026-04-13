@@ -131,7 +131,8 @@ Missing your stack? Contributions for FastAPI, Django, Rails, Rust (axum), Larav
 │   │   └── test.md                        # /test — run tests + coverage
 │   ├── skills/
 │   │   ├── core/
-│   │   │   └── coding-principles/SKILL.md # Universal behavioral rules
+│   │   │   ├── coding-principles/SKILL.md # Universal behavioral rules
+│   │   │   └── debugging/SKILL.md         # Structured debugging workflow
 │   │   └── stacks/                        # Optional — delete what you don't use
 │   │       ├── prisma-patterns/SKILL.md   # Prisma 7 conventions
 │   │       ├── express-api/SKILL.md       # Express 5 patterns

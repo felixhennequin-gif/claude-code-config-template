@@ -34,6 +34,7 @@ template/
     core/
       README.md                 # What "core" means
       coding-principles/        # Universal behavioral skill (always copy)
+      debugging/                # Structured debugging workflow (always copy)
     stacks/
       README.md                 # What "stacks" means
       prisma-patterns/          # Optional

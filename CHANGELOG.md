@@ -11,17 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-- `bash-safety.sh`: replaced literal-substring matching with surgical regex so `rm -rf ./dist`, `git push --force-with-lease`, and `npm publish --dry-run` no longer false-positive. Hook now fails closed on empty/unparseable stdin instead of silently passing.
-- `.claude/settings.json`: stripped Node-specific entries from `permissions.allow` and the redundant `Bash(rm -rf:*)` deny entry. Template now ships truly stack-agnostic permissions. README documents how to add stack-specific entries; the CLI injects them automatically based on selected stacks.
-
-### Removed
-- `fastapi-backend` skill (`.claude/skills/stacks/fastapi-backend/`) — quality was below the template bar (0 code examples, missing modern patterns like `lifespan` and `Annotated[]` DI). Kept `examples/fastapi-backend.CLAUDE.md` as a reference; contributions welcome for a rewrite that matches the Express/React skills.
+## [0.6.0] — 2026-04-13
 
 ### Added
 - `.claude/skills/core/debugging/SKILL.md` — second core behavioral skill enforcing a structured debugging workflow (reproduce → read → trace → one-change → three-strike rule). Activates on bugs, errors, and failed test investigations.
 - `.claude/hooks/notification.sh` + `Notification` event registration — desktop notification when Claude needs attention during long autonomous tasks. Cross-platform (notify-send / osascript / silent fallback).
 - `template/.claudeignore` — stack-agnostic ignore list for `node_modules`, build output, lockfiles, and other noise. The single highest-ROI token-saving measure. The CLI now copies it alongside `CLAUDE.md`.
+- `docs/VALIDATION.md` — placeholder for real-world validation results (token deltas, hook catches, skill activations) to replace credibility-by-claim with credibility-by-measurement.
+- CI: "Check CLI template sync" step in `.github/workflows/lint.yml` — runs `cli/sync-templates.sh` and fails if `cli/template-files/` drifts from source. Prevents silent CLI/template divergence.
+- `prisma-patterns`: `typedSql` guidance (Prisma 7+) — prefer `$queryRawTyped()` with `.sql` files over `$queryRaw` template literals for type-safe raw SQL.
+
+### Changed
+- `.claude/rules/test-files.md`: replaced hardcoded Vitest/Supertest/Testing Library framework list with stack-agnostic guidance ("use the project's existing runner — check `package.json`/`Makefile`/`pyproject.toml`"). Test conventions now ship unchanged for Python, Go, Rust, etc.
+- `react-frontend`: React Compiler bullet is now conditional on detecting `babel-plugin-react-compiler` or the Vite `reactCompiler` plugin, instead of recommending it unconditionally (it's still experimental in React 19).
+- `docs/CONTEXT-BUDGET.md`: replaced the unverifiable "How to measure" section with "How to estimate" — three concrete techniques (file size × 0.25, `wc -w`, ccusage before/after) the user can actually run. Added `.claudeignore` ROI callout.
+- `RESEARCH.md`: dropped the "~55 repos" framing throughout and added a collapsible list of the 15 actually-verified repos. Credibility now matches evidence.
+- `README.md`: directory tree updated for `.claudeignore`, `VALIDATION.md`, and the `Notification` event. Permissions table documents the stack-agnostic default and how the CLI injects stack permissions.
+- `CHANGELOG.md`: added sprint-velocity note explaining that v0.1.0–v0.5.0 were logical stages of a single-day initial build, not separate calendar releases.
+
+### Removed
+- `fastapi-backend` skill (`.claude/skills/stacks/fastapi-backend/`) — quality was below the template bar (0 code examples, missing modern patterns like `lifespan` and `Annotated[]` DI). Kept `examples/fastapi-backend.CLAUDE.md` as a reference; contributions welcome for a rewrite that matches the Express/React skills.
+
+### Fixed
+- `bash-safety.sh`: replaced literal-substring matching with surgical regex so `rm -rf ./dist`, `git push --force-with-lease`, and `npm publish --dry-run` no longer false-positive. Hook now fails closed on empty/unparseable stdin instead of silently passing.
+- `.claude/settings.json`: stripped Node-specific entries from `permissions.allow` and the redundant `Bash(rm -rf:*)` deny entry. Template now ships truly stack-agnostic permissions. README documents how to add stack-specific entries; the CLI injects them automatically based on selected stacks.
 
 ## [0.5.0] — 2026-04-13
 
@@ -172,7 +185,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.2.0...v0.3.0

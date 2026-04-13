@@ -25,6 +25,7 @@ README.md                       # User-facing landing page
 template/
   CLAUDE.md                     # Downstream-facing blank template
   CLAUDE.local.md.example       # Tracked template for personal overrides
+  .claudeignore                 # Ignore list (node_modules, dist, lockfiles, etc.)
 .claude/
   settings.json                 # SessionStart + PreToolUse (main/master guard, bash safety) + PostToolUse lint
   agents/

@@ -17,6 +17,7 @@ mkdir -p "$TARGET/claude"
 # Copy root templates
 cp "$REPO_ROOT/template/CLAUDE.md" "$TARGET/CLAUDE.md"
 cp "$REPO_ROOT/template/CLAUDE.local.md.example" "$TARGET/CLAUDE.local.md.example"
+cp "$REPO_ROOT/template/.claudeignore" "$TARGET/.claudeignore"
 
 # Copy .claude/ contents (without dot prefix)
 cp -r "$REPO_ROOT/.claude/"* "$TARGET/claude/"

@@ -132,6 +132,18 @@ export function copyTemplate(targetDir, selectedStacks) {
     results.push({ file: 'CLAUDE.local.md', status: 'copied' });
   }
 
+  // 2b. Copy .claudeignore (context-budget ignore list)
+  const ignoreSrc = join(TEMPLATE_DIR, '.claudeignore');
+  const ignoreDest = join(targetDir, '.claudeignore');
+  if (existsSync(ignoreSrc)) {
+    if (existsSync(ignoreDest)) {
+      results.push({ file: '.claudeignore', status: 'skipped', reason: 'already exists' });
+    } else {
+      copyFileSync(ignoreSrc, ignoreDest);
+      results.push({ file: '.claudeignore', status: 'copied' });
+    }
+  }
+
   // 3. Copy .claude/ directory (with dot prefix), skipping unselected stacks
   const claudeDirSrc = join(TEMPLATE_DIR, 'claude');
   const claudeDirDest = join(targetDir, '.claude');

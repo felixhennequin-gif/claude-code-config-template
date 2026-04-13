@@ -2,6 +2,10 @@
 
 Every file in `.claude/` costs tokens. Here's how to keep the cost under control.
 
+## Highest-ROI move: ship a `.claudeignore`
+
+Before you start pruning skills, ship `template/.claudeignore` into your project root. Without it, Claude will happily pull `node_modules/`, `dist/`, `package-lock.json`, coverage reports, and minified bundles into context — easily tens of thousands of tokens of noise per session. A one-file ignore list saves more tokens than pruning every optional skill combined. This is the single highest-ROI token-saving measure in this template.
+
 ## Estimated token costs
 
 | Component | Approx. tokens | Loaded when |

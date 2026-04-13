@@ -47,6 +47,7 @@ cd /tmp/ai-template
 
 cp template/CLAUDE.md your-project/CLAUDE.md
 cp template/CLAUDE.local.md.example your-project/CLAUDE.local.md
+cp template/.claudeignore your-project/.claudeignore
 cp -r .claude your-project/.claude
 
 echo "CLAUDE.local.md" >> your-project/.gitignore

@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `.claude/commands/wrap.md` — `/wrap` slash command for end-of-session CLAUDE.md updates. Summarizes git diff, updates only changed sections, proposes a commit. Replaces the missing SessionEnd hook.
+
 ## [0.8.0] — 2026-04-13
 
 ### Added

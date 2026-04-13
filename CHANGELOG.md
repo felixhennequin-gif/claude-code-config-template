@@ -15,18 +15,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.github/ISSUE_TEMPLATE/{bug_report,feature_request,new_skill}.md`
 - `.github/PULL_REQUEST_TEMPLATE.md`
 - `.github/FUNDING.yml`
+- `.github/workflows/lint.yml` — CI: `settings.json` JSON validation, `shellcheck` on hooks, frontmatter field check on skills / agents / rules, and a baseline secret scan (IPv4, secret-looking env assignments, PEM headers)
 - `examples/express-api.CLAUDE.md` — generic Express 5 + Prisma REST API template
 - `examples/nextjs-fullstack.CLAUDE.md` — generic Next.js 15 + Prisma + Tailwind template
 - `examples/README.md` — index and contribution notes for examples
-- `CLAUDE.local.md.example` — tracked template that clones actually receive
+- `template/CLAUDE.local.md.example` — tracked personal-override template that clones actually receive
+- Root `CLAUDE.md` describing this template repo itself (separate from the downstream-facing template copied into user projects)
 - README "Contributing" and "Community" section
 
 ### Changed
 
 - `reviewer` agent no longer asks for per-controller `try/catch` — aligned with the `express-api` skill, which forbids it under Express 5
 - `security-auditor` agent no longer hardcodes PM2 — it now follows the process-manager choice from `CLAUDE.md`
-- README structure tree now lists `examples/`, `CHANGELOG.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, and `.github/`
-- Install snippet now copies `CLAUDE.local.md.example` (the previous instructions copied a gitignored file that was absent from fresh clones)
+- Downstream-facing `CLAUDE.md` template moved from repo root to `template/CLAUDE.md` so the root `CLAUDE.md` can describe the template repo itself
+- `CLAUDE.local.md.example` moved to `template/CLAUDE.local.md.example` to sit alongside the downstream template
+- README structure tree now lists `template/`, `examples/`, `CHANGELOG.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, and `.github/`
+- README structure tree no longer lists `.claude/settings.local.json` — it's gitignored and never ships with the template
+- Install snippet now copies `template/CLAUDE.local.md.example` (the previous instructions copied a gitignored file that was absent from fresh clones)
+- `CONTRIBUTING.md` example length budget aligned with `examples/README.md` (~80 lines, matching the downstream `CLAUDE.md` budget)
 - `CODE_OF_CONDUCT.md` enforcement contact filled in (was `[INSERT CONTACT METHOD]`)
 
 ## [0.1.0] — 2026-04-13

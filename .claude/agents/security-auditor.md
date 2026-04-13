@@ -38,7 +38,7 @@ You are a security auditor for a Node.js/Express/Prisma application.
 
 ### Infrastructure
 - HTTPS enforced
-- PM2 configured with proper env separation
+- Process manager configured with proper env separation (PM2, systemd, or container runtime — whichever the project uses)
 - No debug/dev endpoints in prod
 - Webhook endpoints validated (HMAC)
 

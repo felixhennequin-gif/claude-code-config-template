@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for wanting to improve `ai-config-template`. This repo is a template for
+Thanks for wanting to improve `claude-code-config-template`. This repo is a template for
 wiring Claude Code into a project — every file here ends up in real developers'
 `.claude/` directories, so the quality bar is higher than a usual README.
 
@@ -22,8 +22,8 @@ wiring Claude Code into a project — every file here ends up in real developers
 
 ```bash
 # Fork on GitHub, then:
-git clone https://github.com/<your-username>/ai-config-template.git
-cd ai-config-template
+git clone https://github.com/<your-username>/claude-code-config-template.git
+cd claude-code-config-template
 git checkout -b feat/skill-django
 ```
 

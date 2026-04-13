@@ -1,4 +1,4 @@
-# ai-config-template
+# claude-code-config-template
 
 AI architecture template for Node.js / React / PostgreSQL projects.
 
@@ -84,7 +84,7 @@ Research based on analysis of: Supabase (supabase-js), Bitwarden (server, androi
 
 Contributions are welcome — new skills, rules, hooks, or fixes to existing ones. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the workflow, file conventions, and how to test changes with Claude Code.
 
-Questions, bug reports, and ideas belong in [GitHub Issues](https://github.com/felixhennequin-gif/ai-config-template/issues). Open-ended discussions go in [Discussions](https://github.com/felixhennequin-gif/ai-config-template/discussions).
+Questions, bug reports, and ideas belong in [GitHub Issues](https://github.com/felixhennequin-gif/claude-code-config-template/issues). Open-ended discussions go in [Discussions](https://github.com/felixhennequin-gif/claude-code-config-template/discussions).
 
 ## License
 

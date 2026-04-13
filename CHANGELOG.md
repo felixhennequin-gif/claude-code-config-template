@@ -35,5 +35,5 @@ Initial release of the template.
 - Hooks now parse their payload from stdin instead of a missing env var
 - `/deploy` command no longer hardcodes a specific server
 
-[Unreleased]: https://github.com/felixhennequin-gif/ai-config-template/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/felixhennequin-gif/ai-config-template/releases/tag/v0.1.0
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/felixhennequin-gif/claude-code-config-template/releases/tag/v0.1.0

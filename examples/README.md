@@ -26,7 +26,9 @@ Then:
 
 ## Contributing a new example
 
-See [`CONTRIBUTING.md`](../CONTRIBUTING.md). In short:
+**New-stack examples are especially welcome.** Right now this directory only covers Node.js-flavored stacks (Express, Next.js). Examples for Python (Django, FastAPI, Flask), Ruby on Rails, Go (chi, gin, echo), Rust (axum, actix), Laravel, Phoenix, Spring Boot, SvelteKit, Astro, and anything else would immediately help people installing the template on a non-Node project. Open a PR — see [`CONTRIBUTING.md`](../CONTRIBUTING.md) for the full workflow.
+
+In short:
 
 - Anonymize everything — no real IPs, domains, hostnames, personal names, or business data.
 - Keep it under ~80 lines.

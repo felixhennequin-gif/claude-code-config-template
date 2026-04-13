@@ -22,6 +22,15 @@ jobs:
       - name: Shellcheck hook scripts
         run: shellcheck -S error .claude/hooks/*.sh
 
+      - name: Check CLI template sync
+        run: |
+          bash cli/sync-templates.sh
+          if ! git diff --quiet cli/template-files/; then
+            echo "::error::CLI template files are out of sync. Run 'bash cli/sync-templates.sh' and commit."
+            git diff --stat cli/template-files/
+            exit 1
+          fi
+
       - name: Validate frontmatter
         run: |
           set -euo pipefail

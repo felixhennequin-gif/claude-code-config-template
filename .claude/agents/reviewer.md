@@ -27,7 +27,7 @@ You are a thorough code reviewer for a Node.js/React/PostgreSQL project.
 ### Code quality
 - [ ] Controllers are thin — logic lives in services
 - [ ] No duplicated code across controllers
-- [ ] Error handling consistent (try/catch with proper HTTP status codes)
+- [ ] Errors are thrown (not caught per-controller) and formatted by the central error middleware
 - [ ] No unused imports or dead code
 - [ ] Conventional commit messages
 

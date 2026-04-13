@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Template repositioned as stack-agnostic.** README one-liner now describes the project as "Production-ready AI config template for Claude Code — agents, skills, hooks, and commands for any project." instead of "Node.js / React / PostgreSQL".
+- `template/CLAUDE.md` rewritten with stack placeholders (`[your language]`, `[your framework]`, etc.) so it's fillable for Node, Python, Go, Rust, Ruby, PHP, JVM, or anything else. Section structure (Stack, Structure, Commands, Conventions, Git workflow, Gotchas, References) is unchanged — only the Node/Express/Prisma/React anchors were removed.
+- `.claude/skills/` reorganized: universal skills stay at the top level (`coding-principles/`), stack-specific skills moved under `.claude/skills/stacks/` (`prisma-patterns/`, `express-api/`, `react-frontend/`). Downstream users can delete `stacks/` wholesale or prune individually. History preserved via `git mv`.
+- Install snippet split into "Quick start — core (always)" and "Add stack skills (optional)". README now lists the available stack skills in a table with their trigger conditions and links to each `SKILL.md`.
+- Root `CLAUDE.md` now describes the core-vs-stacks split as a load-bearing repo convention so future contributions don't leak stack-specific content back into the core.
+- `examples/README.md` explicitly invites examples for Python, Ruby, Go, Rust, PHP, JVM, and alt-JS frameworks — the only examples that currently ship are Node-flavored (Express, Next.js).
+- Path references updated in `coding-principles/SKILL.md` and `.github/ISSUE_TEMPLATE/bug_report.md` to match the new `skills/stacks/` layout.
+
 ## [0.1.1] — 2026-04-13
 
 ### Added

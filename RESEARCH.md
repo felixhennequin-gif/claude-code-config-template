@@ -1,6 +1,6 @@
 # Research notes
 
-What we learned from analyzing ~55 open-source Claude Code configurations. This is not a comprehensive survey — it's the patterns and anti-patterns that shaped this template's design.
+What we learned from analyzing notable open-source Claude Code configurations. This is not a comprehensive survey — it's the patterns and anti-patterns that shaped this template's design.
 
 ## Key findings
 
@@ -36,7 +36,7 @@ Repos that mixed "use Prisma's `include` for eager loading" next to "keep functi
 
 ### 6. Most repos don't survive 3 months
 
-Of the 55 repos analyzed, ~40 had no commits in the last 30 days. The ones that survived were either backed by a company (Supabase, Cloudflare) or had a CLI/automation layer that made updates easy. Pure-template repos rot fast.
+The majority of community template repos we looked at had no commits in the last 30 days. The ones that survived were either backed by a company (Supabase, Cloudflare) or had a CLI/automation layer that made updates easy. Pure-template repos rot fast.
 
 **Template decision:** Keep the template small and opinionated. Don't try to cover every stack — cover the pattern well and let users adapt.
 
@@ -60,4 +60,30 @@ The repos that most influenced this template's design:
 | ChrisWiles/claude-code-showcase | Hook patterns, SessionStart idea |
 | Vercel (agent-skills) | Skill organization, naming conventions |
 
-Full list of 55 repos analyzed available on request. We chose not to publish the full table because star counts and repo names change fast — the patterns above are what matter.
+## Repos that most directly shaped the template
+
+<details>
+<summary>Click to expand — organized by category. Not all repos are still active or still have a <code>.claude/</code> directory.</summary>
+
+**Company-backed projects**
+- supabase/supabase-js
+- anthropics/claude-code-action
+- cloudflare/workers-sdk (and other Cloudflare repos shipping skills)
+- bitwarden/server
+- bitwarden/android
+- bitwarden/ai-plugins
+- vercel/next-devtools-mcp
+- vercel/agent-skills
+- openai/openai-agents-python
+
+**Community templates & tools**
+- ChrisWiles/claude-code-showcase
+- davila7/claude-code-templates
+- abhishekray07/claude-md-templates
+- serpro69/claude-toolbox
+- midudev/autoskills
+- forrestchang/andrej-karpathy-skills
+
+</details>
+
+Individual project configs found via GitHub search for `CLAUDE.md` + `.claude/` also informed the anti-patterns list, but aren't enumerated here — we'd rather be honest than pad the list with repos we can no longer verify. If you know a config that deserves a mention, open an issue or PR.

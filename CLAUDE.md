@@ -146,7 +146,7 @@ echo '' | bash .claude/hooks/bash-safety.sh
 ## References
 
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — what the quality bar is for skills, agents, commands, examples
-- [`RESEARCH.md`](./RESEARCH.md) — findings from analyzing ~55 Claude Code configs (rewritten in v0.3.0 to focus on conclusions instead of raw repo lists)
+- [`RESEARCH.md`](./RESEARCH.md) — findings from analyzing notable Claude Code configs (rewritten in v0.3.0 to focus on conclusions instead of raw repo lists; repo list added in the Unreleased phase-2 docs pass)
 - [`docs/CONTEXT-BUDGET.md`](./docs/CONTEXT-BUDGET.md) — per-component token estimates and budget profiles for pruning skills
 - [`CHANGELOG.md`](./CHANGELOG.md) — what changed, including the `[Unreleased]` section for in-flight work
 - [Claude Code docs](https://docs.claude.com/en/docs/claude-code) — upstream source of truth for hook/settings/agent syntax

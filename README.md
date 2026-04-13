@@ -6,7 +6,7 @@ Opinionated starter template for Claude Code — agents, skills, hooks, and comm
 
 Core files (CLAUDE.md, hooks, commands, the `coding-principles` skill) are stack-agnostic and ship with every install. Stack-specific conventions live under `.claude/skills/stacks/` and can be kept, pruned, or replaced individually.
 
-Based on analysis of ~55 open-source repos (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI) — see [the full research](./RESEARCH.md).
+Based on analysis of notable open-source Claude Code configurations (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI, and others) — see [the full research](./RESEARCH.md).
 
 ## Why
 
@@ -198,7 +198,7 @@ See [Anthropic MCP docs](https://docs.anthropic.com/en/docs/claude-code/mcp) for
 
 ## Credits
 
-Research based on analysis of: Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 official skills), OpenAI (openai-agents-python), and ~45 other open-source projects.
+Research based on analysis of: Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 official skills), OpenAI (openai-agents-python), and other notable community templates (see [RESEARCH.md](./RESEARCH.md) for the full list).
 
 ## Compared to alternatives
 

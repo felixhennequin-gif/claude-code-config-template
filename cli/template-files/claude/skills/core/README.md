@@ -6,3 +6,4 @@ They load automatically — do not delete them unless you have a specific reason
 Currently:
 - `coding-principles` — behavioral rules for any code change (think-before-coding, simplicity, surgical edits, goal-driven execution)
 - `debugging` — structured debugging workflow (reproduce → read → trace → one-change → three-strike rule)
+- `error-handling` — universal error handling patterns (fail loudly, fix at root, typed errors)

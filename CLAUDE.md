@@ -1,17 +1,17 @@
-# [Nom du projet]
+# [Project name]
 
-[Description one-liner du projet.]
+[One-liner project description.]
 
 ## Stack
 
 - **Backend**: Node.js / Express 5 / Prisma 7 / PostgreSQL / Redis
 - **Frontend**: React 19 / Vite / Tailwind v4
-- **Infra**: PM2, GitHub Actions CI/CD
+- **Infra**: [process manager — PM2 / systemd / Docker], GitHub Actions CI/CD
 
 ## Structure
 
 ```
-backend/     → API REST (controllers/, services/, middleware/, prisma/)
+backend/     → REST API (controllers/, services/, middleware/, prisma/)
 frontend/    → React SPA (pages/, components/, hooks/, i18n/)
 ```
 
@@ -22,35 +22,35 @@ cd backend && npm run dev       # Backend dev (nodemon)
 cd backend && npm test          # Tests (Vitest)
 cd backend && npm run lint      # ESLint
 cd frontend && npm run dev      # Frontend dev (Vite)
-cd frontend && npm run build    # Build prod
+cd frontend && npm run build    # Production build
 ```
 
 ## Conventions
 
-- Conventional commits : `feat:`, `fix:`, `chore:`, `docs:`
-- TypeScript-style JSDoc sur les fonctions publiques
-- Controllers minces → logique dans `services/`
-- Toute route auth via middleware JWT
-- Validation Zod sur chaque endpoint
-- Pas de `console.log` en prod — utiliser le logger
+- Conventional commits: `feat:`, `fix:`, `chore:`, `docs:`
+- JSDoc on public functions
+- Thin controllers → logic lives in `services/`
+- Every authenticated route goes through the JWT middleware
+- Zod validation on every endpoint
+- No `console.log` in production — use the logger
 
 ## Git workflow
 
-- `main` = prod (protégée, merge via PR uniquement)
-- `dev` = intégration
-- Branches : `feat/xxx`, `fix/xxx`
-- PR obligatoire avec description
+- `main` = production (protected, PR-only merges)
+- `dev` = integration
+- Branches: `feat/xxx`, `fix/xxx`
+- PR required with a description
 
 ## Gotchas
 
-<!-- Les pièges spécifiques à ton projet — section la plus high-value -->
-<!-- Exemples : -->
-<!-- - Le seed nécessite une DB vide, sinon erreur de contrainte unique -->
-<!-- - Le .env n'est pas copié par le script de deploy -->
-<!-- - Express 5 ne supporte pas app.del(), utiliser app.delete() -->
+<!-- Project-specific pitfalls — the highest-value section -->
+<!-- Examples: -->
+<!-- - Seed requires an empty DB, otherwise unique constraint error -->
+<!-- - .env is not copied by the deploy script -->
+<!-- - Express 5 dropped app.del(), use app.delete() -->
 
-## Références
+## References
 
-- Voir `CONTRIBUTING.md` pour le workflow de contribution
-- Voir `prisma/schema.prisma` pour le modèle de données
-- Voir `.claude/skills/` pour les conventions détaillées par domaine
+- See `CONTRIBUTING.md` for the contribution workflow
+- See `prisma/schema.prisma` for the data model
+- See `.claude/skills/` for per-domain conventions

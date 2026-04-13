@@ -1,103 +1,88 @@
 # ai-config-template
 
-Template d'architecture IA pour projets Node.js/React/PostgreSQL.
+AI architecture template for Node.js / React / PostgreSQL projects.
 
-Basé sur l'analyse de ~55 repos open-source (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI) — voir [la recherche complète](https://github.com/felixhennequin-gif/ai-config-template/blob/main/RESEARCH.md).
+Based on analysis of ~55 open-source repos (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI) — see [the full research](./RESEARCH.md).
 
-## Pourquoi
+## Why
 
-Claude Code lit automatiquement les fichiers `CLAUDE.md` et `.claude/` au démarrage de chaque session. Sans ça, tu perds 15 minutes à re-contextualiser. Avec, Claude connaît ta stack, tes conventions, tes commandes, et tes pièges dès le premier message.
+Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every session. Without them, you waste 15 minutes re-contextualizing. With them, Claude knows your stack, conventions, commands, and gotchas from the first message.
 
-## Ce que contient ce template
+## What's in this template
 
 ```
 .
-├── CLAUDE.md                         # Contexte projet (le seul fichier obligatoire)
-├── CLAUDE.local.md                   # Overrides perso (gitignored)
+├── CLAUDE.md                         # Project context (the only required file)
+├── CLAUDE.local.md                   # Personal overrides (gitignored)
 ├── .claude/
-│   ├── settings.json                 # Hooks déterministes (block main, auto-lint)
-│   ├── settings.local.json           # Overrides perso (gitignored)
+│   ├── settings.json                 # Deterministic hooks (block main, auto-lint)
+│   ├── settings.local.json           # Personal overrides (gitignored)
 │   ├── agents/
-│   │   ├── reviewer.md               # Review de code automatisée
-│   │   └── security-auditor.md       # Audit sécurité ciblé
+│   │   ├── reviewer.md               # Automated code review
+│   │   └── security-auditor.md       # Targeted security audit
 │   ├── commands/
-│   │   ├── deploy.md                 # /deploy — workflow de déploiement
-│   │   ├── audit.md                  # /audit — audit qualité complet
-│   │   └── test.md                   # /test — lance les tests + coverage
+│   │   ├── deploy.md                 # /deploy — deployment workflow
+│   │   ├── audit.md                  # /audit — full quality audit
+│   │   └── test.md                   # /test — run tests + coverage
 │   ├── skills/
-│   │   ├── prisma-patterns/SKILL.md  # Conventions Prisma 7
-│   │   ├── express-api/SKILL.md      # Patterns Express 5
-│   │   └── react-frontend/SKILL.md   # Patterns React 19 + Tailwind v4
+│   │   ├── prisma-patterns/SKILL.md  # Prisma 7 conventions
+│   │   ├── express-api/SKILL.md      # Express 5 patterns
+│   │   └── react-frontend/SKILL.md   # React 19 + Tailwind v4 patterns
 │   ├── hooks/
-│   │   └── lint-on-edit.sh           # Auto-lint après chaque édition
+│   │   └── lint-on-edit.sh           # Auto-lint after every edit
 │   └── rules/
-│       └── test-files.md             # Règles spécifiques aux fichiers de test
-├── examples/
-│   ├── ecume.CLAUDE.md               # Exemple adapté à Écume (cocktail-app)
-│   └── lecabanon.CLAUDE.md           # Exemple adapté à LeCabanon
-└── RESEARCH.md                       # Données brutes de la recherche
+│       └── test-files.md             # Rules specific to test files
+├── examples/                         # Reference CLAUDE.md files for real projects
+└── RESEARCH.md                       # Raw research data
 ```
 
 ## Installation
 
-### Pour un nouveau projet
-
 ```bash
-# Clone le template
-git clone https://github.com/felixhennequin-gif/ai-config-template.git /tmp/ai-template
+# Clone this template somewhere
+git clone <this-repo-url> /tmp/ai-template
 
-# Copie dans ton projet
-cp /tmp/ai-template/CLAUDE.md ton-projet/CLAUDE.md
-cp -r /tmp/ai-template/.claude ton-projet/.claude
-cp /tmp/ai-template/CLAUDE.local.md ton-projet/CLAUDE.local.md
+# Copy into your project
+cp /tmp/ai-template/CLAUDE.md your-project/CLAUDE.md
+cp -r /tmp/ai-template/.claude your-project/.claude
+cp /tmp/ai-template/CLAUDE.local.md your-project/CLAUDE.local.md
 
-# Ajoute au .gitignore
-echo "CLAUDE.local.md" >> ton-projet/.gitignore
-echo ".claude/settings.local.json" >> ton-projet/.gitignore
+# Ignore personal files
+echo "CLAUDE.local.md" >> your-project/.gitignore
+echo ".claude/settings.local.json" >> your-project/.gitignore
 
-# Édite CLAUDE.md avec les infos de ton projet
+# Edit CLAUDE.md with your project info
 ```
 
-### Pour Écume ou LeCabanon
+The `examples/` folder contains filled-in `CLAUDE.md` files from real projects you can read for inspiration.
 
-```bash
-cp examples/ecume.CLAUDE.md cocktail-app/CLAUDE.md
-cp -r .claude cocktail-app/.claude
+## Optional: global config
 
-cp examples/lecabanon.CLAUDE.md LeCabanon/CLAUDE.md
-cp -r .claude LeCabanon/.claude
-```
-
-Puis adapte les commandes et la structure dans chaque CLAUDE.md.
-
-## Config globale (optionnel)
-
-Crée `~/.claude/CLAUDE.md` pour tes préférences cross-projets :
+Create `~/.claude/CLAUDE.md` for cross-project preferences:
 
 ```markdown
-# Préférences globales
-- Toujours lancer les tests avant de commit
-- Préférer la simplicité — pas de sur-ingénierie
-- Conventional commits obligatoires
-- Pas de console.log en prod
-- Code en anglais, commentaires en français si pertinent
+# Global preferences
+- Always run tests before commit
+- Prefer simplicity — no over-engineering
+- Conventional commits required
+- No console.log in production
 ```
 
-Max 15 lignes. Tout ce qui est spécifique au projet va dans le CLAUDE.md projet.
+Keep it under 15 lines. Anything project-specific belongs in the project's own `CLAUDE.md`.
 
-## Principes
+## Principles
 
-1. **Max ~80 lignes pour le CLAUDE.md projet.** Au-delà, Claude ignore des parties.
-2. **Ne duplique pas ce qu'un linter fait.** Utilise un hook à la place.
-3. **Pointe vers les docs, ne copie pas.** `Voir TESTING.md` > 50 lignes sur comment tester.
-4. **Les commandes build/test/lint sont le minimum vital.**
-5. **Les skills sont le meilleur ROI.** Un skill Prisma bien écrit est réutilisé automatiquement.
-6. **Les hooks sont gratuits en tokens.** Block main, auto-format — c'est déterministe.
+1. **Max ~80 lines for the project CLAUDE.md.** Beyond that, Claude drops parts of it.
+2. **Don't duplicate what a linter already does.** Use a hook instead.
+3. **Point to docs, don't copy them.** `See TESTING.md` beats 50 lines on how to test.
+4. **Build / test / lint commands are the minimum viable.**
+5. **Skills are the best ROI.** A well-written Prisma skill gets reused automatically.
+6. **Hooks are token-free.** Block main, auto-format — deterministic, no model involvement.
 
-## Crédits
+## Credits
 
-Recherche basée sur l'analyse de : Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 skills officiels), OpenAI (openai-agents-python), et ~45 autres projets open-source.
+Research based on analysis of: Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 official skills), OpenAI (openai-agents-python), and ~45 other open-source projects.
 
-## Licence
+## License
 
 MIT

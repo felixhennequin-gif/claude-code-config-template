@@ -96,8 +96,8 @@ Every skill must:
 
 - Must be anonymized: no real IPs, domains, server hostnames, personal names,
   seed data, or unreleased business information.
-- Must be under ~100 lines — examples are reference material, not
-  documentation dumps.
+- Must be under ~80 lines — examples are reference material, not
+  documentation dumps, and Claude Code drops context beyond that.
 
 ## File structure requirements
 

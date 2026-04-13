@@ -1,7 +1,6 @@
 ---
 name: express-api
 description: Express 5 conventions and REST API patterns. Activates when working on routes, controllers, middleware, validation, or error handling in a Node.js/Express backend.
-allowed-tools: Read, Grep, Glob
 ---
 
 # Express 5 — API conventions

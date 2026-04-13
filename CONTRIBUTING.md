@@ -6,7 +6,7 @@ wiring Claude Code into a project — every file here ends up in real developers
 
 ## What we accept
 
-- **New skills** (`.claude/skills/<name>/SKILL.md`) for stacks we don't cover yet:
+- **New skills** (`.claude/skills/stacks/<name>/SKILL.md`) for stacks we don't cover yet:
   Django, FastAPI, Go (chi/gin/echo), Rust (axum/actix), Rails, Laravel, Spring,
   Elixir/Phoenix, Next.js App Router, SvelteKit, Astro, etc.
 - **New agents** (`.claude/agents/*.md`) for focused use cases: perf auditor,
@@ -60,7 +60,7 @@ justify why it doesn't apply.
 This is the part that matters. Generic advice does not help Claude produce
 better code — in fact, it dilutes the context window.
 
-### Skills (`.claude/skills/<name>/SKILL.md`)
+### Skills (`.claude/skills/core/<name>/SKILL.md` or `.claude/skills/stacks/<name>/SKILL.md`)
 
 Every skill must:
 
@@ -107,9 +107,12 @@ Every skill must:
 ---
 name: skill-name
 description: One sentence. Must include the triggers (file types, keywords, tasks).
-allowed-tools: Read, Grep, Glob
 ---
 ```
+
+The `allowed-tools` field is optional. Omit it for behavioral skills that guide
+how Claude writes code. Include it only for skills that should restrict Claude
+to specific tools (e.g., a read-only analysis skill).
 
 ### Agent frontmatter
 

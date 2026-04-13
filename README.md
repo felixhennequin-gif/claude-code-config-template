@@ -39,6 +39,8 @@ This gives you the stack-agnostic baseline: hooks, commands, rules, and the univ
 
 > The hook in `settings.json` blocks edits on `main` and `master`. If your project uses a different protected branch, update the branch name in `.claude/settings.json`.
 
+> The permissions in `settings.json` include Node.js commands (`npm test`, `npx prisma`, etc.) by default. If your project uses a different stack, edit the `permissions.allow` entries to match your commands.
+
 ### Add stack skills (optional)
 
 The `.claude/skills/stacks/` directory ships with skills for a few common frameworks. Delete the whole folder if you don't use any of them, or remove just the ones you don't need:

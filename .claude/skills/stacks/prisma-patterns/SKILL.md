@@ -1,7 +1,6 @@
 ---
 name: prisma-patterns
 description: Prisma 7 conventions and patterns. Activates when working on the Prisma schema, migrations, queries, or services that call Prisma.
-allowed-tools: Read, Grep, Glob
 ---
 
 # Prisma 7 — Project conventions

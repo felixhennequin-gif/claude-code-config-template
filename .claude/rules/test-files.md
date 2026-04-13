@@ -1,4 +1,5 @@
 ---
+name: test-files
 description: Rules for test files. Loaded only when working with files matching *.test.* or *.spec.* patterns.
 globs: ["**/*.test.*", "**/*.spec.*", "**/tests/**", "**/__tests__/**"]
 ---

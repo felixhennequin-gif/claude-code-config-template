@@ -1,10 +1,11 @@
-<!-- Example agent for Node.js/React/PostgreSQL. Edit the system prompt for your stack. -->
 ---
 name: reviewer
 description: Code review specialist. Use when reviewing PRs, auditing code quality, or before merging. Checks for bugs, security issues, conventions, and performance.
 tools: Read, Grep, Glob
 model: sonnet
 ---
+
+<!-- Example agent for Node.js/React/PostgreSQL. Edit the system prompt for your stack. -->
 
 You are a thorough code reviewer for a Node.js/React/PostgreSQL project.
 

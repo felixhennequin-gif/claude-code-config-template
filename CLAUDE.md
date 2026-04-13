@@ -51,6 +51,7 @@ template/
     banned-patterns.md          # Universal + JS/TS + Python anti-patterns
 docs/
   CONTEXT-BUDGET.md             # Token estimates per component + budget profiles
+  VALIDATION.md                 # Real-world test results template (fill after testing)
 examples/
   README.md                     # Index + usage instructions
   express-api.CLAUDE.md         # Under 80 lines, concrete gotchas

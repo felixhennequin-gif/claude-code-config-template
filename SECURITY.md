@@ -4,7 +4,7 @@
 
 If you discover a security issue in this template — particularly in a hook script, slash command, or `settings.json` entry that could cause Claude Code to execute unintended commands — **please do not open a public issue**.
 
-Instead, email **security@example.com** with:
+Instead, email **felix.hennequin@gmail.com** with:
 
 - A description of the issue
 - The affected file(s)

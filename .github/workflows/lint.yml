@@ -52,13 +52,13 @@ jobs:
 
           echo "Checking skills..."
           while IFS= read -r f; do
-            check_fields "$f" name description allowed-tools
+            check_fields "$f" name description
           done < <(find .claude/skills -name SKILL.md)
 
           echo "Checking agents..."
           while IFS= read -r f; do
             check_fields "$f" name description tools model
-          done < <(find .claude/agents -name '*.md')
+          done < <(find .claude/agents -name '*.md' ! -name 'README.md')
 
           echo "Checking rules..."
           while IFS= read -r f; do

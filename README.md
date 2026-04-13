@@ -20,7 +20,6 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 │   └── CLAUDE.local.md.example       # Template for personal overrides (copy to your project as CLAUDE.local.md)
 ├── .claude/
 │   ├── settings.json                 # Deterministic hooks (block main, auto-lint)
-│   ├── settings.local.json           # Personal overrides (gitignored)
 │   ├── agents/
 │   │   ├── reviewer.md               # Automated code review
 │   │   └── security-auditor.md       # Targeted security audit

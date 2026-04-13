@@ -4,8 +4,8 @@
   "description": "Interactive CLI to scaffold a Claude Code config (CLAUDE.md + .claude/) for any project",
   "type": "module",
   "bin": {
-  "create-claude-code-config": "./bin/create-claude-config.js"
-},
+    "create-claude-code-config": "./bin/create-claude-config.js"
+  },
   "files": [
     "bin/",
     "src/",

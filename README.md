@@ -34,7 +34,7 @@ Setup takes 2 minutes. See [Installation](#installation).
 ### Option A: CLI (recommended)
 
 ```bash
-npx create-claude-config
+npx create-claude-code-config
 ```
 
 Prompts for your project directory and stack. Copies only the files you need.
@@ -100,7 +100,7 @@ Missing your stack? Contributions for Django, Rails, Rust (axum), Laravel, Phoen
 ```
 .
 ├── CLAUDE.md                              # Context for working on this repo itself
-├── cli/                                   # npx create-claude-config (scaffolding CLI)
+├── cli/                                   # npx create-claude-code-config (scaffolding CLI)
 │   ├── package.json
 │   ├── bin/
 │   ├── src/

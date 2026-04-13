@@ -2,7 +2,7 @@
 
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
   console.log(`
-  Usage: npx create-claude-config
+  Usage: npx create-claude-code-config
 
   Interactive CLI to scaffold a Claude Code config for any project.
 

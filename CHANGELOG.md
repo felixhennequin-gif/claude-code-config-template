@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.5.0] — 2026-04-13
 
 ### Added
-- **`create-claude-config` CLI** — interactive scaffolding tool
-  - `npx create-claude-config` to scaffold a Claude Code config
+- **`create-claude-code-config` CLI** — interactive scaffolding tool
+  - `npx create-claude-code-config` to scaffold a Claude Code config
   - Prompts for project directory + stack selection (Express, Prisma, React, FastAPI)
   - Copies CLAUDE.md, .claude/ (hooks, commands, rules, skills), CLAUDE.local.md
   - Removes unselected stack skills automatically

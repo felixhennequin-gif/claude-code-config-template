@@ -1,4 +1,4 @@
-# create-claude-config
+# create-claude-code-config
 
 Interactive CLI to scaffold a [Claude Code](https://docs.anthropic.com/en/docs/claude-code) config for any project.
 
@@ -7,7 +7,7 @@ Part of [claude-code-config-template](https://github.com/felixhennequin-gif/clau
 ## Usage
 
 ```bash
-npx create-claude-config
+npx create-claude-code-config
 ```
 
 Or with npm create:

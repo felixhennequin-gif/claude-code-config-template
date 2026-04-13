@@ -67,13 +67,13 @@ examples/
 
 ## CLI (`cli/`)
 
-The `create-claude-config` npm package lives here. It's published independently but shares this repo.
+The `create-claude-code-config` npm package lives here. It's published independently but shares this repo.
 
-- Entry point: `cli/bin/create-claude-config.js`
+- Entry point: `cli/bin/create-claude-code-config.js`
 - Template files are embedded in `cli/template-files/` — these are copies of `template/` and `.claude/`
 - After any change to template files, skills, hooks, rules, or commands: run `bash cli/sync-templates.sh` to re-copy them into `cli/template-files/`
 - The CLI has one dependency: `prompts`
-- Test locally with `cd cli && node bin/create-claude-config.js`
+- Test locally with `cd cli && node bin/create-claude-code-config.js`
 
 ## Working on this repo
 

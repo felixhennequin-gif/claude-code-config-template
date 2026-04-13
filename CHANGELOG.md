@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-04-13
+
 ### Added
 - `.claude/skills/core/error-handling/SKILL.md` — universal error handling patterns (fail loudly, fix at root, typed errors). Activates when writing error handling code in any language.
 - `template/CLAUDE.md` and `cli/template-files/CLAUDE.md`: new `## Off-limits` section — placeholder for files and directories Claude should never modify (generated files, migrations, vendor directories).
@@ -201,7 +203,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.3.0...v0.4.0

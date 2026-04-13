@@ -1,21 +1,27 @@
-#!/bin/bash
-# Hook: auto-lint after edit
-# Called by .claude/settings.json PostToolUse on Edit|MultiEdit|Write
+#!/usr/bin/env bash
+# PostToolUse hook: auto-lint the edited file
+# Triggered by .claude/settings.json on Edit|MultiEdit|Write.
 #
-# Runs ESLint --fix on the edited file silently.
-# Exits 0 even on failure (non-blocking).
+# Claude Code passes hook context as JSON on stdin, NOT as env vars, so we
+# parse tool_input.file_path ourselves. Non-blocking: any failure exits 0.
 
-FILE="$CLAUDE_FILE_PATH"
+set -u
 
-if [ -z "$FILE" ]; then
-  exit 0
+INPUT=$(cat)
+
+if command -v jq >/dev/null 2>&1; then
+  FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty')
+else
+  # jq fallback — node is always available since Claude Code runs on it
+  FILE=$(printf '%s' "$INPUT" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(JSON.parse(s).tool_input.file_path||"")}catch(e){}})' 2>/dev/null)
 fi
 
-# Only lint JS/TS/JSX/TSX files
+[ -z "${FILE:-}" ] && exit 0
+
 case "$FILE" in
-  *.js|*.ts|*.jsx|*.tsx)
-    cd "$CLAUDE_PROJECT_DIR" 2>/dev/null || exit 0
-    npx eslint --fix "$FILE" 2>/dev/null || true
+  *.js|*.ts|*.jsx|*.tsx|*.mjs|*.cjs)
+    cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
+    npx --no-install eslint --fix "$FILE" >/dev/null 2>&1 || true
     ;;
 esac
 

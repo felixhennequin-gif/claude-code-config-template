@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ \"$(git branch --show-current)\" != \"main\" ] || { echo '{\"block\": true, \"message\": \"Cannot edit on main branch. Switch to dev or a feature branch.\"}' >&2; exit 2; }",
+            "command": "[ \"$(cd \"$CLAUDE_PROJECT_DIR\" && git branch --show-current 2>/dev/null)\" != \"main\" ] || { echo 'Cannot edit on main branch. Switch to dev or a feature branch.' >&2; exit 2; }",
             "timeout": 5
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" && npx eslint --fix \"$CLAUDE_FILE_PATH\" 2>/dev/null || true",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/lint-on-edit.sh",
             "timeout": 15
           }
         ]

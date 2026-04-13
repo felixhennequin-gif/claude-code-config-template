@@ -2,7 +2,9 @@
 
 ![License](https://img.shields.io/github/license/felixhennequin-gif/claude-code-config-template) ![CI](https://img.shields.io/github/actions/workflow/status/felixhennequin-gif/claude-code-config-template/lint.yml?label=lint) ![GitHub stars](https://img.shields.io/github/stars/felixhennequin-gif/claude-code-config-template?style=social)
 
-AI architecture template for Node.js / React / PostgreSQL projects.
+Production-ready AI config template for Claude Code — agents, skills, hooks, and commands for any project.
+
+Core files (CLAUDE.md, agents, hooks, commands, the `coding-principles` skill) are stack-agnostic and ship with every install. Stack-specific conventions live under `.claude/skills/stacks/` and can be kept, pruned, or replaced individually.
 
 Based on analysis of ~55 open-source repos (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI) — see [the full research](./RESEARCH.md).
 
@@ -30,10 +32,11 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 │   │   ├── audit.md                  # /audit — full quality audit
 │   │   └── test.md                   # /test — run tests + coverage
 │   ├── skills/
-│   │   ├── coding-principles/SKILL.md # Stack-agnostic behavioral rules (think, simplify, surgical, goal-driven)
-│   │   ├── prisma-patterns/SKILL.md   # Prisma 7 conventions
-│   │   ├── express-api/SKILL.md       # Express 5 patterns
-│   │   └── react-frontend/SKILL.md    # React 19 + Tailwind v4 patterns
+│   │   ├── coding-principles/SKILL.md  # Universal — behavioral rules (think, simplify, surgical, goal-driven)
+│   │   └── stacks/                     # Optional — keep only the ones you use
+│   │       ├── prisma-patterns/SKILL.md # Prisma 7 conventions
+│   │       ├── express-api/SKILL.md     # Express 5 patterns
+│   │       └── react-frontend/SKILL.md  # React 19 + Tailwind v4 patterns
 │   ├── hooks/
 │   │   └── lint-on-edit.sh           # Auto-lint after every edit
 │   └── rules/
@@ -51,14 +54,17 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 
 ## Installation
 
+### Quick start — core (always)
+
 ```bash
 # Clone this template somewhere
 git clone <this-repo-url> /tmp/ai-template
+cd /tmp/ai-template
 
-# Copy into your project
-cp /tmp/ai-template/template/CLAUDE.md your-project/CLAUDE.md
-cp -r /tmp/ai-template/.claude your-project/.claude
-cp /tmp/ai-template/template/CLAUDE.local.md.example your-project/CLAUDE.local.md
+# Copy the core files into your project
+cp template/CLAUDE.md your-project/CLAUDE.md
+cp template/CLAUDE.local.md.example your-project/CLAUDE.local.md
+cp -r .claude your-project/.claude
 
 # Ignore personal files (if not already in your .gitignore)
 echo "CLAUDE.local.md" >> your-project/.gitignore
@@ -66,6 +72,31 @@ echo ".claude/settings.local.json" >> your-project/.gitignore
 
 # Edit CLAUDE.md with your project info
 ```
+
+This gives you the stack-agnostic baseline: hooks, agents, commands, rules, and the universal `coding-principles` skill.
+
+### Add stack skills (optional)
+
+The `.claude/skills/stacks/` directory ships with skills for a few common frameworks. Delete the whole folder if you don't use any of them, or remove just the ones you don't need:
+
+```bash
+# Drop everything stack-specific
+rm -rf your-project/.claude/skills/stacks/
+
+# Or keep only what you use — example for a non-React backend:
+rm -rf your-project/.claude/skills/stacks/react-frontend
+rm -rf your-project/.claude/skills/stacks/prisma-patterns  # if you don't use Prisma
+```
+
+Available stack skills:
+
+| Skill | Triggers on |
+|---|---|
+| [`stacks/prisma-patterns`](./.claude/skills/stacks/prisma-patterns/SKILL.md) | Prisma 7 schema, migrations, queries, services |
+| [`stacks/express-api`](./.claude/skills/stacks/express-api/SKILL.md) | Express 5 routes, controllers, middleware, validators |
+| [`stacks/react-frontend`](./.claude/skills/stacks/react-frontend/SKILL.md) | React 19 + Vite + Tailwind v4 components, hooks, pages |
+
+Missing your stack? Contributions for Django, FastAPI, Rails, Go (chi/gin), Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Optional: global config
 
@@ -87,7 +118,7 @@ Keep it under 15 lines. Anything project-specific belongs in the project's own `
 2. **Don't duplicate what a linter already does.** Use a hook instead.
 3. **Point to docs, don't copy them.** `See TESTING.md` beats 50 lines on how to test.
 4. **Build / test / lint commands are the minimum viable.**
-5. **Skills are the best ROI.** A well-written Prisma skill gets reused automatically.
+5. **Skills are the best ROI.** A well-written skill gets reused automatically every time its trigger matches.
 6. **Hooks are token-free.** Block main, auto-format — deterministic, no model involvement.
 
 ## Credits

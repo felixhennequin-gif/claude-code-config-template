@@ -8,13 +8,16 @@ Based on analysis of ~55 open-source repos (Supabase, Bitwarden, Vercel, Anthrop
 
 Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every session. Without them, you waste 15 minutes re-contextualizing. With them, Claude knows your stack, conventions, commands, and gotchas from the first message.
 
+> The root `CLAUDE.md` in this repo describes the template project itself — it's what Claude Code reads when working *on* this template. The blank file you copy into *your* project lives at [`template/CLAUDE.md`](./template/CLAUDE.md).
+
 ## What's in this template
 
 ```
 .
-├── CLAUDE.md                         # Project context (the only required file)
+├── CLAUDE.md                         # Context for working on this repo itself
+├── template/
+│   └── CLAUDE.md                     # Downstream-facing project context (copy this into your project)
 ├── CLAUDE.local.md.example           # Template for personal overrides
-├── CLAUDE.local.md                   # Your personal overrides (gitignored, copy from .example)
 ├── .claude/
 │   ├── settings.json                 # Deterministic hooks (block main, auto-lint)
 │   ├── settings.local.json           # Personal overrides (gitignored)
@@ -51,7 +54,7 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 git clone <this-repo-url> /tmp/ai-template
 
 # Copy into your project
-cp /tmp/ai-template/CLAUDE.md your-project/CLAUDE.md
+cp /tmp/ai-template/template/CLAUDE.md your-project/CLAUDE.md
 cp -r /tmp/ai-template/.claude your-project/.claude
 cp /tmp/ai-template/CLAUDE.local.md.example your-project/CLAUDE.local.md
 

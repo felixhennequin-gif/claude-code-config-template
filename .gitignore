@@ -1,8 +1,11 @@
 CLAUDE.local.md
 .claude/settings.local.json
+.claude/.template-manifest.json
 node_modules/
 .env
 .env.*
 !.env.example
 dist/
 coverage/
+
+tmp/

@@ -13,7 +13,8 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 ```
 .
 ├── CLAUDE.md                         # Project context (the only required file)
-├── CLAUDE.local.md                   # Personal overrides (gitignored)
+├── CLAUDE.local.md.example           # Template for personal overrides
+├── CLAUDE.local.md                   # Your personal overrides (gitignored, copy from .example)
 ├── .claude/
 │   ├── settings.json                 # Deterministic hooks (block main, auto-lint)
 │   ├── settings.local.json           # Personal overrides (gitignored)
@@ -44,9 +45,9 @@ git clone <this-repo-url> /tmp/ai-template
 # Copy into your project
 cp /tmp/ai-template/CLAUDE.md your-project/CLAUDE.md
 cp -r /tmp/ai-template/.claude your-project/.claude
-cp /tmp/ai-template/CLAUDE.local.md your-project/CLAUDE.local.md
+cp /tmp/ai-template/CLAUDE.local.md.example your-project/CLAUDE.local.md
 
-# Ignore personal files
+# Ignore personal files (if not already in your .gitignore)
 echo "CLAUDE.local.md" >> your-project/.gitignore
 echo ".claude/settings.local.json" >> your-project/.gitignore
 

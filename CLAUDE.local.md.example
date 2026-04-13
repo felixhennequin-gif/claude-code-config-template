@@ -1,0 +1,25 @@
+# Local overrides — do NOT commit this file
+#
+# Copy this file to `CLAUDE.local.md` (which is gitignored) and fill it in.
+# Claude Code loads both `CLAUDE.md` and `CLAUDE.local.md` at session start,
+# so anything here adds personal context without polluting the shared file.
+
+## My environment
+
+- OS: [your OS]
+- Editor: [your editor]
+- Terminal: [your terminal]
+- Dev server: [host or "none" — e.g. "staging.internal, Ubuntu 22.04, SSH"]
+
+## My preferences
+
+- [How you work — schedule, focus blocks, etc.]
+- [Response style you want — dense/verbose, formal/direct]
+- [Whether you want Claude to challenge you or just validate]
+
+## Local MCP servers
+
+<!-- Add your personal MCP servers here -->
+<!-- Example: -->
+<!-- - filesystem: access to a local notes vault -->
+<!-- - github: repo access -->

@@ -1,50 +1,50 @@
 ---
 name: prisma-patterns
-description: Conventions et patterns Prisma 7. Active quand on travaille sur le schema Prisma, les migrations, les queries, ou les services qui appellent Prisma.
+description: Prisma 7 conventions and patterns. Activates when working on the Prisma schema, migrations, queries, or services that call Prisma.
 allowed-tools: Read, Grep, Glob
 ---
 
-# Prisma 7 — Conventions projet
+# Prisma 7 — Project conventions
 
 ## Schema
 
-- Un model par entité métier. Pas de tables techniques visibles dans le schema (sauf sessions/tokens).
-- Relations explicites avec `@relation`. Toujours nommer les relations quand il y a ambiguïté.
-- `@updatedAt` sur tous les models qui ont du contenu modifiable.
-- `@default(cuid())` pour les IDs string, `@default(autoincrement())` pour les IDs int.
-- Enums pour les valeurs fixes (rôles, statuts, visibilité).
+- One model per domain entity. No technical tables surfaced in the schema (except sessions / tokens).
+- Explicit relations via `@relation`. Always name the relation when there's ambiguity.
+- `@updatedAt` on every model whose content can change.
+- `@default(cuid())` for string IDs, `@default(autoincrement())` for int IDs.
+- Enums for fixed values (roles, statuses, visibility).
 
 ## Queries
 
-- **Toujours `select` ou `include` explicite.** Jamais de `findMany()` sans filtre sur un model avec beaucoup de données.
-- **Éviter N+1** : utiliser `include` avec les relations nécessaires plutôt que des boucles avec `findUnique`.
-- **Pagination cursor-based** pour les listes longues (feed, search results). Pattern :
+- **Always use an explicit `select` or `include`.** Never `findMany()` without a filter on a large table.
+- **Avoid N+1:** use `include` with the needed relations rather than loops calling `findUnique`.
+- **Cursor-based pagination** for long lists (feed, search results). Pattern:
   ```js
   const items = await prisma.model.findMany({
     take: limit + 1,
     cursor: cursor ? { id: cursor } : undefined,
     skip: cursor ? 1 : 0,
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
   const hasMore = items.length > limit;
   if (hasMore) items.pop();
   ```
-- **Transactions** pour les opérations multi-model qui doivent être atomiques.
+- **Transactions** for multi-model operations that must be atomic.
 
 ## Migrations
 
-- `npx prisma migrate dev --name description-courte` en dev.
-- Jamais `db push` en prod. Toujours `migrate deploy`.
-- Vérifier les migrations générées avant de commit — Prisma peut générer des `DROP` inattendus.
+- `npx prisma migrate dev --name short-description` in dev.
+- Never `db push` in production. Always `migrate deploy`.
+- Review the generated migration before committing — Prisma may emit unexpected `DROP`s.
 
 ## Seed
 
-- `prisma/seed.js` ou `prisma/seed.ts`. Idempotent : utiliser `upsert` plutôt que `create`.
-- Données de seed réalistes, pas de "test123".
+- `prisma/seed.js` or `prisma/seed.ts`. Idempotent: prefer `upsert` over `create`.
+- Realistic seed data — no `test123`.
 
 ## Anti-patterns
 
-- ❌ `prisma.$queryRaw` sauf cas exceptionnel (full-text search, fonctions SQL spécifiques)
-- ❌ `deleteMany()` sans `where` — toujours expliciter le filtre
-- ❌ Nested writes trop profonds (> 2 niveaux) — découper en transactions séquentielles
-- ❌ Oublier les index sur les champs fréquemment filtrés (`@@index`)
+- ❌ `prisma.$queryRaw` except in exceptional cases (full-text search, SQL-specific functions)
+- ❌ `deleteMany()` without a `where` — always spell out the filter
+- ❌ Deeply nested writes (> 2 levels) — split into sequential transactions
+- ❌ Missing `@@index` on fields that are frequently filtered

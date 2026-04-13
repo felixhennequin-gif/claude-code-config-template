@@ -1,33 +1,33 @@
 # Écume (cocktail-app)
 
-Application web de cocktails avec fonctionnalités sociales. MVP complet, en route vers la monétisation.
+Cocktail web app with social features. MVP complete, heading toward monetization.
 
 ## Stack
 
 - **Backend**: Node.js / Express 5 / Prisma 7 / PostgreSQL / Redis (ioredis)
 - **Frontend**: React 19 / Vite 7 / Tailwind v4
 - **Infra**: PM2, Cloudflare Tunnel, Nginx, GitHub Actions CI/CD
-- **Email**: Resend (configuré, flows pas encore actifs)
-- **Paiement**: Stripe (planifié)
+- **Email**: Resend (configured, flows not yet active)
+- **Payments**: Stripe (planned)
 
 ## Structure
 
 ```
 backend/
 ├── src/
-│   ├── controllers/      # Routes handlers (minces)
-│   ├── services/         # Logique métier + Prisma
-│   ├── middleware/        # Auth JWT, validation, rate limiting, error handler
-│   ├── validators/       # Schémas Zod
-│   └── routes/           # Déclaration routes
+│   ├── controllers/     # Thin route handlers
+│   ├── services/        # Business logic + Prisma
+│   ├── middleware/      # JWT auth, validation, rate limiting, error handler
+│   ├── validators/      # Zod schemas
+│   └── routes/          # Route declarations
 frontend/
 ├── src/
-│   ├── pages/            # Composants page
-│   ├── components/       # UI réutilisable
-│   ├── hooks/            # Custom hooks
-│   ├── services/         # Appels API
-│   ├── i18n/             # FR/EN
-│   └── contexts/         # Auth, Theme
+│   ├── pages/           # Page components
+│   ├── components/      # Reusable UI
+│   ├── hooks/           # Custom hooks
+│   ├── services/        # API calls
+│   ├── i18n/            # FR/EN
+│   └── contexts/        # Auth, Theme
 ```
 
 ## Commands
@@ -37,43 +37,43 @@ cd backend && npm run dev         # Backend (nodemon)
 cd backend && npm test            # 197 tests (Vitest)
 cd backend && npm run lint        # ESLint
 cd frontend && npm run dev        # Frontend (Vite)
-cd frontend && npm run build      # Build prod
+cd frontend && npm run build      # Production build
 npx prisma migrate dev            # Migrations
-npx prisma studio                 # GUI DB
+npx prisma studio                 # DB GUI
 ```
 
 ## Conventions
 
-- Conventional commits : `feat:`, `fix:`, `chore:`
-- Controllers minces → logique dans services/
-- Validation Zod sur chaque endpoint
-- Auth JWT avec refresh token rotation
-- Redis : cache avec graceful degradation (app marche sans Redis)
-- i18n : FR/EN, fichiers dans frontend/src/i18n/
+- Conventional commits: `feat:`, `fix:`, `chore:`
+- Thin controllers → logic lives in `services/`
+- Zod validation on every endpoint
+- JWT auth with refresh token rotation
+- Redis: cache with graceful degradation (app works without Redis)
+- i18n: FR/EN, files in `frontend/src/i18n/`
 
-## Domaine
+## Domain
 
 - `cocktail-app.fr` (OVH)
-- Deploy : PM2 processes `cocktail-api`, `cocktail-api-dev`, `ecume-api`
-- CI/CD : webhook HMAC SHA-256 + `deploy.sh`
+- Deploy: PM2 processes `cocktail-api`, `cocktail-api-dev`, `ecume-api`
+- CI/CD: HMAC SHA-256 webhook + `deploy.sh`
 
 ## Gotchas
 
-- Express 5 : pas de `app.del()`, utiliser `app.delete()`
-- Le SW cache thecocktaildb et cause du cache poisoning (bug ouvert)
-- RecipeDetail crash sur /recipes/55 (diagnostic incomplet)
-- Dark mode + i18n merge potentiellement instable
-- Le seed nécessite PostgreSQL + Redis running
-- Redis optionnel : `lazyConnect: true` + try/catch sur chaque appel
+- Express 5: no `app.del()`, use `app.delete()`
+- The service worker caches `thecocktaildb` and causes cache poisoning (known bug)
+- `RecipeDetail` crashes on `/recipes/55` (incomplete diagnosis)
+- Dark mode + i18n merge potentially unstable
+- Seed requires PostgreSQL + Redis running
+- Redis is optional: `lazyConnect: true` + try/catch on every call
 
-## Chantiers ouverts
+## Open work
 
-- Email flows Resend (5 prompts prêts)
-- Stripe monétisation freemium ~4€/mois (6 prompts prêts)
-- Migration slugs URLs
-- Naming définitif : Écume vs Zeste
+- Resend email flows (5 prompts ready)
+- Stripe freemium monetization ~€4/month (6 prompts ready)
+- URL slug migration
+- Final naming: Écume vs Zeste
 
-## Références
+## References
 
-- `prisma/schema.prisma` pour le modèle de données
-- `.claude/skills/` pour les conventions détaillées
+- `prisma/schema.prisma` for the data model
+- `.claude/skills/` for detailed conventions

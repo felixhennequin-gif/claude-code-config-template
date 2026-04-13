@@ -19,28 +19,28 @@ globs: ["**/*.test.*", "**/*.spec.*", "**/tests/**", "**/__tests__/**"]
 
 ### Naming
 ```js
-// BON — décrit le comportement attendu
+// GOOD — describes the expected behavior
 it('should return 401 when token is expired')
-it('should create a recipe and return 201')
+it('should create an item and return 201')
 
-// MAUVAIS — décrit l'implémentation
-it('calls prisma.recipe.create')
+// BAD — describes the implementation
+it('calls prisma.item.create')
 it('works correctly')
 ```
 
 ### AAA Pattern
 Every test follows Arrange → Act → Assert:
 ```js
-it('should return the recipe by id', async () => {
+it('should return the item by id', async () => {
   // Arrange
-  const recipe = await createTestRecipe();
+  const item = await createTestItem();
 
   // Act
-  const res = await request(app).get(`/api/recipes/${recipe.id}`);
+  const res = await request(app).get(`/api/items/${item.id}`);
 
   // Assert
   expect(res.status).toBe(200);
-  expect(res.body.name).toBe(recipe.name);
+  expect(res.body.name).toBe(item.name);
 });
 ```
 

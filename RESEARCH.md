@@ -1,5 +1,7 @@
 # Research notes
 
+> Analysis conducted: March–April 2026. Repo states may have changed since.
+
 What we learned from analyzing notable open-source Claude Code configurations. This is not a comprehensive survey — it's the patterns and anti-patterns that shaped this template's design.
 
 ## Key findings

@@ -44,6 +44,10 @@ Before you start pruning skills, ship `template/.claudeignore` into your project
 4. The coding-principles skill is the one you should almost never delete — it's the highest-ROI file
 5. If your CLAUDE.md is over 80 lines, you're probably duplicating what a skill already covers
 
-## How to measure
+## How to estimate
 
-Ask Claude Code: "How many tokens is my current context?" at the start of a session. Compare with and without specific skills to see their real cost.
+Claude Code doesn't expose exact token counts, but you can estimate:
+
+1. **File size rule of thumb**: ~1.3 tokens per word, ~0.4 tokens per character. An 80-line CLAUDE.md with ~40 chars/line ≈ 80 × 40 × 0.4 ≈ 1,280 tokens.
+2. **Check what's loaded**: At the start of a session, ask Claude "What files from .claude/ are currently in your context?" — it will list what it loaded.
+3. **Compare sessions**: Run the same task with and without a specific skill. If Claude follows the skill's conventions only when it's present, it's being loaded. If it follows them either way, the skill is redundant (Claude already knows the pattern from training).

@@ -1,0 +1,101 @@
+name: lint
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Validate settings.json
+        run: python3 -m json.tool .claude/settings.json > /dev/null
+
+      - name: Shellcheck hook scripts
+        run: shellcheck -S error .claude/hooks/*.sh
+
+      - name: Validate frontmatter
+        run: |
+          set -euo pipefail
+
+          fail=0
+
+          extract_frontmatter() {
+            awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1' "$1"
+          }
+
+          check_fields() {
+            local file=$1
+            shift
+            local fm
+            fm=$(extract_frontmatter "$file")
+            if [ -z "$fm" ]; then
+              echo "::error file=$file::missing YAML frontmatter"
+              fail=1
+              return
+            fi
+            for key in "$@"; do
+              if ! printf '%s\n' "$fm" | grep -qE "^${key}:[[:space:]]*\S"; then
+                echo "::error file=$file::frontmatter missing required field '${key}'"
+                fail=1
+              fi
+            done
+          }
+
+          echo "Checking skills..."
+          while IFS= read -r f; do
+            check_fields "$f" name description allowed-tools
+          done < <(find .claude/skills -name SKILL.md)
+
+          echo "Checking agents..."
+          while IFS= read -r f; do
+            check_fields "$f" name description tools model
+          done < <(find .claude/agents -name '*.md')
+
+          echo "Checking rules..."
+          while IFS= read -r f; do
+            check_fields "$f" description globs
+          done < <(find .claude/rules -name '*.md')
+
+          exit "$fail"
+
+      - name: Secret scan
+        run: |
+          set -euo pipefail
+
+          fail=0
+          # git ls-files already excludes .git/ and untracked junk.
+          # Exclude RESEARCH.md (cites external repos) and this workflow itself
+          # (which contains the scan patterns).
+          mapfile -t files < <(
+            git ls-files \
+              | grep -Ev '^(RESEARCH\.md|\.github/workflows/lint\.yml)$'
+          )
+
+          # Hardcoded IPv4 addresses — full 4-octet match to dodge version strings.
+          if grep -nHE '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' "${files[@]}"; then
+            echo "::error::hardcoded IPv4 address found"
+            fail=1
+          fi
+
+          # Long secret-looking values assigned to sensitive env var names.
+          if grep -nHEi '\b(SECRET|PASSWORD|API[_-]?KEY|ACCESS[_-]?KEY|PRIVATE[_-]?KEY)[[:space:]]*=[[:space:]]*["'"'"']?[A-Za-z0-9/+_-]{16,}' "${files[@]}"; then
+            echo "::error::secret-looking assignment found"
+            fail=1
+          fi
+
+          # PEM-style private key headers.
+          if grep -nHE 'BEGIN [A-Z ]*PRIVATE KEY' "${files[@]}"; then
+            echo "::error::private key header found"
+            fail=1
+          fi
+
+          exit "$fail"

@@ -8,3 +8,4 @@ Currently:
 - `debugging` — structured debugging workflow (reproduce → read → trace → one-change → three-strike rule)
 - `error-handling` — universal error handling patterns (fail loudly, fix at root, typed errors)
 - `testing` — testing strategy (what to test, coverage as a floor, when to skip tests)
+- `git-workflow` — branch naming, Conventional Commits, rebase vs. merge, PR description template, conflict resolution

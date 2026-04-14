@@ -8,4 +8,3 @@ Currently:
 - `debugging` — structured debugging workflow (reproduce → read → trace → one-change → three-strike rule)
 - `error-handling` — universal error handling patterns (fail loudly, fix at root, typed errors)
 - `testing` — testing strategy (what to test, coverage as a floor, when to skip tests)
-- `ci-cd-pipeline` — GitHub Actions and GitLab CI patterns, build-once/deploy-many, security checklist, anti-patterns

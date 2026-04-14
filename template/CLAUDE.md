@@ -73,5 +73,5 @@
 
 - See `CONTRIBUTING.md` for the contribution workflow
 - See `.claude/skills/` for stack-specific conventions loaded per task
-- See `.claude/skills/core/ci-cd-pipeline/SKILL.md` for CI/CD patterns (GitHub Actions, GitLab CI, security)
+- See `.claude/skills/stacks/ci-cd-pipeline/SKILL.md` for CI/CD patterns (GitHub Actions, GitLab CI, security) — delete if you use another CI platform
 - [Link to the data model / API spec / architecture doc if any]

@@ -37,7 +37,7 @@ function copyDirRecursive(src, dest, skipPaths = new Set()) {
  * Build the set of stack skill directories to skip.
  */
 function getSkipPaths(selectedStacks) {
-  const allStacks = ['express-api', 'prisma-patterns', 'react-frontend', 'symfony-api'];
+  const allStacks = ['express-api', 'prisma-patterns', 'react-frontend', 'symfony-api', 'ci-cd-pipeline'];
   const skipped = allStacks.filter((s) => !selectedStacks.includes(s));
   return new Set(skipped.map((s) => join('claude', 'skills', 'stacks', s)));
 }

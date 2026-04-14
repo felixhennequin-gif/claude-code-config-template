@@ -1,10 +1,10 @@
 {
   "name": "create-claude-code-config",
-  "version": "0.9.5",
+  "version": "0.9.7",
   "description": "Interactive CLI to scaffold a Claude Code config (CLAUDE.md + .claude/) for any project",
   "type": "module",
   "bin": {
-    "create-claude-code-config": "./bin/create-claude-code-config.js"
+    "create-claude-code-config": "bin/create-claude-code-config.js"
   },
   "files": [
     "bin/",
@@ -23,7 +23,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/felixhennequin-gif/claude-code-config-template.git",
+    "url": "git+https://github.com/felixhennequin-gif/claude-code-config-template.git",
     "directory": "cli"
   },
   "dependencies": {

@@ -1,7 +1,16 @@
+<!--
+Path-scoped project rule — loaded by Claude Code when editing matching files.
+Mechanism: https://code.claude.com/docs/en/memory#path-specific-rules
+The correct frontmatter field is `paths:` (Claude Code), not `globs:` (Cursor).
+-->
 ---
 name: test-files
 description: Rules for test files. Loaded only when working with files matching *.test.* or *.spec.* patterns.
-globs: ["**/*.test.*", "**/*.spec.*", "**/tests/**", "**/__tests__/**"]
+paths:
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "**/tests/**"
+  - "**/__tests__/**"
 ---
 
 # Test file conventions

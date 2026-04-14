@@ -1,7 +1,13 @@
+<!--
+Path-scoped project rule — loaded by Claude Code when editing matching files.
+Mechanism: https://code.claude.com/docs/en/memory#path-specific-rules
+The correct frontmatter field is `paths:` (Claude Code), not `globs:` (Cursor).
+-->
 ---
 name: banned-patterns-python
 description: Python-specific anti-patterns. Loaded when editing .py files.
-globs: ["**/*.py"]
+paths:
+  - "**/*.py"
 ---
 
 ## Universal (all languages)

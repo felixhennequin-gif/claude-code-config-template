@@ -144,7 +144,7 @@ echo '' | bash .claude/hooks/bash-safety.sh
 - **`lint-on-edit.sh` parses its payload from stdin**, not env vars. Claude Code used to expose env vars, but no longer — the hook was fixed for this in commit `ca8ecf8`. If you refactor the hook, keep the stdin path.
 - **PreToolUse main/master guard uses `git branch --show-current`** inside a `case` statement. A detached HEAD returns empty and passes the guard — intentional, don't "fix" it.
 - **`bash-safety.sh` must not be "improved" to block more patterns without testing.** `grep -qF` is literal-match by design — regex escapes like `\.` will be treated as literal backslash-dot and miss real matches. Add a smoke test in `CLAUDE.md` → "Working on this repo" before any pattern additions.
-- **Frontmatter in `.claude/rules/*.md` uses `globs:` (not `applyTo:`)** — this is the format Claude Code actually reads. Don't rename it.
+- **Frontmatter in `.claude/rules/*.md` uses `paths:`** — this is the field Claude Code reads for path-specific rules (see [docs](https://code.claude.com/docs/en/memory#path-specific-rules)). `globs:` is a Cursor convention and is silently ignored by Claude Code — don't revert to it. Rules without a `paths:` field load unconditionally at session start.
 - **The repo's root `CLAUDE.md` is this file, not the downstream template.** Don't accidentally blank it out when editing the downstream template at `template/CLAUDE.md`.
 
 ## References

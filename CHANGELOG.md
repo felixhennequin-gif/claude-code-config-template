@@ -11,6 +11,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `.claude/skills/core/code-review/SKILL.md` — genericised so the skill installs
+  untouched on any downstream repo, per the `core/` vs `stacks/` split in
+  `CLAUDE.md`. Removed repo-specific references to `cli/template-files/`,
+  `cli/sync-templates.sh`, `audit.md`, and the `.claude/settings.json` /
+  `.claude/hooks/*.sh` validation snippets. The GOOD batch example, the
+  execute prompt's sync/validation step, and the "never edit mirrored files"
+  anti-pattern are now phrased in stack-neutral terms. Dropped the HTML comment
+  referencing the v0.9.5 origin session.
+
+### Added
+- `.claude/skills/core/code-review/SKILL.md` — new guidance: a tiebreaker for
+  when file proximity and severity ordering conflict (file proximity wins),
+  batch-size targets (3–7 items, ≤~200 LOC of diff), an explicit "run the
+  project's test suite" instruction in the execute prompt, an extra disagreement
+  criterion for findings that are correct in the abstract but out of the
+  project's stated scope, and an anti-pattern reminding reviewers to cross-check
+  batches against other skills/rules/agents (the incident that motivated this
+  was the past `reviewer` vs `express-api` try/catch contradiction). The PR
+  prompt now notes its `gh` CLI assumption and uses `<default-branch>` instead
+  of hard-coding `master`.
+
 ## [0.9.5] — 2026-04-14
 
 ### Added

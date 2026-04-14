@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `.claudeignore` at the repo root — previously untracked. Reduces session
+  noise when Claude Code works *on this repo* (not the downstream template
+  copy, which already ships under `template/` and `cli/template-files/`).
+
 ### Changed
 - `.claude/settings.json` (+ `cli/template-files/` mirror) — `PreToolUse` and
   `PostToolUse` matchers now include `NotebookEdit` alongside
@@ -25,6 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `--no-install` guard, which keeps the hook offline-safe and fast by refusing
   to auto-install eslint when the project hasn't declared it. A prior edit
   truncated the flag and the error was silently swallowed by `2>&1 || true`.
+- `.claude/hooks/lint-on-edit.sh` (+ `cli/template-files/` mirror) — hoisted
+  `cd "${CLAUDE_PROJECT_DIR:-.}"` above the `case` so Python/Go/Rust branches
+  also run from the project root. Previously only the JS branch did the
+  `cd`, which meant `ruff`/`gofmt`/`rustfmt` config lookups resolved against
+  whatever directory Claude Code happened to be running in.
+- `.claude/skills/core/testing/SKILL.md` — removed a self-referential
+  "See rule 3 above" sentence inside rule 3 itself.
 - `.github/workflows/lint.yml` — dogfood the `ci-cd-pipeline` skill the repo
   ships: pin `actions/checkout@v4` to a commit SHA (security checklist line
   item), add a top-level `permissions: contents: read` block for

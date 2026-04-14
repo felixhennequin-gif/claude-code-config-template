@@ -83,8 +83,6 @@ def test_raises_for_non_integer_age(): ...
 def test_raises_for_age_over_150(): ...
 ```
 
-See rule 3 above: below 70% on business logic, or 100% without edge-case assertions, both warrant a flag.
-
 ## 4. Framework, structure, naming
 
 - **Framework** — use the project's existing test runner. Don't switch frameworks without asking. Check `package.json` scripts, `Makefile`, `pyproject.toml`, or CI config for the correct test command. If no test infrastructure exists, ask the user which framework to use before creating test files.

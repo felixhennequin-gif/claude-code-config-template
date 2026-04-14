@@ -21,13 +21,15 @@ if [ -z "${FILE:-}" ]; then
   exit 0
 fi
 
+# Run every formatter from the project root so config lookups (eslint.config.*,
+# pyproject.toml, rustfmt.toml, etc.) resolve relative to the repo, not cwd.
+cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
+
 case "$FILE" in
   *.js|*.ts|*.jsx|*.tsx|*.mjs|*.cjs)
-    cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
     npx --no-install eslint --fix "$FILE" >/dev/null 2>&1 || true
     ;;
   *.py)
-    cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
     if command -v ruff >/dev/null 2>&1; then
       ruff check --fix "$FILE" >/dev/null 2>&1 || true
     fi

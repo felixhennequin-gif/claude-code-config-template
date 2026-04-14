@@ -18,6 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `--no-install` guard, which keeps the hook offline-safe and fast by refusing
   to auto-install eslint when the project hasn't declared it. A prior edit
   truncated the flag and the error was silently swallowed by `2>&1 || true`.
+- `.github/workflows/lint.yml` — dogfood the `ci-cd-pipeline` skill the repo
+  ships: pin `actions/checkout@v4` to a commit SHA (security checklist line
+  item), add a top-level `permissions: contents: read` block for
+  least-privilege `GITHUB_TOKEN`, and add a `concurrency` block keyed on
+  `${{ github.workflow }}-${{ github.ref }}` with `cancel-in-progress: true`
+  so rapid pushes stop stacking redundant runs. Also removed the redundant
+  `sudo apt-get install -y shellcheck` step — shellcheck is preinstalled on
+  `ubuntu-latest` runners.
 
 ## [0.9.7] — 2026-04-14
 

@@ -52,7 +52,7 @@ jobs:
           # then stub the dynamic branch lookup with an env var so we can drive it
           # with arbitrary branch names. The case-statement classifier is what we
           # actually want to exercise.
-          CMD=$(jq -r '.hooks.PreToolUse[] | select(.matcher=="Edit|MultiEdit|Write") | .hooks[0].command' .claude/settings.json)
+          CMD=$(jq -r '.hooks.PreToolUse[] | select(.matcher | contains("Write")) | .hooks[0].command' .claude/settings.json)
 
           if [ -z "$CMD" ] || [ "$CMD" = "null" ]; then
             echo "::error::could not extract branch-guard command from .claude/settings.json"

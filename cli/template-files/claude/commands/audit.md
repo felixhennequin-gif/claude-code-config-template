@@ -14,7 +14,14 @@ Run a full quality audit on the codebase. Combines code review, security check, 
 
 1. **Security scan**
    - Run the project's dependency audit (e.g. `npm audit --audit-level=high`, `pip-audit`, `cargo audit`) inside `BACKEND_DIR`.
-   - Check for hardcoded secrets: grep for `password`, `secret`, `api_key`, `token` in source files.
+   - Check for hardcoded secret assignments — patterns where a sensitive key name is assigned a literal value of 8+ characters:
+     ```bash
+     grep -rE "(SECRET|PASSWORD|API_KEY|TOKEN|PRIVATE_KEY)\s*=\s*['\"][^'\"]{8,}" \
+       --include="*.js" --include="*.ts" --include="*.py" \
+       --include="*.env*" . 2>/dev/null \
+       | grep -v "\.example" | grep -v "\.test\." | grep -v "\.spec\."
+     ```
+     Flag any match that is not an environment variable reference (i.e. not `process.env.*` or `os.environ*`).
    - Review auth/JWT implementation in the auth middleware.
    - Check CORS, security headers, and rate limiting config.
 

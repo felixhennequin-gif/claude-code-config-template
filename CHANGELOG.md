@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `.claude/settings.json` (+ `cli/template-files/` mirror) — `PreToolUse` and
+  `PostToolUse` matchers now include `NotebookEdit` alongside
+  `Edit|MultiEdit|Write`. Previously both the `main`/`master` branch guard
+  and the auto-lint hook silently skipped `.ipynb` edits, leaving
+  notebook-heavy projects (data science, ML) unprotected.
+
 ### Fixed
 - `.claude/hooks/lint-on-edit.sh` (+ `cli/template-files/` mirror) — replaced
   `npx --no eslint --fix` with `npx --no-install eslint --fix`. `--no` is not

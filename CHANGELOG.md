@@ -11,8 +11,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] — 2026-04-14
+
 ### Added
 - `.claude/commands/wrap.md` — `/wrap` slash command for end-of-session CLAUDE.md updates. Summarizes git diff, updates only changed sections, proposes a commit. Replaces the missing SessionEnd hook.
+- `examples/agents/fastapi-reviewer.md` — FastAPI/Python example agent (Security, Async patterns, Pydantic v2, Architecture, Alembic checklist).
+- `.claude/skills/core/coding-principles/SKILL.md` — BAD/GOOD code examples for all 4 rules (think before coding, simplicity, surgical changes, goal-driven execution).
+- `template/settings.local.json.example` — user-level permissions override template (gitignored, install-only, mirrors `CLAUDE.local.md.example` pattern).
+- `README.md` — `settings.local.json` documentation under global config section.
+
+### Changed
+- `audit.md` — secrets scan rewritten: targeted `grep -rE` on assignment patterns instead of keyword grep; excludes `.example`/`.test`/`.spec` and `process.env` refs.
+- `express-api/SKILL.md` — removed dead `app.del()` anti-pattern.
+- `react-frontend/SKILL.md` — hooks return style marked as team preference, not a framework rule.
+- `examples/express-api.CLAUDE.md` — path drift fix: `lib/prisma.js` → `src/lib/prisma.js` in Gotchas section.
+- `examples/agents/reviewer.md` — Conventional commits moved from Code quality to new Git hygiene section.
+- `examples/agents/security-auditor.md` — password hashing: argon2id as primary recommendation, bcrypt >= 12 as fallback, MD5/SHA-1/unsalted banned.
+
+### Fixed
+- `error-handling/SKILL.md` — contradiction between Rule 1 example (log+rethrow) and anti-patterns (log once at boundary); Rule 1 now shows rethrow only.
+- `session-start.sh` — `grep -r` replaced with `git grep` (respects `.gitignore`, no hang on large projects).
+- `.github/workflows/lint.yml` — IPv4 regex false-positived on version strings; now filtered via `grep -Ev`.
+- `cli/sync-templates.sh` + CI — `settings.local.json` sync failure resolved via option C (`.example` pattern, consistent with `CLAUDE.local.md.example`).
 
 ## [0.8.2] — 2026-04-14
 
@@ -218,7 +238,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.2...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.2...v0.9.0
 [0.8.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.0...v0.8.2
 [0.8.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.6.0...v0.7.0

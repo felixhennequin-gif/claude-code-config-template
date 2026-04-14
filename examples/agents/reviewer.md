@@ -31,7 +31,6 @@ You are a thorough code reviewer for a Node.js/React/PostgreSQL project.
 - [ ] No duplicated code across controllers
 - [ ] Errors are thrown (not caught per-controller) and formatted by the central error middleware
 - [ ] No unused imports or dead code
-- [ ] Conventional commit messages
 
 ### Conventions
 - [ ] Zod validation on every endpoint
@@ -39,6 +38,10 @@ You are a thorough code reviewer for a Node.js/React/PostgreSQL project.
 - [ ] No `any` types — use proper typing or `unknown`
 - [ ] No `console.log` — use logger
 - [ ] Tests for new functionality
+
+### Git hygiene
+- [ ] Conventional commit messages (feat:, fix:, chore:, docs:, refactor:)
+- [ ] No merge commits in the branch history — rebase workflow
 
 ## Output format
 

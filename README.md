@@ -181,6 +181,16 @@ Create `~/.claude/CLAUDE.md` for cross-project preferences:
 
 Keep it under 15 lines. Anything project-specific belongs in the project's own `CLAUDE.md`.
 
+**`.claude/settings.local.json`** is gitignored and ships as an empty permissions override. Use it to add personal tool permissions without touching the shared `settings.json`:
+
+```json
+{
+  "permissions": {
+    "allow": ["Bash(python:*)", "Bash(pytest:*)"]
+  }
+}
+```
+
 ### MCP integration
 
 This template does not ship a `.mcp.json` — MCP server configs are project-specific. Create one at your project root:

@@ -88,6 +88,5 @@ const createItemSchema = z.object({
 
 - ❌ `res.status(200).json({ error: true })` — use real status codes
 - ❌ Business logic inside controllers
-- ❌ `app.del()` — removed in Express 5, use `app.delete()`
 - ❌ Catch-all `try/catch` in every controller (pointless under Express 5)
 - ❌ `req.body` without Zod validation

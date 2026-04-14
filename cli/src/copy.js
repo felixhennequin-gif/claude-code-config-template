@@ -188,6 +188,10 @@ export function copyTemplate(targetDir, selectedStacks) {
   const claudeDirDest = join(targetDir, '.claude');
   const skipPaths = getSkipPaths(selectedStacks);
 
+  // settings.local.json.example is install-time only: it gets renamed to
+  // settings.local.json in the target and the .example file itself is not shipped.
+  skipPaths.add(join('claude', 'settings.local.json.example'));
+
   if (existsSync(claudeDirDest)) {
     results.push({ file: '.claude/', status: 'skipped', reason: 'already exists — delete it first to re-scaffold' });
   } else {
@@ -195,6 +199,15 @@ export function copyTemplate(targetDir, selectedStacks) {
     results.push({ file: '.claude/', status: 'copied' });
     for (const rel of walkFiles(claudeDirDest)) {
       copiedPaths.push(join('.claude', rel));
+    }
+
+    // Install settings.local.json from the .example template (skip if user already has one)
+    const settingsLocalSrc = join(TEMPLATE_DIR, 'claude', 'settings.local.json.example');
+    const settingsLocalDest = join(claudeDirDest, 'settings.local.json');
+    if (existsSync(settingsLocalSrc) && !existsSync(settingsLocalDest)) {
+      copyFileSync(settingsLocalSrc, settingsLocalDest);
+      results.push({ file: '.claude/settings.local.json', status: 'copied' });
+      copiedPaths.push(join('.claude', 'settings.local.json'));
     }
 
     const skippedStacks = ['express-api', 'prisma-patterns', 'react-frontend']

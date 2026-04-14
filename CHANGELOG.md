@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `.github/workflows/lint.yml` — branch-guard smoke test used an exact-string
+  `jq` match on the `Edit|MultiEdit|Write` matcher, which broke after the
+  matcher gained `NotebookEdit`. Switched to `contains("Write")` so the test
+  keeps finding the hook regardless of future matcher additions.
+
 ### Added
 - `.claudeignore` at the repo root — previously untracked. Reduces session
   noise when Claude Code works *on this repo* (not the downstream template

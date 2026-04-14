@@ -40,6 +40,58 @@ jobs:
           # Should BLOCK — fail-closed on unparseable input
           ! echo 'not json at all' | bash .claude/hooks/bash-safety.sh
 
+      - name: Smoke-test branch guard (settings.json PreToolUse hook)
+        run: |
+          set -euo pipefail
+
+          # Extract the Edit|MultiEdit|Write PreToolUse command from settings.json,
+          # then stub the dynamic branch lookup with an env var so we can drive it
+          # with arbitrary branch names. The case-statement classifier is what we
+          # actually want to exercise.
+          CMD=$(jq -r '.hooks.PreToolUse[] | select(.matcher=="Edit|MultiEdit|Write") | .hooks[0].command' .claude/settings.json)
+
+          if [ -z "$CMD" ] || [ "$CMD" = "null" ]; then
+            echo "::error::could not extract branch-guard command from .claude/settings.json"
+            exit 1
+          fi
+
+          # Replace:
+          #   BRANCH="$(cd "$CLAUDE_PROJECT_DIR" && git branch --show-current 2>/dev/null)"
+          # with:
+          #   BRANCH="$TEST_BRANCH"
+          STUBBED=$(printf '%s' "$CMD" | sed 's|BRANCH="\$([^)]*)"|BRANCH="$TEST_BRANCH"|')
+
+          if [ "$STUBBED" = "$CMD" ]; then
+            echo "::error::sed stub failed — branch-guard one-liner shape changed, update this smoke test"
+            exit 1
+          fi
+
+          run_guard() {
+            local expected=$1
+            local branch=$2
+            local rc=0
+            ( export TEST_BRANCH="$branch"; eval "$STUBBED" ) 2>/dev/null || rc=$?
+            if [ "$rc" -ne "$expected" ]; then
+              echo "::error::branch guard for '$branch' returned $rc, expected $expected"
+              exit 1
+            fi
+          }
+
+          # Protected branches — must block (exit 2)
+          run_guard 2 main
+          run_guard 2 master
+
+          # Feature branches — must allow (exit 0)
+          run_guard 0 feat/test
+          run_guard 0 fix/whatever
+          run_guard 0 docs/readme
+
+          # Detached HEAD returns empty string — documented intentional passthrough
+          # (see CLAUDE.md: "A detached HEAD returns empty and passes the guard — intentional, don't 'fix' it.")
+          run_guard 0 ""
+
+          echo "branch guard smoke-test passed"
+
       - name: Check CLI template sync
         run: |
           bash cli/sync-templates.sh

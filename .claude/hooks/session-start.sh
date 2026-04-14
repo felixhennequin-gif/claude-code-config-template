@@ -12,6 +12,12 @@ echo "Branch: $(git branch --show-current 2>/dev/null || echo 'unknown')"
 echo "Last commit: $(git log -1 --oneline 2>/dev/null || echo 'none')"
 echo ""
 
+CLAUDE_LOCAL="${CLAUDE_PROJECT_DIR:-.}/CLAUDE.local.md"
+if [ ! -f "$CLAUDE_LOCAL" ]; then
+  echo "Note: CLAUDE.local.md not found. Copy CLAUDE.local.md.example to CLAUDE.local.md and fill it in for personal context."
+  echo ""
+fi
+
 # Uncommitted changes summary
 CHANGES=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
 if [ "$CHANGES" -gt 0 ]; then

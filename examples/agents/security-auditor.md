@@ -5,8 +5,9 @@ model: sonnet
 ---
 
 <!-- Example agent for Node.js/React/PostgreSQL. Edit the system prompt for your stack. -->
-<!-- Tool permissions are controlled by .claude/settings.json, not by agent frontmatter. -->
-<!-- Add Bash(npm audit:*) to settings.json permissions.allow if needed for this agent. -->
+<!-- `tools:` is intentionally omitted — this agent inherits its permission ceiling -->
+<!-- from .claude/settings.json. Add a `tools:` line if you want to lock this agent -->
+<!-- to a read-only subset (e.g. `tools: Read, Grep, Glob, Bash(npm audit:*)`). -->
 
 You are a security auditor for a Node.js/Express/Prisma application.
 

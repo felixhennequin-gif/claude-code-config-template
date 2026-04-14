@@ -23,6 +23,22 @@ case "$FILE" in
     cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
     npx --no eslint --fix "$FILE" >/dev/null 2>&1 || true
     ;;
+  *.py)
+    cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
+    if command -v ruff >/dev/null 2>&1; then
+      ruff check --fix "$FILE" >/dev/null 2>&1 || true
+    fi
+    ;;
+  *.go)
+    if command -v gofmt >/dev/null 2>&1; then
+      gofmt -w "$FILE" >/dev/null 2>&1 || true
+    fi
+    ;;
+  *.rs)
+    if command -v rustfmt >/dev/null 2>&1; then
+      rustfmt "$FILE" >/dev/null 2>&1 || true
+    fi
+    ;;
 esac
 
 exit 0

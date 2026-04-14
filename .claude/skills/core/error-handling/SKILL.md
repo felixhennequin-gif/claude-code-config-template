@@ -5,7 +5,7 @@ description: Universal error handling patterns. Activates when writing error han
 
 # Error handling
 
-Three rules that apply to every language and stack.
+Four rules that apply to every language and stack.
 
 ## 1. Fail loudly at the boundary, silently never
 
@@ -44,6 +44,45 @@ class NotFoundError extends AppError {
 throw new NotFoundError('User');
 ```
 
+## 4. Classify at the HTTP boundary, propagate typed errors everywhere else
+
+The HTTP layer is the only place that maps error types to status codes. Business logic throws typed errors; the error middleware (or equivalent) translates them into responses. Service and repository layers must not know about HTTP.
+
+```js
+// BAD — mapping scattered across controllers, duplicated on every route
+app.get('/users/:id', async (req, res) => {
+  const user = await getUser(req.params.id);
+  if (!user) return res.status(404).json({ error: 'not found' });
+  if (!canRead(req.user, user)) return res.status(403).json({ error: 'forbidden' });
+  res.json(user);
+});
+
+// GOOD — services throw typed errors, one middleware maps them
+// service layer:
+async function getUser(id, actor) {
+  const user = await repo.findById(id);
+  if (!user) throw new NotFoundError('User');
+  if (!canRead(actor, user)) throw new ForbiddenError('User');
+  return user;
+}
+
+// boundary (runs once, for every route):
+const STATUS_MAP = {
+  NotFoundError: 404,
+  UnauthorizedError: 401,
+  ForbiddenError: 403,
+  ValidationError: 400,
+  ConflictError: 409,
+};
+app.use((err, req, res, _next) => {
+  const status = STATUS_MAP[err.constructor.name] ?? 500;
+  if (status === 500) logger.error({ err }, 'unhandled error');
+  res.status(status).json({ error: err.message });
+});
+```
+
+The same pattern applies to any boundary that speaks a protocol: gRPC status codes, GraphQL error extensions, message-queue DLQ routing. Only one place per boundary owns the mapping.
+
 ## Anti-patterns
 
 - ❌ Empty catch blocks (`catch {}` / `except: pass`)
@@ -51,3 +90,5 @@ throw new NotFoundError('User');
 - ❌ Checking error message strings (`if (e.message.includes('not found')`)
 - ❌ Re-throwing a different error type that loses the original stack trace — use `cause`: `throw new AppError('msg', { cause: e })`
 - ❌ Logging AND rethrowing at every layer — log once at the top boundary
+- ❌ HTTP status codes inside the service layer — services don't know about HTTP
+- ❌ Duplicating the status-code mapping across controllers — do it once in the error middleware

@@ -1,78 +1,72 @@
 # Symfony API
 
-Backend API built with Symfony 5.4, API Platform, and Doctrine ORM.
+Backend API built with Symfony and Doctrine ORM.
 
 ## Stack
 
-- **Runtime**: PHP 8.2, Symfony 5.4
-- **API**: API Platform 2.7 (JSON-LD), custom controllers
-- **ORM**: Doctrine 2.13 (primary + secondary entity managers)
-- **Auth**: LDAP → JWT (Lexik) + refresh tokens (Gesdinet)
-- **Scheduling**: cron/cron-bundle 2.10 — schedules stored in DB
-- **Admin**: EasyAdmin 3.5
-- **Quality**: PHPStan level 6, Rector (UP_TO_PHP_82)
+- **Runtime**: PHP 8.1+, Symfony 5.4+ (also works on 6.x / 7.x)
+- **ORM**: Doctrine ORM + Doctrine Migrations
+- **API**: controllers with PHP 8 `#[Route]` attributes (swap in API Platform if you use it)
+- **Auth**: replace with your provider — JWT, OAuth2, session, etc.
+- **Scheduling**: Symfony Scheduler (`#[AsSchedule]`) or system cron
+- **Quality**: PHPStan level 6+, Rector
 
 ## Structure
 
 ```
 src/
-  Command/        → Console commands — batch ops, exports, scheduling
-  Controller/     → HTTP controllers (API Platform + custom)
-  Entity/         → Doctrine ORM entities (PHP 8 attributes)
-  Repository/     → Domain-specific query methods
-  Service/        → One class per external integration
+  Command/        → Console commands (#[AsCommand])
+  Controller/     → HTTP controllers, one action per endpoint
+  Entity/         → Doctrine entities (PHP 8 attributes)
+  Repository/     → Query methods, extends ServiceEntityRepository
+  Service/        → Business logic, one class per concern
 config/
-  packages/       → Bundle YAML configs
-  services.yaml   → DI bindings — env vars injected as bound parameters
-migrations/
-  primary/        → Primary DB migrations
-  secondary/      → Secondary DB migrations
+  packages/       → Bundle configs
+  services.yaml   → DI bindings, env vars via bind:
+migrations/       → Doctrine migrations (append-only)
 ```
 
 ## Commands
 
 ```bash
 composer install
-php bin/console doctrine:migrations:migrate --em=primary
-php bin/console doctrine:migrations:migrate --em=secondary
+php bin/console doctrine:migrations:migrate --no-interaction
 php bin/phpunit
 vendor/bin/phpstan analyse
 vendor/bin/rector process --dry-run
-docker-compose up -d   # PostgreSQL + mailcatcher
 ```
 
 ## Conventions
 
-- Constructor injection only — never `ContainerInterface` or `$_ENV`
-- PHP 8 attribute syntax for routes and ORM mapping — no annotations
-- Controllers are thin — logic lives in `Service/`
-- Bound parameters in `services.yaml` `bind:` — one entry per env var
+- Constructor injection only — never `ContainerInterface` or direct `$_ENV` reads
+- PHP 8 attributes for routes and ORM mapping — no annotations
+- Controllers stay thin — business logic lives in `Service/`, queries in `Repository/`
+- Env vars injected as bound parameters in `services.yaml` under `bind:`
 - PHPStan level 6 must pass before committing to `src/`
-- Migrations are append-only — never edit existing files
-- Cron schedules live in DB (`CronJob` entity) — not in command classes
+- Migrations are append-only — a mistake is fixed by a new migration, never an edit
+- New code must pass `vendor/bin/phpstan analyse` without suppression comments
 
 ## Git workflow
 
-- feature branches: `feat/xxx`, `fix/xxx`
+- Feature branches: `feat/xxx`, `fix/xxx`, `docs/xxx`
 - Conventional commits: `feat:`, `fix:`, `chore:`, `docs:`
 - PHPStan must pass on CI before merge
 
 ## Gotchas
 
-- Two entity managers (`primary` + `secondary`) — never cross-reference entities between them
-- Migrations require `--em=primary` AND `--em=secondary` separately
-- `services.yaml` `bind:` keys must match constructor parameter names exactly
-- Rector target is `UP_TO_PHP_82` — check `composer.json` requires PHP `^8.2`
+- `services.yaml` `bind:` keys must match constructor parameter names exactly (`$apiUrl` ↔ `$apiUrl`)
+- Doctrine generates migrations by diffing mapping metadata — review the SQL, it can emit unexpected `DROP` / `ALTER` statements
+- `php bin/console cache:clear` in `prod` requires the target `var/cache/prod/` to be writable
+- Rector may rewrite code aggressively — always run `--dry-run` first and commit its changes in a separate commit
 
 ## Off-limits
 
-- `.env` — contains real credentials, never modify
-- `config/jwt/*.pem` — JWT keypair, never commit
-- existing migration files — append-only
-- `src/Legacy/` — do not extend legacy patterns (`ContainerInterface`, annotations)
+- `.env` — production credentials, never commit real values
+- `config/secrets/` — secrets vault, never commit decrypted values
+- Applied migration files — append-only
 
 ## References
 
 - See `.claude/skills/stacks/symfony-api/` for Symfony-specific conventions
-- `config/services.yaml` for the full bound parameters list
+- `config/services.yaml` for bound parameter examples
 - See `CONTRIBUTING.md` for the contribution workflow

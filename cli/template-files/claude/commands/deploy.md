@@ -30,9 +30,9 @@ Run the full deployment pipeline for this project.
      them in the project's deploy script or an environment-scoped config
 
 5. **Verify**
-   - Hit the app's health endpoint (e.g. `GET /health`)
-   - Check the process manager status (`pm2 list`, `systemctl status …`,
-     `docker ps`, etc. — whichever this project uses)
-   - Tail the logs for 30 seconds and confirm no errors
+   - Hit the app's health endpoint and report the HTTP status code — e.g. `curl -s -o /dev/null -w "%{http_code}" https://your-app/health`
+   - Check the process manager status and report the output (`pm2 list` / `systemctl status …` / `docker ps` — whichever this project uses)
+   - Report the last 50 log lines (`pm2 logs --lines 50` / `journalctl -n 50` / `docker logs --tail 50 <container>`)
+   - If any error appears in the log output, stop and report it
 
 Report each step's result. Stop at the first failure.

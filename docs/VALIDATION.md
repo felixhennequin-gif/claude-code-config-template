@@ -1,14 +1,15 @@
-# Real-world validation
+# Validation checklist & smoke test results
 
-This template has been tested on real projects to verify that its conventions,
-hooks, and skills produce measurably different Claude Code behavior compared to a bare setup.
+> Results below are from the template author's own project. Non-Node stacks are untested. If you validate on a different stack, please contribute your results via PR.
+
+This file tracks smoke-test runs of the template on concrete projects, to surface where the conventions, hooks, and skills produce different Claude Code behavior compared to a bare setup.
 
 ## Test methodology
 
-For each project, we:
-1. Ran `npx create-claude-code-config` to install the template
+For each project:
+1. Run `npx create-claude-code-config` to install the template
 2. Let Claude Code explore the architecture and fill CLAUDE.md
-3. Observed hook behavior, convention adherence, and CLI correctness
+3. Observe hook behavior, convention adherence, and CLI correctness
 
 ---
 
@@ -59,13 +60,13 @@ A non-Node project (Go, Python, or Rust) will be added here after testing.
 
 ---
 
-## What we learned
+## Observations from this run
 
-- The CLI install is genuinely fast (~30s) and requires zero manual configuration for Node stacks
+- The CLI install is fast (~30s) and requires zero manual configuration for Node stacks
 - The `--update` manifest detection works correctly: SHA-256 comparison catches untouched files, customized files are left intact
 - `settings.json` exclusion from `--update` is the right call — injected permissions vary per project
-- The architecture exploration prompt produces non-trivial, version-specific gotchas that justify the template's existence
-- The branch guard hook enforces conventions without requiring the user to remember them
+- The architecture exploration prompt surfaced non-trivial, version-specific gotchas
+- The branch guard hook enforced conventions without requiring the user to remember them
 
 ## What to watch
 

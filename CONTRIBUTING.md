@@ -78,12 +78,16 @@ Every skill must:
 
 ### Agents (`.claude/agents/*.md`)
 
-- Frontmatter with `name`, `description`, `tools`, `model`.
+- Frontmatter with `name`, `description`, `model` (required) and `tools` (optional).
 - `description` must make it obvious *when* Claude should invoke the agent.
   "Use when reviewing PRs, auditing code quality, or before merging" — not
   "Reviews code."
-- Scope the `tools` list to the minimum needed. A reviewer agent does not need
-  `Bash(rm:*)`.
+- `tools` is **optional**. Include it to restrict the agent to a specific tool
+  subset — useful for read-only agents like `reviewer` or `security-auditor`.
+  Omit it to inherit project permissions from `.claude/settings.json`.
+  When you do include it, scope the list to the minimum needed: a reviewer
+  agent never needs `Bash(rm:*)`. Never use `Bash(*)` as a wildcard — that
+  defeats the purpose of scoping.
 
 ### Commands (`.claude/commands/*.md`)
 
@@ -120,8 +124,9 @@ to specific tools (e.g., a read-only analysis skill).
 ---
 name: agent-name
 description: When to invoke this agent. Be specific.
-tools: Read, Grep, Glob
 model: sonnet
+# tools is optional — include it only to restrict this agent to a tool subset.
+# tools: Read, Grep, Glob
 ---
 ```
 

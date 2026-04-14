@@ -37,7 +37,7 @@ function copyDirRecursive(src, dest, skipPaths = new Set()) {
  * Build the set of stack skill directories to skip.
  */
 function getSkipPaths(selectedStacks) {
-  const allStacks = ['express-api', 'prisma-patterns', 'react-frontend'];
+  const allStacks = ['express-api', 'prisma-patterns', 'react-frontend', 'symfony-api'];
   const skipped = allStacks.filter((s) => !selectedStacks.includes(s));
   return new Set(skipped.map((s) => join('claude', 'skills', 'stacks', s)));
 }
@@ -49,6 +49,7 @@ const STACK_PERMISSIONS = {
   'express-api': ['Bash(npm:*)', 'Bash(npx:*)'],
   'prisma-patterns': ['Bash(npm:*)', 'Bash(npx:*)'],
   'react-frontend': ['Bash(npm:*)', 'Bash(npx:*)'],
+  'symfony-api': ['Bash(composer:*)', 'Bash(php:*)'],
 };
 
 /**
@@ -210,7 +211,7 @@ export function copyTemplate(targetDir, selectedStacks) {
       copiedPaths.push(join('.claude', 'settings.local.json'));
     }
 
-    const skippedStacks = ['express-api', 'prisma-patterns', 'react-frontend']
+    const skippedStacks = ['express-api', 'prisma-patterns', 'react-frontend', 'symfony-api']
       .filter((s) => !selectedStacks.includes(s));
     if (skippedStacks.length > 0) {
       results.push({ file: `stacks removed: ${skippedStacks.join(', ')}`, status: 'info' });

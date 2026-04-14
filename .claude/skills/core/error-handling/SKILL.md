@@ -9,7 +9,7 @@ Three rules that apply to every language and stack.
 
 ## 1. Fail loudly at the boundary, silently never
 
-Errors should propagate up to the layer that can handle them meaningfully. Never swallow an error silently.
+Errors should propagate up to the layer that can handle them meaningfully. Never swallow an error silently. The right default in intermediate layers is **no try/catch at all** — not a rethrow. Wrapping a call only to rethrow is a no-op that linters (ESLint `no-useless-catch`) already flag.
 
 ```js
 // BAD — error is gone, caller thinks it succeeded
@@ -17,13 +17,10 @@ try {
   await doSomething();
 } catch (e) {}
 
-// GOOD — let it propagate. Logging happens once at the top boundary
-// (e.g. an error middleware), not at every intermediate layer.
-try {
-  await doSomething();
-} catch (e) {
-  throw e;
-}
+// GOOD — let it propagate naturally. No try/catch needed here.
+// Errors bubble up to the boundary (e.g. Express 5 error middleware,
+// or an outer try/catch in the entry point) where they're logged once.
+await doSomething();
 ```
 
 ## 2. Fix at the root, not the symptom

@@ -23,13 +23,16 @@ then proposes a commit.
    - Do NOT exceed 80 lines total
    - If nothing relevant changed for a section, leave it as-is
 
-3. **Propose a commit**
-   - Show the CLAUDE.md diff
-   - Ask: "Commit this update? (yes / skip)"
-   - If yes: `git add CLAUDE.md && git commit -m "docs: update CLAUDE.md post-session"`
-   - If skip: leave it staged for the user to commit manually
+3. **Show changes**
+   - Display the CLAUDE.md diff with `git diff CLAUDE.md`
+   - If there are no changes, say so and exit cleanly
+   - If there are changes, ask: "CLAUDE.md has been updated. Options: (1) commit now, (2) stage only, (3) skip"
+   - Option 1: `git add CLAUDE.md && git commit -m "docs: update CLAUDE.md post-session"`
+   - Option 2: `git add CLAUDE.md` — leaves it staged for the user to commit with their next real commit
+   - Option 3: leave unstaged
 
 ## Rules
 - Never invent information. Only document what actually happened in this session.
 - If nothing changed that affects CLAUDE.md, say so and exit cleanly.
 - Keep it fast — this should take under 30 seconds.
+- Most teams prefer not to have session-boundary commits in their history — default to option 2 (stage) if the user doesn't specify a preference.

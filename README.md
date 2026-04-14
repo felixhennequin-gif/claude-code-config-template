@@ -4,7 +4,7 @@
 
 Opinionated starter template for Claude Code — agents, skills, hooks, and commands for any project.
 
-Core files (CLAUDE.md, hooks, commands, the `coding-principles` skill) are stack-agnostic and ship with every install. Stack-specific conventions live under `.claude/skills/stacks/` and can be kept, pruned, or replaced individually.
+Core files (CLAUDE.md, hooks, commands, and the core skills under `.claude/skills/core/` — `coding-principles`, `debugging`, `error-handling`, `testing`) are stack-agnostic and ship with every install. Stack-specific conventions live under `.claude/skills/stacks/` and can be kept, pruned, or replaced individually.
 
 Based on analysis of notable open-source Claude Code configurations (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI, and others) — see [the full research](./RESEARCH.md).
 
@@ -54,7 +54,7 @@ echo "CLAUDE.local.md" >> your-project/.gitignore
 echo ".claude/settings.local.json" >> your-project/.gitignore
 ```
 
-This gives you the stack-agnostic baseline: hooks, commands, rules, and the universal `coding-principles` skill.
+This gives you the stack-agnostic baseline: hooks, commands, rules, and the universal core skills (`coding-principles`, `debugging`, `error-handling`, `testing`).
 
 > The hook in `settings.json` blocks edits on `main` and `master`. If your project uses a different protected branch, update the branch name in `.claude/settings.json`.
 
@@ -136,7 +136,9 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   ├── skills/
 │   │   ├── core/
 │   │   │   ├── coding-principles/SKILL.md # Universal behavioral rules
-│   │   │   └── debugging/SKILL.md         # Structured debugging workflow
+│   │   │   ├── debugging/SKILL.md         # Structured debugging workflow
+│   │   │   ├── error-handling/SKILL.md    # Universal error-handling patterns
+│   │   │   └── testing/SKILL.md           # Testing strategy and decisions
 │   │   └── stacks/                        # Optional — delete what you don't use
 │   │       ├── prisma-patterns/SKILL.md   # Prisma 7 conventions
 │   │       ├── express-api/SKILL.md       # Express 5 patterns

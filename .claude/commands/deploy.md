@@ -1,32 +1,25 @@
 # Deploy workflow
 # Usage: /deploy
 
-<!-- Configure these for your project -->
-<!-- BUILD_CMD: npm run build -->
-<!-- TEST_CMD: npm test -->
-<!-- BACKEND_DIR: backend/ -->
-<!-- FRONTEND_DIR: frontend/ -->
-<!-- DEPLOY_SCRIPT: ./scripts/deploy.sh -->
-
 Run the full deployment pipeline for this project.
 
 ## Steps
 
 1. **Pre-checks**
-   - Confirm we are on `main` or `dev`
+   - Confirm the current branch is the project's release branch (typically `main`, `master`, or `dev` — check `CLAUDE.md` or `README.md` for the project's convention)
    - `git status --porcelain` — if the working tree is dirty, stop and ask
    - Confirm the remote is up to date (`git fetch && git status -sb`)
 
 2. **Tests**
-   - `cd $BACKEND_DIR && $TEST_CMD`
+   - Inspect `package.json`, `Makefile`, `pyproject.toml`, or `go.mod` to find the test command, then run it from the correct directory.
    - If any test fails, stop and report
 
 3. **Build**
-   - `cd $FRONTEND_DIR && $BUILD_CMD`
+   - Inspect `package.json` (or the equivalent for the project's language) to find the build script and the frontend/backend directory, then run the build.
    - Verify the build output directory exists and is non-empty
 
 4. **Deploy**
-   - Prefer a repo-local script: if `$DEPLOY_SCRIPT` exists, run it
+   - Check if a deploy script exists at common locations (`scripts/deploy.sh`, `deploy.sh`, `Makefile` `deploy` target, `justfile` `deploy` recipe) and run it if found.
    - Otherwise, follow the project's documented deployment path —
      typically one of:
      - SSH to the server, pull latest, install deps, run migrations,
@@ -34,7 +27,7 @@ Run the full deployment pipeline for this project.
      - Push to a branch/tag that triggers a CI/CD pipeline
      - Push a container image to the registry and restart the service
    - Never hardcode the target host or credentials in this file — put
-     them in `$DEPLOY_SCRIPT` or an environment-scoped config
+     them in the project's deploy script or an environment-scoped config
 
 5. **Verify**
    - Hit the app's health endpoint (e.g. `GET /health`)

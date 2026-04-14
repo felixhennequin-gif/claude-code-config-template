@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.4] — 2026-04-14
+
 ### Fixed
 - `symfony-api/SKILL.md` — réécriture complète depuis zéro avec conventions
   Symfony 5.4+ stock uniquement. Suppression de toutes les références projet-spécifiques :
@@ -51,6 +53,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `settings.json` ajoutée.
 
 ### Added
+- `.claude/skills/core/ci-cd-pipeline/SKILL.md` — GitHub Actions and GitLab CI patterns:
+  job structure, artifact passing, OIDC authentication, DAG with `needs`, security
+  checklist (SHA pinning, least privilege, scoped secrets), and anti-patterns to flag
+  in existing workflows. `template/CLAUDE.md` gains a `## CI/CD conventions` block
+  referencing the skill.
 - `.claude/hooks/user-prompt-context.sh` — exemple commenté de `UserPromptSubmit` hook
   pour injecter du contexte à chaque prompt.
 - `.github/workflows/lint.yml` — step "Smoke-test bash-safety hook" : vérifie les cas
@@ -304,7 +311,9 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.2...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.4...HEAD
+[0.9.4]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.3...v0.9.4
+[0.9.3]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.2...v0.9.0

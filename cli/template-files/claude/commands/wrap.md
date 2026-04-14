@@ -20,7 +20,7 @@ then proposes a commit.
      - Conventions if a new pattern was established during the session
      - Gotchas if a non-obvious issue was discovered and fixed
    - Do NOT rewrite sections that didn't change
-   - Do NOT exceed 80 lines total
+   - Do NOT exceed 80 lines total — if CLAUDE.md is already at or near 80 lines, remove the oldest stale gotcha (or the least load-bearing bullet in Conventions/Structure) before adding a new one. Prefer pruning over append-only growth.
    - If nothing relevant changed for a section, leave it as-is
 
 3. **Show changes**

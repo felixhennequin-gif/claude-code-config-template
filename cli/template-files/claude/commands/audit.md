@@ -11,9 +11,10 @@ Run a full quality audit on the codebase. Combines code review, security check, 
      ```bash
      grep -rE "(SECRET|PASSWORD|API_KEY|TOKEN|PRIVATE_KEY)\s*=\s*['\"][^'\"]{8,}" \
        --include="*.js" --include="*.ts" --include="*.py" \
-       --include="*.env*" . 2>/dev/null \
+       --include=".env" --include="*.env*" . 2>/dev/null \
        | grep -v "\.example" | grep -v "\.test\." | grep -v "\.spec\."
      ```
+     `--include=".env"` and `--include="*.env*"` are listed separately on purpose: the former guarantees the plain `.env` file is scanned, the latter covers `.env.local`, `.env.production`, `app.env`, etc.
      Flag any match that is not an environment variable reference (i.e. not `process.env.*` or `os.environ*`).
    - Review auth/JWT implementation in the auth middleware.
    - Check CORS, security headers, and rate limiting config.

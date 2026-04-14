@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.1] — 2026-04-14
+
+### Added
+- `.claude/skills/core/testing/SKILL.md` — testing strategy skill: what to
+  test, success criterion before implementing, coverage as a floor, when not
+  to write tests. Complements rules/test-files.md with task-description-based
+  activation.
+- README.md — midudev/autoskills added to the comparison table
+
 ## [0.9.0] — 2026-04-14
 
 ### Added
@@ -238,7 +247,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.2...v0.9.0
 [0.8.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.0...v0.8.2
 [0.8.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.7.0...v0.8.0

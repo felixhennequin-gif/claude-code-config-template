@@ -36,7 +36,7 @@ export function updateTemplate(targetDir) {
 
   for (const relPath of templateFiles) {
     // Map template-files/ paths to target paths:
-    //   "claude/hooks/bash-safety.sh" → ".claude/hooks/bash-safety.sh"
+    //   "claude/hooks/dangerous-rm-guard.sh" → ".claude/hooks/dangerous-rm-guard.sh"
     //   "CLAUDE.md"                   → "CLAUDE.md"
     //   ".claudeignore"               → ".claudeignore"
     const targetRelPath =

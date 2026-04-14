@@ -1,6 +1,6 @@
 # claude-code-config-template
 
-An opinionated Claude Code starter template for any project. The core — `template/CLAUDE.md`, hooks, commands, rules, and the universal `coding-principles` skill under `.claude/skills/core/` — is stack-agnostic. Stack-specific conventions live under `.claude/skills/stacks/` and are optional. Default subagents ship as examples under `examples/agents/` (Node/React/PostgreSQL-flavored) — `.claude/agents/` is empty by default so it never ships stack assumptions downstream.
+An opinionated Claude Code starter template for any project. The core — `template/CLAUDE.md`, hooks, commands, rules, and the universal skills under `.claude/skills/core/` (`coding-principles`, `debugging`, `error-handling`, `testing`) — is stack-agnostic. Stack-specific conventions live under `.claude/skills/stacks/` and are optional. Default subagents ship as examples under `examples/agents/` (Node/React/PostgreSQL-flavored) — `.claude/agents/` is empty by default so it never ships stack assumptions downstream.
 
 This `CLAUDE.md` is **not** the downstream-facing template — it's the one Claude Code loads when working *on this repo*. The downstream template lives at [`template/CLAUDE.md`](./template/CLAUDE.md).
 
@@ -8,7 +8,7 @@ This `CLAUDE.md` is **not** the downstream-facing template — it's the one Clau
 
 - **`template/CLAUDE.md`** — the stack-agnostic placeholder project context users copy into their own projects
 - **`template/CLAUDE.local.md.example`** — the personal-override template users copy to `CLAUDE.local.md` (which is gitignored)
-- **`.claude/skills/core/coding-principles/`** — the one universal behavioral skill that ships with every install
+- **`.claude/skills/core/`** — universal behavioral skills that ship with every install: `coding-principles`, `debugging`, `error-handling`, `testing`
 - **`.claude/skills/stacks/`** — optional stack-specific skills (currently `prisma-patterns`, `express-api`, `react-frontend`); users delete the whole directory or keep a subset
 - **`.claude/` (rest)** — hooks (lint-on-edit, session-start, bash-safety), commands, and rules, all stack-agnostic
 - **`.claude/agents/`** — empty by default, just a README pointing to `examples/agents/`
@@ -36,6 +36,8 @@ template/
       README.md                 # What "core" means
       coding-principles/        # Universal behavioral skill (always copy)
       debugging/                # Structured debugging workflow (always copy)
+      error-handling/           # Universal error-handling patterns (always copy)
+      testing/                  # Testing strategy and decisions (always copy)
     stacks/
       README.md                 # What "stacks" means
       prisma-patterns/          # Optional
@@ -48,7 +50,8 @@ template/
     notification.sh             # Desktop alert when Claude waits for input (Notification)
   rules/
     test-files.md               # Scoped rules for *.test.*, *.spec.*
-    banned-patterns.md          # Universal + JS/TS + Python anti-patterns
+    banned-patterns.md          # Universal + JS/TS anti-patterns
+    banned-patterns-python.md   # Python-specific anti-patterns
 docs/
   CONTEXT-BUDGET.md             # Token estimates per component + budget profiles
   VALIDATION.md                 # Real-world test results template (fill after testing)
@@ -124,7 +127,7 @@ echo '' | bash .claude/hooks/bash-safety.sh
 - **Keep `template/CLAUDE.md` under ~80 lines** and examples under ~80 lines — Claude Code drops context beyond that.
 - **Don't duplicate linters.** If ESLint / Prettier / the hook already enforces a rule, don't write it into a skill.
 - **Conventions across files must agree.** A contradiction between a skill and an agent is a bug (see past incident in `CHANGELOG.md` Unreleased: `reviewer` vs `express-api` on `try/catch`).
-- **Core vs. stacks/ split is load-bearing.** `.claude/skills/core/` (currently just `coding-principles`) and everything outside `.claude/skills/stacks/` must stay stack-agnostic so downstream users on any language can install them untouched. Anything Node/Python/Go/Rust-specific belongs under `.claude/skills/stacks/<name>/` or — for subagents — `examples/agents/`.
+- **Core vs. stacks/ split is load-bearing.** `.claude/skills/core/` (currently `coding-principles`, `debugging`, `error-handling`, `testing`) and everything outside `.claude/skills/stacks/` must stay stack-agnostic so downstream users on any language can install them untouched. Anything Node/Python/Go/Rust-specific belongs under `.claude/skills/stacks/<name>/` or — for subagents — `examples/agents/`.
 - **`.claude/agents/` is empty by default.** Stack-flavored subagents live under `examples/agents/` and must include a `<!-- Example agent for <stack>... -->` header comment. Don't re-add defaults to `.claude/agents/` without making them truly stack-agnostic.
 
 ## Git workflow

@@ -67,28 +67,29 @@ Never add Doctrine annotations — PHP 8 attribute syntax only (`#[ORM\Entity]`,
 
 ## 3. Multi-entity manager — never cross managers
 
-Two entity managers: `default` (PostgreSQL) and `iws` (SQL Server).
-Never reference entities from one EM in queries of the other.
-Always specify the EM explicitly for migrations and schema operations.
+Some projects run two entity managers (e.g. `primary` for the main database
+and `secondary` for a legacy or external one). When they do, never reference
+entities from one EM in queries of the other, and always specify the EM
+explicitly for migrations and schema operations.
 
 ```php
 // BAD — implicit EM, will use wrong connection
-$this->entityManager->getRepository(IwsEntity::class)->findAll();
+$this->entityManager->getRepository(SecondaryEntity::class)->findAll();
 
 // GOOD — inject the correct EM explicitly
 public function __construct(
-    #[Autowire(service: 'doctrine.orm.default_entity_manager')]
+    #[Autowire(service: 'doctrine.orm.primary_entity_manager')]
     private readonly EntityManagerInterface $em,
-    #[Autowire(service: 'doctrine.orm.iws_entity_manager')]
-    private readonly EntityManagerInterface $iwsEm,
+    #[Autowire(service: 'doctrine.orm.secondary_entity_manager')]
+    private readonly EntityManagerInterface $secondaryEm,
 ) {}
 ```
 
 Migration commands:
 ```bash
 # Always run both — they manage separate schema sets
-php bin/console doctrine:migrations:migrate --em=default
-php bin/console doctrine:migrations:migrate --em=cron
+php bin/console doctrine:migrations:migrate --em=primary
+php bin/console doctrine:migrations:migrate --em=secondary
 ```
 
 Never edit existing migration files — migrations are append-only.
@@ -117,8 +118,8 @@ class SyncServersCommand extends Command
 
 ## 5. Migrations
 
-- Generate: `php bin/console make:migration` (default EM) or
-  `php bin/console doctrine:migrations:diff --em=cron`
+- Generate: `php bin/console make:migration` (primary EM) or
+  `php bin/console doctrine:migrations:diff --em=secondary`
 - Never edit existing migration files
 - Review generated SQL before committing — Doctrine may emit unexpected DROPs
 - Run against test DB before production
@@ -144,8 +145,8 @@ Never add `@phpstan-ignore` without a documented reason.
 - ❌ `$_ENV['KEY']` or `getenv('KEY')` — use bound parameters from `services.yaml`
 - ❌ `ContainerInterface` in new services or controllers
 - ❌ Doctrine annotation syntax (`@ORM\Entity`) — use PHP 8 attributes
-- ❌ Cross-EM entity references — `default` and `iws` are isolated
+- ❌ Cross-EM entity references — `primary` and `secondary` are isolated
 - ❌ Hardcoded cron schedules in command classes
 - ❌ Editing existing migration files
 - ❌ `shell_exec` or `exec` in new code
-- ❌ `verify_peer=false` in new HTTP clients — legacy NetboxApi does this, don't replicate
+- ❌ `verify_peer=false` in new HTTP clients — legacy `LegacyHttpClient` does this, don't replicate

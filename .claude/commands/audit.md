@@ -3,17 +3,10 @@
 
 Run a full quality audit on the codebase. Combines code review, security check, and convention compliance.
 
-<!-- Configure these paths for your project -->
-<!-- BACKEND_DIR: backend/ -->
-<!-- FRONTEND_DIR: frontend/ -->
-<!-- SCHEMA_PATH: prisma/schema.prisma -->
-
-> Edit the paths above to match your project structure. The steps below reference them as placeholders.
-
 ## Steps
 
 1. **Security scan**
-   - Run the project's dependency audit (e.g. `npm audit --audit-level=high`, `pip-audit`, `cargo audit`) inside `BACKEND_DIR`.
+   - Inspect `package.json`, `pyproject.toml`, `Cargo.toml`, or `go.mod` to identify the language and find the backend directory. Run the appropriate dependency audit (`npm audit --audit-level=high`, `pip-audit`, `cargo audit`, `govulncheck ./...`) from that directory.
    - Check for hardcoded secret assignments — patterns where a sensitive key name is assigned a literal value of 8+ characters:
      ```bash
      grep -rE "(SECRET|PASSWORD|API_KEY|TOKEN|PRIVATE_KEY)\s*=\s*['\"][^'\"]{8,}" \
@@ -32,7 +25,7 @@ Run a full quality audit on the codebase. Combines code review, security check, 
    - Check for debug output (`console.log`, `print`, `dbg!`) in non-test files.
 
 3. **Database**
-   - Review `SCHEMA_PATH` for missing indexes, missing timestamps, inconsistent naming.
+   - Locate the schema file (e.g. `prisma/schema.prisma`, `db/schema.rb`, `alembic/versions/`, `db/migrations/`) and review it for missing indexes, missing timestamps, inconsistent naming.
    - Check for N+1 patterns: find single-row queries inside loops.
    - Verify seed/fixture scripts are idempotent.
 

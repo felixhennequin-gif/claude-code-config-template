@@ -6,7 +6,7 @@ Backend API built with Symfony 5.4, API Platform, and Doctrine ORM.
 
 - **Runtime**: PHP 8.2, Symfony 5.4
 - **API**: API Platform 2.7 (JSON-LD), custom controllers
-- **ORM**: Doctrine 2.13 (PostgreSQL primary, SQL Server secondary)
+- **ORM**: Doctrine 2.13 (primary + secondary entity managers)
 - **Auth**: LDAP → JWT (Lexik) + refresh tokens (Gesdinet)
 - **Scheduling**: cron/cron-bundle 2.10 — schedules stored in DB
 - **Admin**: EasyAdmin 3.5
@@ -25,16 +25,16 @@ config/
   packages/       → Bundle YAML configs
   services.yaml   → DI bindings — env vars injected as bound parameters
 migrations/
-  default/        → Main DB migrations
-  crondb/         → Cron bundle migrations
+  primary/        → Primary DB migrations
+  secondary/      → Secondary DB migrations
 ```
 
 ## Commands
 
 ```bash
 composer install
-php bin/console doctrine:migrations:migrate --em=default
-php bin/console doctrine:migrations:migrate --em=cron
+php bin/console doctrine:migrations:migrate --em=primary
+php bin/console doctrine:migrations:migrate --em=secondary
 php bin/phpunit
 vendor/bin/phpstan analyse
 vendor/bin/rector process --dry-run
@@ -59,8 +59,8 @@ docker-compose up -d   # PostgreSQL + mailcatcher
 
 ## Gotchas
 
-- Two entity managers (`default` + `iws`) — never cross-reference entities between them
-- Migrations require `--em=default` AND `--em=cron` separately
+- Two entity managers (`primary` + `secondary`) — never cross-reference entities between them
+- Migrations require `--em=primary` AND `--em=secondary` separately
 - `services.yaml` `bind:` keys must match constructor parameter names exactly
 - Rector target is `UP_TO_PHP_82` — check `composer.json` requires PHP `^8.2`
 

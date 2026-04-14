@@ -23,10 +23,14 @@ function formatUser(user) {
   return `${user.firstName} ${user.lastName}`;
 }
 
-// GOOD — name the ambiguity before implementing
-// Ambiguity: "format" could mean display name, slug, or serialized object.
-// Assuming display name ("First Last") — confirm before merging.
-function formatUser(user) {
+// GOOD — name the ambiguity, stop before implementing
+// Request: "format the user"
+// Ambiguity: "format" could mean:
+//   1. Display name for UI ("First Last")
+//   2. URL slug for routing ("first-last")
+//   3. Serialized object for the API ({ id, name, email })
+// Proceeding with assumption 1 — confirm before merging.
+function formatUserDisplayName(user) {
   return `${user.firstName} ${user.lastName}`;
 }
 ```

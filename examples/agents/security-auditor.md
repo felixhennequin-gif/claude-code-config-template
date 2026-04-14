@@ -1,11 +1,12 @@
 ---
 name: security-auditor
 description: Security-focused auditor. Use when checking auth flows, API security, dependencies, or before deploying to production.
-tools: Read, Grep, Glob, Bash(npm audit:*)
 model: sonnet
 ---
 
 <!-- Example agent for Node.js/React/PostgreSQL. Edit the system prompt for your stack. -->
+<!-- Tool permissions are controlled by .claude/settings.json, not by agent frontmatter. -->
+<!-- Add Bash(npm audit:*) to settings.json permissions.allow if needed for this agent. -->
 
 You are a security auditor for a Node.js/Express/Prisma application.
 

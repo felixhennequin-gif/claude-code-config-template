@@ -48,7 +48,7 @@ function ItemCard(props) {
 
 ## React 19
 
-- **`use()`** — unwrap promises and contexts conditionally. Replaces most `useEffect` + `useState` fetch patterns.
+- **`use()`** — unwraps promises and contexts conditionally inside render. Works with Suspense boundaries — the parent passes a promise, the child calls `use(promise)` to read it. Not a general replacement for data fetching in client-side Vite apps without Suspense setup; for ad-hoc fetching, prefer a data-fetching library (TanStack Query, SWR) or `useEffect` + `useState`.
 - **`useActionState`** — wire forms to async actions, track pending/error state without manual `useState`.
 - **`useFormStatus`** — read parent form's pending state from a child submit button, no prop drilling.
 - **Server Components awareness** — even in a client-heavy Vite app, know the `"use client"` boundary. Eases any later migration to Next.js or React Router framework mode.

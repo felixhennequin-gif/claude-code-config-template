@@ -49,9 +49,8 @@ template/
     bash-safety.sh              # Blocks destructive commands (PreToolUse Bash)
     notification.sh             # Desktop alert when Claude waits for input (Notification)
   rules/
-    test-files.md               # Scoped rules for *.test.*, *.spec.*
-    banned-patterns.md          # Universal + JS/TS anti-patterns
-    banned-patterns-python.md   # Python-specific anti-patterns
+    banned-patterns.md          # Universal + JS/TS anti-patterns (path-scoped)
+    banned-patterns-python.md   # Python-specific anti-patterns (path-scoped)
 docs/
   CONTEXT-BUDGET.md             # Token estimates per component + budget profiles
   VALIDATION.md                 # Real-world test results template (fill after testing)
@@ -144,6 +143,7 @@ echo '' | bash .claude/hooks/bash-safety.sh
 - **`lint-on-edit.sh` parses its payload from stdin**, not env vars. Claude Code used to expose env vars, but no longer — the hook was fixed for this in commit `ca8ecf8`. If you refactor the hook, keep the stdin path.
 - **PreToolUse main/master guard uses `git branch --show-current`** inside a `case` statement. A detached HEAD returns empty and passes the guard — intentional, don't "fix" it.
 - **`bash-safety.sh` must not be "improved" to block more patterns without testing.** `grep -qF` is literal-match by design — regex escapes like `\.` will be treated as literal backslash-dot and miss real matches. Add a smoke test in `CLAUDE.md` → "Working on this repo" before any pattern additions.
+- **`git reset --hard` / `git clean -fd` / `git branch -D` / `git checkout --` are intentionally excluded from the permissions allowlist.** `settings.json` lists safe git subcommands explicitly instead of `Bash(git:*)` — destructive rewrites require a manual run. Don't "simplify" this back to a wildcard.
 - **Frontmatter in `.claude/rules/*.md` uses `paths:`** — this is the field Claude Code reads for path-specific rules (see [docs](https://code.claude.com/docs/en/memory#path-specific-rules)). `globs:` is a Cursor convention and is silently ignored by Claude Code — don't revert to it. Rules without a `paths:` field load unconditionally at session start.
 - **The repo's root `CLAUDE.md` is this file, not the downstream template.** Don't accidentally blank it out when editing the downstream template at `template/CLAUDE.md`.
 

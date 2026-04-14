@@ -1,6 +1,6 @@
 ---
 name: testing
-description: Testing strategy and decisions. Activates when writing tests, deciding what to test, setting up a test suite, or evaluating test coverage for any language or stack.
+description: Testing strategy and conventions. Activates when writing tests, deciding what to test, editing files under *.test.*, *.spec.*, tests/, or __tests__/, setting up a test suite, or evaluating test coverage for any language or stack.
 ---
 
 # Testing
@@ -70,7 +70,48 @@ it('should throw for age over 150')    // boundary
 Coverage < 70% on business logic: flag it.
 Coverage = 100% with no edge case tests: also flag it.
 
-## 4. When NOT to write tests
+## 4. Framework, structure, naming
+
+- **Framework** — use the project's existing test runner. Don't switch frameworks without asking. Check `package.json` scripts, `Makefile`, `pyproject.toml`, or CI config for the correct test command. If no test infrastructure exists, ask the user which framework to use before creating test files.
+- **Structure** — test files colocated next to source OR in a `tests/` directory. Pick one per project and stay consistent.
+- **File name** — `[module].test.js` / `[module].spec.js` — adapt the extension to the project language (`.test.ts`, `test_module.py`, `_test.go`, etc.).
+- **Grouping** — group with `describe()` (or the equivalent in your framework) by function/method; nest for variants.
+
+### Naming tests by behavior, not implementation
+
+```js
+// GOOD — describes the expected behavior
+it('should return 401 when token is expired')
+it('should create an item and return 201')
+
+// BAD — describes the implementation
+it('calls prisma.item.create')
+it('works correctly')
+```
+
+### AAA pattern (Arrange → Act → Assert)
+
+```js
+it('should return the item by id', async () => {
+  // Arrange
+  const item = await createTestItem();
+
+  // Act
+  const res = await request(app).get(`/api/items/${item.id}`);
+
+  // Assert
+  expect(res.status).toBe(200);
+  expect(res.body.name).toBe(item.name);
+});
+```
+
+### Test isolation
+
+- Each test is independent — no shared mutable state between tests.
+- Use `beforeEach` for setup, `afterEach` for cleanup.
+- Database tests: use transactions that roll back, or truncate tables between tests.
+
+## 5. When NOT to write tests
 
 Skip tests for:
 - One-shot migration scripts (run once, delete)

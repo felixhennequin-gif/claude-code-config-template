@@ -48,7 +48,7 @@ function ItemCard(props) {
 
 ## React 19
 
-- **`use()`** — unwraps promises and contexts conditionally inside render. Works with Suspense boundaries — the parent passes a promise, the child calls `use(promise)` to read it. Not a general replacement for data fetching in client-side Vite apps without Suspense setup; for ad-hoc fetching, prefer a data-fetching library (TanStack Query, SWR) or `useEffect` + `useState`.
+- **`use()` (React 19)** — unwraps a Promise or a Context inside render. It **requires a parent `<Suspense>` boundary** that renders a fallback while the promise resolves: calling `use(promise)` suspends the component, and the closest `<Suspense>` ancestor catches the suspension and shows its `fallback`. Without a Suspense boundary, the suspension propagates up the tree and nothing renders. In a Vite app without Suspense boundaries configured, `use(promise)` will appear to freeze the whole subtree. For ad-hoc client-side data fetching, prefer TanStack Query / SWR or `useEffect` + `useState`. Reserve `use()` for cases where you pass a promise as a prop from a Server Component or through an explicit Suspense boundary you control.
 - **`useActionState`** — wire forms to async actions, track pending/error state without manual `useState`.
 - **`useFormStatus`** — read parent form's pending state from a child submit button, no prop drilling.
 - **Server Components awareness** — even in a client-heavy Vite app, know the `"use client"` boundary. Eases any later migration to Next.js or React Router framework mode.

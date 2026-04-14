@@ -58,7 +58,7 @@ This gives you the stack-agnostic baseline: hooks, commands, rules, and the univ
 
 > The hook in `settings.json` blocks edits on `main` and `master`. If your project uses a different protected branch, update the branch name in `.claude/settings.json`.
 
-> `settings.json` ships with a stack-agnostic `permissions.allow` list (`Read`, `Grep`, `Glob`, `Bash(git:*)`). Add entries for your own stack's commands — examples:
+> `settings.json` ships with a stack-agnostic `permissions.allow` list (`Read`, `Grep`, `Glob`, plus an explicit list of safe `git` subcommands — `status`, `diff`, `log`, `show`, `add`, `commit`, `push`, `fetch`, `pull`, `branch`, `checkout`, `switch`, `stash`, `merge`, `rebase`, `tag`, `remote`, `restore`). Destructive git commands like `git reset --hard`, `git clean -fd`, `git branch -D`, and `git checkout --` are **not** in the allowlist — run them manually if you really need them. Add entries for your own stack's commands — examples:
 >
 > ```jsonc
 > // Node.js
@@ -149,8 +149,8 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   │   ├── bash-safety.sh                 # Blocks dangerous shell commands
 │   │   └── notification.sh                # Desktop alert when Claude waits for input
 │   └── rules/
-│       ├── test-files.md                  # Rules specific to test files
-│       └── banned-patterns.md             # Universal + JS/TS + Python anti-patterns
+│       ├── banned-patterns.md             # Universal + JS/TS anti-patterns (path-scoped)
+│       └── banned-patterns-python.md      # Python-specific anti-patterns (path-scoped)
 ├── docs/
 │   ├── CONTEXT-BUDGET.md                  # Token estimates and budget profiles
 │   └── VALIDATION.md                      # Real-world test results (template)

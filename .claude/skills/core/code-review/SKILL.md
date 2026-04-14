@@ -3,8 +3,7 @@ name: code-review
 description: Structured workflow for acting on an external code review — triage findings by severity and effort, write a prioritized roadmap to /tmp/roadmap.md, then hand execution prompts to Claude Code batch by batch. Activates when the user receives a review, audit, or critique of their repo and wants to act on it. Also triggers on "triage this review", "make a roadmap from this feedback", "act on these findings", "we have a list of issues to fix".
 ---
 
-<!-- Workflow extracted from a real review session on claude-code-config-template v0.9.5.
-     Three phases: Analyse → Roadmap → Execute. Never collapse them into one. -->
+<!-- Three phases: Analyse → Roadmap → Execute. Never collapse them into one. -->
 
 # Code Review
 
@@ -42,6 +41,7 @@ For every finding in the review, produce one row:
 - It contradicts a decision documented in `CLAUDE.md` or `CONTRIBUTING.md`
 - The fix is a breaking change whose cost exceeds the benefit
 - The reviewer is confusing a scope limit with a bug
+- The finding is correct in the abstract but falls outside the project's stated scope (e.g. asking for i18n in a tool explicitly documented as English-only)
 - It is already addressed in `CHANGELOG.md`
 
 ## 2. Write the roadmap
@@ -53,6 +53,8 @@ Group findings into batches. One batch = one branch + one PR. Then write everyth
 - Group by file proximity — avoid two batches touching the same files
 - P1 effort S before P1 effort L (quick wins before big refactors)
 - P2 and P3 go last or are deferred with justification
+- **Tiebreaker:** when file proximity and severity ordering conflict, file proximity wins. Merge conflicts between batches are more expensive than a delayed quick win.
+- **Batch size:** aim for 3–7 checklist items per batch. Split a batch if it would produce more than ~200 LOC of diff or mix unrelated concerns.
 
 **roadmap.md format**
 
@@ -82,13 +84,13 @@ Source: [review title or commit ref]
 - [ ] Fix the hook issue we discussed
 
 // GOOD — self-contained
-## Batch 3 — fix/audit-grep-dotenv
+## Batch 3 — fix/secret-scan-dotenv
 **P1 — ~20 min**
-Fix secret scan in audit.md that misses plain .env files (no extension).
+Fix secret-scan command that misses plain .env files (no extension).
 
-- [ ] Replace --include="*.env*" with two patterns: --include=".env" and --include="*.env*"
-- [ ] Align with the stricter regex already used in .github/workflows/lint.yml
-- [ ] Run bash cli/sync-templates.sh to propagate the change to cli/template-files/
+- [ ] Replace the single `*.env*` glob with two patterns: `.env` and `*.env*`
+- [ ] Align the command with the stricter regex already used in CI
+- [ ] If the project mirrors this file elsewhere (generated assets, packaged template, etc.), run the project's sync/build step after editing
 ```
 
 After writing `/tmp/roadmap.md`, display it in the conversation and **stop**. Do not begin execution without an explicit "go".
@@ -105,10 +107,12 @@ Read /tmp/roadmap.md before doing anything else.
 Execute the batches in order. For each batch:
 1. git checkout -b <branch-name>
 2. Apply the changes listed in the batch
-3. If a sync script exists (e.g. bash cli/sync-templates.sh), run it after any batch
-   that touches source files copied elsewhere in the repo
-4. Validate: python3 -m json.tool .claude/settings.json > /dev/null if settings.json
-   was touched; shellcheck -S error .claude/hooks/*.sh if a hook was touched
+3. If the project mirrors or generates files from the edited sources (e.g. a packaged
+   template directory, a generated schema, an embedded bundle), run the project's
+   sync/build step so the mirrors stay in lock-step
+4. Run the project's standard validation on anything the batch touched: linter,
+   type-checker, and the test suite. Also run any format-specific sanity check that
+   applies (e.g. JSON parse on config files, shellcheck on shell scripts)
 5. git add -A && git commit -m "fix(<batch-name>): <one-line summary>"
 6. Show a diff summary of what changed
 7. Stop and wait for "next" before moving to the next batch
@@ -116,22 +120,24 @@ Execute the batches in order. For each batch:
 Absolute rules:
 - Never merge or push without explicit instruction
 - If a batch flags a decision to make (Option A / Option B), stop and ask before proceeding
-- Never edit cli/template-files/ directly — edit the source then run the sync script
+- Never edit mirrored or generated files directly — edit the source and re-run the project's sync/build step
 
 Start with Batch 1 now.
 ```
 
 **Prompt — open PRs and merge in order**
 
+Assumes GitHub + the `gh` CLI. Adapt the commands to your host's PR tool (`glab`, `bb`, etc.) if you use a different forge.
+
 ```
-You have [N] branches ready. Open a PR for each and merge into master in batch order.
+You have [N] branches ready. Open a PR for each and merge into the default branch in batch order.
 
 For each branch:
 1. git checkout <branch>
-2. gh pr create --base master --title "<conventional title>" --body "Batch [N] — /tmp/roadmap.md"
+2. gh pr create --base <default-branch> --title "<conventional title>" --body "Batch [N] — /tmp/roadmap.md"
 3. gh pr checks --watch
 4. If CI passes: gh pr merge --squash --delete-branch
-5. git checkout master && git pull
+5. git checkout <default-branch> && git pull
 6. Move to the next branch
 
 Stop on red CI. Show the failure output and wait for instructions.
@@ -151,4 +157,5 @@ Start with branch 1 now.
 - ❌ Fixing a P3 before a P0 because it's easier
 - ❌ Leaving Notes blank on a disagreement — silent dismissal is not a position
 - ❌ Merging branches out of order — diffs accumulate and rebases become opaque
-- ❌ Editing `cli/template-files/` directly instead of the source file
+- ❌ Editing mirrored or generated files directly instead of the source, then re-running the project's sync/build step
+- ❌ Letting a batch silently contradict another skill, rule, or agent in the repo — cross-check the change against the rest of the config before committing

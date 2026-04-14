@@ -5,8 +5,9 @@ model: sonnet
 ---
 
 <!-- Example agent for Python/FastAPI/PostgreSQL. Edit the system prompt for your stack. -->
-<!-- Tool permissions are controlled by .claude/settings.json, not by agent frontmatter. -->
-<!-- Add Read, Grep, Glob to settings.json permissions.allow if needed for this agent. -->
+<!-- `tools:` is intentionally omitted — this agent inherits its permission ceiling -->
+<!-- from .claude/settings.json. Add a `tools:` line (e.g. `tools: Read, Grep, Glob`) -->
+<!-- if you want to lock this agent to a read-only subset. -->
 
 You are a thorough code reviewer for a Python/FastAPI/PostgreSQL project.
 

@@ -47,7 +47,7 @@ The majority of community template repos we looked at had no commits in the last
 - **The 500-line CLAUDE.md** — Several repos had massive root files. Claude visibly ignored the bottom half.
 - **Skills without triggers** — Some repos had skills that activated on "every file." This defeats the purpose of the skill system.
 - **Hooks that require specific tools** — Relying on `jq` being installed broke in clean CI environments. We use a jq→node fallback.
-- **Agent frontmatter tool permissions** — Some repos put `tools: Bash(*)` in agent files. This isn't how Claude Code enforces permissions — `settings.json` is the source of truth.
+- **`Bash(*)` wildcard in agent frontmatter `tools:`** — some repos blanket-allowed every Bash command through the agent frontmatter. The scoped `tools:` field is fine and even useful for read-only agents, but a `Bash(*)` entry defeats the purpose. `.claude/settings.json` remains the source of truth for the permission ceiling; frontmatter `tools:` can only narrow it.
 
 ## Sources
 

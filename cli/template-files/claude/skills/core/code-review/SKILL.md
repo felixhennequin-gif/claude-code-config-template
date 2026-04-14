@@ -159,3 +159,4 @@ Start with branch 1 now.
 - ❌ Merging branches out of order — diffs accumulate and rebases become opaque
 - ❌ Editing mirrored or generated files directly instead of the source, then re-running the project's sync/build step
 - ❌ Letting a batch silently contradict another skill, rule, or agent in the repo — cross-check the change against the rest of the config before committing
+- ❌ Classifying a "file X is committed / tracked / leaking into git" finding without first running the project's list-tracked-files check (e.g. `git ls-files <path>`, `git check-ignore -v <path>`). Filesystem tools like `find` / `ls` show on-disk files, not tracked files — a file can exist locally while already being ignored. Verify tracked state during Phase 1 triage, not during Phase 3 execution.

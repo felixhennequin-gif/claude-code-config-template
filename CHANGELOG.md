@@ -49,6 +49,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.9.7] — 2026-04-14
 
 ### Fixed
+- `.claude/skills/core/code-review/SKILL.md` (+ `cli/template-files/` mirror) —
+  added an anti-pattern against classifying "file X is committed / leaking
+  into git" findings without first running the project's list-tracked-files
+  check (`git ls-files`, `git check-ignore -v`). Filesystem tools like
+  `find`/`ls` show on-disk files, not tracked files — a file can exist
+  locally while already being ignored. Caught during a self-audit where a
+  P1 "untrack `.template-manifest.json`" finding turned out to be a no-op
+  because the path was already in `.gitignore`.
 - `.claude/skills/core/code-review/SKILL.md` — genericised so the skill installs
   untouched on any downstream repo, per the `core/` vs `stacks/` split in
   `CLAUDE.md`. Removed repo-specific references to `cli/template-files/`,

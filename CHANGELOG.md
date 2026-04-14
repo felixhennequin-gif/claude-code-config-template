@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.2] — 2026-04-14
+
+### Added
+- `.claude/skills/stacks/symfony-api/SKILL.md` — Symfony 5.4+ stack skill
+  (constructor injection, PHP 8 attributes, multi-EM isolation, cron in DB,
+  PHPStan level 6)
+- `examples/symfony-api.CLAUDE.md` — anonymized Symfony example
+- README.md comparison table — midudev/autoskills added
+- `.claude/skills/core/testing/SKILL.md` — testing strategy core skill
+
 ## [0.9.1] — 2026-04-14
 
 ### Added
@@ -247,7 +257,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.1...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.2...HEAD
+[0.9.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.2...v0.9.0
 [0.8.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.0...v0.8.2

@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `.claude/commands/wrap.md` — `/wrap` slash command for end-of-session CLAUDE.md updates. Summarizes git diff, updates only changed sections, proposes a commit. Replaces the missing SessionEnd hook.
 
+## [0.8.2] — 2026-04-14
+
+### Fixed
+- `.claude/skills/core/error-handling/SKILL.md` + CLI copy: Rule 1 "GOOD" example no longer contradicts the anti-patterns section. The example now shows rethrow without logging, with a comment clarifying that logging happens once at the top boundary (not at every intermediate layer).
+- `.claude/hooks/session-start.sh` + CLI copy: TODO scan now uses `git grep` instead of `grep -r`. The previous implementation did not respect `.gitignore` and could hang on large projects (walking `node_modules`, `dist`, etc.). `git grep` respects `.gitignore` for free.
+- `.github/workflows/lint.yml`: the secret-scan IPv4 check no longer false-positives on version strings. The `grep -nHE` match is now piped through `grep -Ev` to filter lines containing `version`, `v0.x`, `v1.x`, or quoted four-segment version strings like `"1.2.3.4"`.
+
 ## [0.8.0] — 2026-04-13
 
 ### Added
@@ -211,7 +218,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.8.0...v0.8.2
 [0.8.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.5.0...v0.6.0

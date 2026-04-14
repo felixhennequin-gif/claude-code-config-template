@@ -17,11 +17,11 @@ try {
   await doSomething();
 } catch (e) {}
 
-// GOOD — at minimum, log and rethrow
+// GOOD — let it propagate. Logging happens once at the top boundary
+// (e.g. an error middleware), not at every intermediate layer.
 try {
   await doSomething();
 } catch (e) {
-  logger.error({ err: e }, 'doSomething failed');
   throw e;
 }
 ```

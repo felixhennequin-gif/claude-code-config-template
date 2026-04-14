@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   keeps finding the hook regardless of future matcher additions.
 
 ### Added
+- `routines/` directory with 5 ready-to-use routine prompts (pr-review, dependency-audit, deploy-verify, bug-triage, docs-drift)
+- `ROUTINES.md` — guide to Claude Code cloud routines (triggers, setup, limits, hooks vs routines comparison)
 - `.claudeignore` at the repo root — previously untracked. Reduces session
   noise when Claude Code works *on this repo* (not the downstream template
   copy, which already ships under `template/` and `cli/template-files/`).

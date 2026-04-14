@@ -114,9 +114,17 @@ Missing your stack? Contributions for FastAPI, Django, Rails, Rust (axum), Larav
 4. **Build / test / lint commands are the minimum viable.**
 5. **Skills are the best ROI.** A well-written skill gets reused automatically every time its trigger matches.
 6. **Hooks are token-free.** Block main, auto-format — deterministic, no model involvement.
-7. **Know your token budget.** Every skill costs tokens — see [docs/CONTEXT-BUDGET.md](docs/CONTEXT-BUDGET.md).
+7. **Routines are for judgment; hooks are for rules.** Block `main` with a hook (deterministic). Review a PR with a routine (needs the model). Don't use a routine for something a hook handles.
+8. **Know your token budget.** Every skill costs tokens — see [docs/CONTEXT-BUDGET.md](docs/CONTEXT-BUDGET.md).
 
 See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fill it after testing on your own project.
+
+### Routines (new — April 2026)
+
+Cloud-based automations that run on Anthropic's infrastructure without your machine.
+See [ROUTINES.md](ROUTINES.md) for the full guide and setup instructions.
+Ready-to-use prompts live in `routines/` — copy the prompt into
+[claude.ai/code/routines](https://claude.ai/code/routines) and configure your trigger.
 
 ## What's in this template
 
@@ -162,6 +170,13 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   └── rules/
 │       ├── banned-patterns.md             # Universal + JS/TS anti-patterns (path-scoped)
 │       └── banned-patterns-python.md      # Python-specific anti-patterns (path-scoped)
+├── routines/
+│   ├── pr-review.md                  # /routine — automated PR code review
+│   ├── dependency-audit.md           # /routine — weekly dep check + security audit
+│   ├── deploy-verify.md              # /routine — post-deploy smoke tests
+│   ├── bug-triage.md                 # /routine — nightly pick-and-fix top bug
+│   └── docs-drift.md                # /routine — weekly stale docs detection
+├── ROUTINES.md                       # Guide to cloud-based routines
 ├── docs/
 │   ├── CONTEXT-BUDGET.md                  # Token estimates and budget profiles
 │   └── VALIDATION.md                      # Real-world test results (template)

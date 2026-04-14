@@ -5,6 +5,7 @@ const STACKS = [
   { value: 'prisma-patterns', title: 'Prisma 7' },
   { value: 'react-frontend', title: 'React 19 + Tailwind v4' },
   { value: 'symfony-api', title: 'Symfony 5.4+ (PHP)' },
+  { value: 'ci-cd-pipeline', title: 'CI/CD (GitHub Actions + GitLab CI)' },
 ];
 
 export async function askQuestions() {

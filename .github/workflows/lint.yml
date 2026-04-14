@@ -22,23 +22,23 @@ jobs:
       - name: Shellcheck hook scripts
         run: shellcheck -S error .claude/hooks/*.sh
 
-      - name: Smoke-test bash-safety hook
+      - name: Smoke-test dangerous-rm-guard hook
         run: |
           set -euo pipefail
 
           # Should PASS (exit 0) — routine dev commands
-          echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ./dist"}}' | bash .claude/hooks/bash-safety.sh
-          echo '{"tool_name":"Bash","tool_input":{"command":"git push --force-with-lease origin main"}}' | bash .claude/hooks/bash-safety.sh
-          echo '{"tool_name":"Bash","tool_input":{"command":"npm publish --dry-run"}}' | bash .claude/hooks/bash-safety.sh
+          echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ./dist"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+          echo '{"tool_name":"Bash","tool_input":{"command":"git push --force-with-lease origin main"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+          echo '{"tool_name":"Bash","tool_input":{"command":"npm publish --dry-run"}}' | bash .claude/hooks/dangerous-rm-guard.sh
 
           # Should BLOCK (exit 2) — genuinely dangerous
-          ! echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf /"}}' | bash .claude/hooks/bash-safety.sh
-          ! echo '{"tool_name":"Bash","tool_input":{"command":"git push --force origin main"}}' | bash .claude/hooks/bash-safety.sh
-          ! echo '{"tool_name":"Bash","tool_input":{"command":"npm publish"}}' | bash .claude/hooks/bash-safety.sh
-          ! echo '{"tool_name":"Bash","tool_input":{"command":"dd if=/dev/zero of=/dev/sda"}}' | bash .claude/hooks/bash-safety.sh
+          ! echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf /"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+          ! echo '{"tool_name":"Bash","tool_input":{"command":"git push --force origin main"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+          ! echo '{"tool_name":"Bash","tool_input":{"command":"npm publish"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+          ! echo '{"tool_name":"Bash","tool_input":{"command":"dd if=/dev/zero of=/dev/sda"}}' | bash .claude/hooks/dangerous-rm-guard.sh
 
           # Should BLOCK — fail-closed on unparseable input
-          ! echo 'not json at all' | bash .claude/hooks/bash-safety.sh
+          ! echo 'not json at all' | bash .claude/hooks/dangerous-rm-guard.sh
 
       - name: Smoke-test branch guard (settings.json PreToolUse hook)
         run: |

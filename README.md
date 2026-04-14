@@ -31,7 +31,7 @@ Setup takes 2 minutes. See [Installation](#installation).
 ## What you get
 
 - **Universal core skills** — `coding-principles`, `debugging`, `error-handling`, `testing`, `ci-cd-pipeline` — stack-agnostic and loaded on trigger.
-- **Safety hooks** — branch guard blocks `main`/`master` edits, `bash-safety.sh` blocks destructive commands, `lint-on-edit.sh` auto-formats JS/TS/Python/Go/Rust after every edit, `session-start.sh` injects git context.
+- **Safety hooks** — branch guard blocks `main`/`master` edits, `dangerous-rm-guard.sh` blocks destructive commands, `lint-on-edit.sh` auto-formats JS/TS/Python/Go/Rust after every edit, `session-start.sh` injects git context.
 - **One-command install** — `npx create-claude-code-config` copies only the files you need; stack-specific skills (`.claude/skills/stacks/`) are opt-in.
 
 ## Installation
@@ -131,7 +131,7 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   ├── CLAUDE.local.md.example            # Personal overrides template
 │   └── .claudeignore                      # Ignore list (node_modules, dist, lockfiles, …)
 ├── .claude/
-│   ├── settings.json                      # Hooks + permissions (branch guard, bash-safety, lint, notification)
+│   ├── settings.json                      # Hooks + permissions (branch guard, dangerous-rm-guard, lint, notification)
 │   ├── agents/
 │   │   └── README.md                      # Empty by default — see examples/agents/
 │   ├── commands/
@@ -152,7 +152,7 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   ├── hooks/
 │   │   ├── lint-on-edit.sh                # Auto-lint after every edit (JS/TS/Python/Go/Rust)
 │   │   ├── session-start.sh               # Injects git context at session start
-│   │   ├── bash-safety.sh                 # Blocks dangerous shell commands
+│   │   ├── dangerous-rm-guard.sh          # Blocks a small list of classically dangerous shell commands
 │   │   ├── notification.sh                # Desktop alert when Claude waits for input
 │   │   └── user-prompt-context.sh         # UserPromptSubmit example (not wired — see file)
 │   └── rules/

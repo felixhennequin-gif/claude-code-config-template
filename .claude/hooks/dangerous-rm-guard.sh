@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# PreToolUse hook for Bash — blocks dangerous commands
-# Reads tool input from stdin (JSON with "command" field)
+# PreToolUse hook for Bash — blocks a small, explicit list of classically
+# dangerous commands. The name is deliberately narrow: this is NOT a
+# comprehensive safety net. It catches famous footguns (`rm -rf /`,
+# `git push --force`, `dd if=`, `mkfs.*`, accidental `npm publish`) and
+# nothing else. It does NOT block:
+#   - curl … | bash / wget … | sh (supply-chain vectors)
+#   - writes to ~/.ssh, ~/.bashrc, ~/.profile
+#   - docker system prune -af --volumes
+#   - yarn / pnpm / cargo / twine publishes
+# If you need broader coverage, add patterns yourself and extend the smoke
+# tests in .github/workflows/lint.yml — do not assume this hook already
+# protects against the command you're about to run.
+#
+# Reads tool input from stdin (JSON with "command" field).
 # Fail-closed: if the payload can't be parsed, block the call.
 
 INPUT=$(cat)
@@ -13,7 +25,7 @@ COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // .command // empty' 2>/de
 " 2>/dev/null)
 
 if [ -z "$COMMAND" ]; then
-  echo "BLOCKED: bash-safety hook could not parse command from stdin (fail-closed)." >&2
+  echo "BLOCKED: dangerous-rm-guard hook could not parse command from stdin (fail-closed)." >&2
   echo "reason: A safety hook that cannot read its input must block. Check the JSON payload format." >&2
   exit 2
 fi
@@ -31,7 +43,7 @@ LITERAL_PATTERNS=(
 for PATTERN in "${LITERAL_PATTERNS[@]}"; do
   if echo "$COMMAND" | grep -qF "$PATTERN"; then
     echo "BLOCKED: command matches dangerous pattern '$PATTERN'" >&2
-    echo "reason: This command is blocked by the bash-safety hook. If you really need to run it, do so manually outside Claude Code." >&2
+    echo "reason: This command is blocked by the dangerous-rm-guard hook. If you really need to run it, do so manually outside Claude Code." >&2
     exit 2
   fi
 done
@@ -40,14 +52,14 @@ done
 # rm -rf . as the entire target (not "rm -rf ./dist" or "rm -rf .cache")
 if echo "$COMMAND" | grep -qE '(^|[[:space:]])rm[[:space:]]+-[rRf]+[[:space:]]+\.([[:space:]]|$)'; then
   echo "BLOCKED: command matches dangerous pattern 'rm -rf .'" >&2
-  echo "reason: This command is blocked by the bash-safety hook. If you really need to run it, do so manually outside Claude Code." >&2
+  echo "reason: This command is blocked by the dangerous-rm-guard hook. If you really need to run it, do so manually outside Claude Code." >&2
   exit 2
 fi
 
 # git push --force (but NOT --force-with-lease) and git push -f
 if echo "$COMMAND" | grep -qE '(^|[[:space:]])git[[:space:]]+push[[:space:]].*(--force($|[[:space:]])|--force[^-]|-f($|[[:space:]]))'; then
   echo "BLOCKED: command matches dangerous pattern 'git push --force / -f'" >&2
-  echo "reason: Use --force-with-lease instead. Blocked by the bash-safety hook." >&2
+  echo "reason: Use --force-with-lease instead. Blocked by the dangerous-rm-guard hook." >&2
   exit 2
 fi
 
@@ -55,7 +67,7 @@ fi
 if echo "$COMMAND" | grep -qE '(^|[[:space:]])npm[[:space:]]+publish($|[[:space:]])'; then
   if ! echo "$COMMAND" | grep -qE '(^|[[:space:]])npm[[:space:]]+publish[[:space:]].*--dry-run'; then
     echo "BLOCKED: command matches dangerous pattern 'npm publish'" >&2
-    echo "reason: Blocked by the bash-safety hook. Use --dry-run to preview." >&2
+    echo "reason: Blocked by the dangerous-rm-guard hook. Use --dry-run to preview." >&2
     exit 2
   fi
 fi

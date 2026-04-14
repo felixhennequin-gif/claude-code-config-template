@@ -10,7 +10,7 @@ This `CLAUDE.md` is **not** the downstream-facing template — it's the one Clau
 - **`template/CLAUDE.local.md.example`** — the personal-override template users copy to `CLAUDE.local.md` (which is gitignored)
 - **`.claude/skills/core/`** — universal behavioral skills that ship with every install: `coding-principles`, `debugging`, `error-handling`, `testing`, `ci-cd-pipeline`
 - **`.claude/skills/stacks/`** — optional stack-specific skills (currently `prisma-patterns`, `express-api`, `react-frontend`); users delete the whole directory or keep a subset
-- **`.claude/` (rest)** — hooks (lint-on-edit, session-start, bash-safety), commands, and rules, all stack-agnostic
+- **`.claude/` (rest)** — hooks (lint-on-edit, session-start, dangerous-rm-guard), commands, and rules, all stack-agnostic
 - **`.claude/agents/`** — empty by default, just a README pointing to `examples/agents/`
 - **`examples/*.CLAUDE.md`** — stack-specific ready-to-adapt alternatives to `template/CLAUDE.md`
 - **`examples/agents/`** — Node/React/PostgreSQL-flavored subagents (`reviewer`, `security-auditor`) users copy into `.claude/agents/` and edit for their stack
@@ -47,7 +47,7 @@ template/
   hooks/
     lint-on-edit.sh             # Stdin-parsing ESLint hook (PostToolUse)
     session-start.sh            # Injects git context (SessionStart)
-    bash-safety.sh              # Blocks destructive commands (PreToolUse Bash)
+    dangerous-rm-guard.sh       # Blocks destructive commands (PreToolUse Bash)
     notification.sh             # Desktop alert when Claude waits for input (Notification)
   rules/
     banned-patterns.md          # Universal + JS/TS anti-patterns (path-scoped)
@@ -91,31 +91,31 @@ No build step in the root — every file is Markdown, JSON, or shell. The `cli/`
 python3 -c "import json; json.load(open('.claude/settings.json'))"
 
 # Syntax-check hooks
-bash -n .claude/hooks/lint-on-edit.sh .claude/hooks/session-start.sh .claude/hooks/bash-safety.sh
+bash -n .claude/hooks/lint-on-edit.sh .claude/hooks/session-start.sh .claude/hooks/dangerous-rm-guard.sh
 
 # Smoke-test the lint hook with a sample payload
 echo '{"tool_name":"Edit","tool_input":{"file_path":"/tmp/x.js"}}' | bash .claude/hooks/lint-on-edit.sh
 
-# Smoke-test bash-safety — every case below must produce the expected exit code.
+# Smoke-test dangerous-rm-guard — every case below must produce the expected exit code.
 # Should PASS (exit 0) — routine dev commands that previously false-positived:
-echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ./dist"}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ./node_modules"}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf .cache"}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"git push --force-with-lease origin main"}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"npm publish --dry-run"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ./dist"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ./node_modules"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf .cache"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"git push --force-with-lease origin main"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"npm publish --dry-run"}}' | bash .claude/hooks/dangerous-rm-guard.sh
 
 # Should BLOCK (exit 2) — genuinely dangerous:
-echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf /"}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ~"}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ."}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"git push --force origin main"}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"git push -f origin main"}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"npm publish"}}' | bash .claude/hooks/bash-safety.sh
-echo '{"tool_name":"Bash","tool_input":{"command":"dd if=/dev/zero of=/dev/sda"}}' | bash .claude/hooks/bash-safety.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf /"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ~"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf ."}}' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"git push --force origin main"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"git push -f origin main"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"npm publish"}}' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"dd if=/dev/zero of=/dev/sda"}}' | bash .claude/hooks/dangerous-rm-guard.sh
 
 # Should BLOCK (exit 2) — fail-closed on unparseable input:
-echo 'not json at all' | bash .claude/hooks/bash-safety.sh
-echo '' | bash .claude/hooks/bash-safety.sh
+echo 'not json at all' | bash .claude/hooks/dangerous-rm-guard.sh
+echo '' | bash .claude/hooks/dangerous-rm-guard.sh
 ```
 
 ## Conventions specific to this repo
@@ -144,7 +144,7 @@ echo '' | bash .claude/hooks/bash-safety.sh
 - **`lint-on-edit.sh` parses its payload from stdin**, not env vars. Claude Code used to expose env vars, but no longer — the hook was fixed for this in commit `ca8ecf8`. If you refactor the hook, keep the stdin path.
 - **`lint-on-edit.sh` now covers JS/TS/Python/Go/Rust** — each branch gates on `command -v <tool>` and exits 0 silently if the tool isn't installed, so downstream users on any stack get formatting for free if they have the standard tool. Don't add branches that block on missing tools — the hook must stay non-blocking.
 - **PreToolUse main/master guard uses `git branch --show-current`** inside a `case` statement. A detached HEAD returns empty and passes the guard — intentional, don't "fix" it.
-- **`bash-safety.sh` must not be "improved" to block more patterns without testing.** `grep -qF` is literal-match by design — regex escapes like `\.` will be treated as literal backslash-dot and miss real matches. Add a smoke test in `CLAUDE.md` → "Working on this repo" before any pattern additions.
+- **`dangerous-rm-guard.sh` must not be "improved" to block more patterns without testing.** `grep -qF` is literal-match by design — regex escapes like `\.` will be treated as literal backslash-dot and miss real matches. Add a smoke test in `CLAUDE.md` → "Working on this repo" before any pattern additions.
 - **`git reset --hard` / `git clean -fd` / `git branch -D` / `git checkout --` are intentionally excluded from the permissions allowlist.** `settings.json` lists safe git subcommands explicitly instead of `Bash(git:*)` — destructive rewrites require a manual run. Don't "simplify" this back to a wildcard.
 - **Frontmatter in `.claude/rules/*.md` uses `paths:`** — this is the field Claude Code reads for path-specific rules (see [docs](https://code.claude.com/docs/en/memory#path-specific-rules)). `globs:` is a Cursor convention and is silently ignored by Claude Code — don't revert to it. Rules without a `paths:` field load unconditionally at session start.
 - **Settings precedence is `~/.claude/settings.json` → `.claude/settings.json` → `.claude/settings.local.json`** (later wins). A permission granted at the user level applies even if the project config doesn't list it — don't assume `.claude/settings.json` is the full allowlist when debugging permission issues.

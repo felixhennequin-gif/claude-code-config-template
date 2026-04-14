@@ -146,6 +146,7 @@ echo '' | bash .claude/hooks/bash-safety.sh
 - **`bash-safety.sh` must not be "improved" to block more patterns without testing.** `grep -qF` is literal-match by design — regex escapes like `\.` will be treated as literal backslash-dot and miss real matches. Add a smoke test in `CLAUDE.md` → "Working on this repo" before any pattern additions.
 - **`git reset --hard` / `git clean -fd` / `git branch -D` / `git checkout --` are intentionally excluded from the permissions allowlist.** `settings.json` lists safe git subcommands explicitly instead of `Bash(git:*)` — destructive rewrites require a manual run. Don't "simplify" this back to a wildcard.
 - **Frontmatter in `.claude/rules/*.md` uses `paths:`** — this is the field Claude Code reads for path-specific rules (see [docs](https://code.claude.com/docs/en/memory#path-specific-rules)). `globs:` is a Cursor convention and is silently ignored by Claude Code — don't revert to it. Rules without a `paths:` field load unconditionally at session start.
+- **Settings precedence is `~/.claude/settings.json` → `.claude/settings.json` → `.claude/settings.local.json`** (later wins). A permission granted at the user level applies even if the project config doesn't list it — don't assume `.claude/settings.json` is the full allowlist when debugging permission issues.
 - **The repo's root `CLAUDE.md` is this file, not the downstream template.** Don't accidentally blank it out when editing the downstream template at `template/CLAUDE.md`.
 
 ## References

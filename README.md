@@ -199,6 +199,14 @@ Keep it under 15 lines. Anything project-specific belongs in the project's own `
 }
 ```
 
+**Settings precedence** — Claude Code loads in this order:
+
+1. `~/.claude/settings.json` — user-level global (your personal permissions baseline)
+2. `.claude/settings.json` — project-level (committed to the repo)
+3. `.claude/settings.local.json` — project-level personal overrides (gitignored)
+
+Later entries override earlier ones. A permission in `settings.local.json` wins over the same entry in `.claude/settings.json`. Note: if you add `Bash(npm:*)` to `~/.claude/settings.json` but your project's `.claude/settings.json` doesn't list it, the permission is still granted — global settings apply.
+
 ### MCP integration
 
 This template does not ship a `.mcp.json` — MCP server configs are project-specific. Create one at your project root:

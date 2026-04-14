@@ -1,6 +1,6 @@
 {
   "name": "create-claude-code-config",
-  "version": "0.8.0",
+  "version": "0.8.2",
   "description": "Interactive CLI to scaffold a Claude Code config (CLAUDE.md + .claude/) for any project",
   "type": "module",
   "bin": {

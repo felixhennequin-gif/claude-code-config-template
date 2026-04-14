@@ -48,11 +48,13 @@ it('should throw for negative prices')
 // now implement applyDiscount to make these pass
 ```
 
-## 3. Coverage is a floor, not a goal
+## 3. Coverage: 70% is the floor, prod-failing cases are the goal
 
-100% coverage does not mean the code is correct — it means every line
-was executed at least once. What matters is that the cases that fail in
-prod are covered.
+70% line coverage on business logic is the floor — below that, flag it.
+But hitting the floor is not the point: 100% coverage does not mean the
+code is correct, it only means every line was executed at least once.
+The actual goal is that every case which fails in prod is covered by a
+test. A suite at 100% with no edge-case assertions is also a failure.
 
 Mandatory cases for any non-trivial function:
 - Happy path (expected input, expected output)
@@ -67,8 +69,7 @@ it('should throw for non-integer age') // edge case
 it('should throw for age over 150')    // boundary
 ```
 
-Coverage < 70% on business logic: flag it.
-Coverage = 100% with no edge case tests: also flag it.
+See rule 3 above: below 70% on business logic, or 100% without edge-case assertions, both warrant a flag.
 
 ## 4. Framework, structure, naming
 

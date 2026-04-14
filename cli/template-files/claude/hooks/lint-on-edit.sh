@@ -16,7 +16,10 @@ else
   FILE=$(printf '%s' "$INPUT" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(JSON.parse(s).tool_input.file_path||"")}catch(e){}})' 2>/dev/null)
 fi
 
-[ -z "${FILE:-}" ] && exit 0
+if [ -z "${FILE:-}" ]; then
+  echo "warn: lint-on-edit received empty file_path, skipping" >&2
+  exit 0
+fi
 
 case "$FILE" in
   *.js|*.ts|*.jsx|*.tsx|*.mjs|*.cjs)

@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.5] — 2026-04-14
+
+### Added
+- Re-release of the `ci-cd-pipeline` core skill on npm. The 0.9.4 git tag and
+  npm publish were cut before PR #12 / #13 / #14 landed, so the npm 0.9.4
+  tarball did not contain `.claude/skills/core/ci-cd-pipeline/SKILL.md`, the
+  `## CI/CD conventions` block in `template/CLAUDE.md`, or the updated
+  `.claude/skills/core/README.md` entry. 0.9.5 is a content-only re-cut of
+  0.9.4 so the npm package matches master.
+
 ## [0.9.4] — 2026-04-14
 
 ### Fixed
@@ -311,7 +321,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.4...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.5...HEAD
+[0.9.5]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.4...v0.9.5
 [0.9.4]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.1...v0.9.2

@@ -2,13 +2,11 @@
 
 ![License](https://img.shields.io/github/license/felixhennequin-gif/claude-code-config-template) ![CI](https://img.shields.io/github/actions/workflow/status/felixhennequin-gif/claude-code-config-template/lint.yml?label=lint) ![GitHub stars](https://img.shields.io/github/stars/felixhennequin-gif/claude-code-config-template?style=social)
 
+> **Root `CLAUDE.md` = context for working *on* this template repo.** The file you copy into your own project lives at [`template/CLAUDE.md`](./template/CLAUDE.md).
+
 Opinionated starter template for Claude Code — agents, skills, hooks, and commands for any project.
 
-Core files (CLAUDE.md, hooks, commands, and the core skills under `.claude/skills/core/` — `coding-principles`, `debugging`, `error-handling`, `testing`) are stack-agnostic and ship with every install. Stack-specific conventions live under `.claude/skills/stacks/` and can be kept, pruned, or replaced individually.
-
-Based on analysis of notable open-source Claude Code configurations (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI, and others) — see [the full research](./RESEARCH.md).
-
-> The root `CLAUDE.md` in this repo describes the template project itself — it's what Claude Code reads when working *on* this template. The blank file you copy into *your* project lives at [`template/CLAUDE.md`](./template/CLAUDE.md).
+Based on notes from reviewing notable open-source Claude Code configurations (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI, and others) — see [RESEARCH.md](./RESEARCH.md).
 
 ## Why
 
@@ -25,9 +23,16 @@ Without this template, Claude Code starts every session with zero project contex
 | No safety net for destructive commands | Bash safety hook blocks `rm -rf /`, `git push --force`, etc. |
 | Claude forgets your conventions between sessions | Skills enforce patterns (naming, architecture, error handling) |
 | No dynamic context | SessionStart hook shows branch, last commit, uncommitted changes |
+| UserPromptSubmit rarely used | Ships an opt-in example hook (`user-prompt-context.sh`) for injecting task context at every prompt |
 | You re-explain testing/deploy workflow each time | `/test` and `/deploy` commands available instantly |
 
 Setup takes 2 minutes. See [Installation](#installation).
+
+## What you get
+
+- **Universal core skills** — `coding-principles`, `debugging`, `error-handling`, `testing` — stack-agnostic and loaded on trigger.
+- **Safety hooks** — branch guard blocks `main`/`master` edits, `bash-safety.sh` blocks destructive commands, `lint-on-edit.sh` auto-formats JS/TS/Python/Go/Rust after every edit, `session-start.sh` injects git context.
+- **One-command install** — `npx create-claude-code-config` copies only the files you need; stack-specific skills (`.claude/skills/stacks/`) are opt-in.
 
 ## Installation
 
@@ -144,10 +149,11 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   │       ├── express-api/SKILL.md       # Express 5 patterns
 │   │       └── react-frontend/SKILL.md    # React 19 + Tailwind v4
 │   ├── hooks/
-│   │   ├── lint-on-edit.sh                # Auto-lint after every edit
+│   │   ├── lint-on-edit.sh                # Auto-lint after every edit (JS/TS/Python/Go/Rust)
 │   │   ├── session-start.sh               # Injects git context at session start
 │   │   ├── bash-safety.sh                 # Blocks dangerous shell commands
-│   │   └── notification.sh                # Desktop alert when Claude waits for input
+│   │   ├── notification.sh                # Desktop alert when Claude waits for input
+│   │   └── user-prompt-context.sh         # UserPromptSubmit example (not wired — see file)
 │   └── rules/
 │       ├── banned-patterns.md             # Universal + JS/TS anti-patterns (path-scoped)
 │       └── banned-patterns-python.md      # Python-specific anti-patterns (path-scoped)

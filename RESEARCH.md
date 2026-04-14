@@ -1,14 +1,12 @@
 # Research notes
 
-> Analysis conducted: March–April 2026. Repo states may have changed since.
-
-What we learned from analyzing notable open-source Claude Code configurations. This is not a comprehensive survey — it's the patterns and anti-patterns that shaped this template's design.
+> This is not a formal study. These are observations from reviewing notable open-source Claude Code configurations that shaped this template's design decisions.
 
 ## Key findings
 
 ### 1. CLAUDE.md length matters — but not the way you think
 
-Most repos with a CLAUDE.md over 100 lines showed evidence of Claude ignoring later sections. The best-performing configs (Supabase, Anthropic's own claude-code-action) kept their root CLAUDE.md under 60 lines and offloaded details to skills and docs.
+Long root `CLAUDE.md` files (well over 100 lines) showed the same failure mode across repos: Claude quietly drops the tail. The configs that felt best to work with kept the root file short and offloaded detail to skills and docs.
 
 **Template decision:** 80-line soft limit for project CLAUDE.md.
 
@@ -20,38 +18,38 @@ Repos that used `.claude/skills/` with proper frontmatter (triggers, description
 
 ### 3. Hooks are underused
 
-Only ~15% of repos we found used hooks at all. The ones that did (Supabase, ChrisWiles/showcase) used them for branch protection and auto-formatting — deterministic, zero-token-cost automation. Nobody was using SessionStart hooks for dynamic context injection, which is a missed opportunity.
+Most configs we looked at used no hooks at all. The few that did used them for branch protection and auto-formatting — deterministic, zero-token-cost automation. Almost nobody was using `SessionStart` for dynamic context injection, which is a missed opportunity.
 
-**Template decision:** Ship branch guard + lint hook + SessionStart hook + Bash safety hook.
+**Template decision:** Ship branch guard + lint hook + `SessionStart` + bash-safety hook, and an opt-in `UserPromptSubmit` example.
 
 ### 4. Agents need to be project-specific
 
-Generic agents ("review this code", "audit security") performed poorly unless they included project-specific context (stack, conventions, known issues). The best agent configs we found (Bitwarden, Vercel) were tightly coupled to their stack.
+Generic agents ("review this code", "audit security") performed poorly unless they included project-specific context (stack, conventions, known issues). The best agent configs we found were tightly coupled to their stack.
 
 **Template decision:** Ship agents as examples, not defaults. Users copy and customize.
 
 ### 5. Stack-specific rules mixed with universal rules cause confusion
 
-Repos that mixed "use Prisma's `include` for eager loading" next to "keep functions under 50 lines" in the same file created inconsistent Claude behavior — Claude would apply stack rules to the wrong files.
+Repos that put "use Prisma's `include` for eager loading" next to "keep functions under 50 lines" in the same file produced inconsistent Claude behavior — stack rules sometimes bled into the wrong files.
 
 **Template decision:** `core/` for universal, `stacks/` for framework-specific, loaded separately.
 
-### 6. Most repos don't survive 3 months
+### 6. Pure-template repos rot fast
 
-The majority of community template repos we looked at had no commits in the last 30 days. The ones that survived were either backed by a company (Supabase, Cloudflare) or had a CLI/automation layer that made updates easy. Pure-template repos rot fast.
+Community template repos with no company backing and no automation layer go stale quickly — many we looked at had no commits in the last month. The survivors were either company-owned or had a CLI that made updates easy.
 
 **Template decision:** Keep the template small and opinionated. Don't try to cover every stack — cover the pattern well and let users adapt.
 
 ## Anti-patterns we avoided
 
-- **The 500-line CLAUDE.md** — Several repos had massive root files. Claude visibly ignored the bottom half.
-- **Skills without triggers** — Some repos had skills that activated on "every file." This defeats the purpose of the skill system.
-- **Hooks that require specific tools** — Relying on `jq` being installed broke in clean CI environments. We use a jq→node fallback.
-- **`Bash(*)` wildcard in agent frontmatter `tools:`** — some repos blanket-allowed every Bash command through the agent frontmatter. The scoped `tools:` field is fine and even useful for read-only agents, but a `Bash(*)` entry defeats the purpose. `.claude/settings.json` remains the source of truth for the permission ceiling; frontmatter `tools:` can only narrow it.
+- **The 500-line CLAUDE.md** — Claude visibly ignored the bottom half.
+- **Skills without triggers** — activating on "every file" defeats the point of the skill system.
+- **Hooks that require specific tools** — hard dependencies on tools like `jq` broke in clean CI environments. We use a jq→node fallback.
+- **`Bash(*)` wildcard in agent frontmatter `tools:`** — the scoped `tools:` field is fine and useful for read-only agents, but a `Bash(*)` entry defeats the purpose. `.claude/settings.json` remains the source of truth for the permission ceiling; frontmatter `tools:` can only narrow it.
 
 ## Sources
 
-The repos that most influenced this template's design:
+The repos that most directly shaped this template:
 
 | Repo | What we took from it |
 |------|---------------------|
@@ -62,15 +60,13 @@ The repos that most influenced this template's design:
 | ChrisWiles/claude-code-showcase | Hook patterns, SessionStart idea |
 | Vercel (agent-skills) | Skill organization, naming conventions |
 
-## Repos that most directly shaped the template
-
 <details>
-<summary>Click to expand — organized by category. Not all repos are still active or still have a <code>.claude/</code> directory.</summary>
+<summary>Repos consulted (click to expand)</summary>
 
 **Company-backed projects**
 - supabase/supabase-js
 - anthropics/claude-code-action
-- cloudflare/workers-sdk (and other Cloudflare repos shipping skills)
+- cloudflare/workers-sdk
 - bitwarden/server
 - bitwarden/android
 - bitwarden/ai-plugins
@@ -86,6 +82,6 @@ The repos that most influenced this template's design:
 - midudev/autoskills
 - forrestchang/andrej-karpathy-skills
 
-</details>
+If a config you think deserves a mention is missing, open an issue or PR.
 
-Individual project configs found via GitHub search for `CLAUDE.md` + `.claude/` also informed the anti-patterns list, but aren't enumerated here — we'd rather be honest than pad the list with repos we can no longer verify. If you know a config that deserves a mention, open an issue or PR.
+</details>

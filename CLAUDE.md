@@ -139,8 +139,9 @@ echo '' | bash .claude/hooks/bash-safety.sh
 
 ## Gotchas
 
-- **`CLAUDE.local.md` is gitignored**, so it's absent from fresh clones. The downstream template users actually receive is `template/CLAUDE.local.md.example`. The install snippet in `README.md` must reflect this — don't regress it.
+- **`CLAUDE.local.md` is gitignored**, so it's absent from fresh clones. The downstream template users actually receive is `template/CLAUDE.local.md.example`. The install snippet in `README.md` must reflect this — don't regress it. `session-start.sh` prints a reminder each session when the file is missing — that's the main nudge users get to set up personal overrides, don't suppress it.
 - **`lint-on-edit.sh` parses its payload from stdin**, not env vars. Claude Code used to expose env vars, but no longer — the hook was fixed for this in commit `ca8ecf8`. If you refactor the hook, keep the stdin path.
+- **`lint-on-edit.sh` now covers JS/TS/Python/Go/Rust** — each branch gates on `command -v <tool>` and exits 0 silently if the tool isn't installed, so downstream users on any stack get formatting for free if they have the standard tool. Don't add branches that block on missing tools — the hook must stay non-blocking.
 - **PreToolUse main/master guard uses `git branch --show-current`** inside a `case` statement. A detached HEAD returns empty and passes the guard — intentional, don't "fix" it.
 - **`bash-safety.sh` must not be "improved" to block more patterns without testing.** `grep -qF` is literal-match by design — regex escapes like `\.` will be treated as literal backslash-dot and miss real matches. Add a smoke test in `CLAUDE.md` → "Working on this repo" before any pattern additions.
 - **`git reset --hard` / `git clean -fd` / `git branch -D` / `git checkout --` are intentionally excluded from the permissions allowlist.** `settings.json` lists safe git subcommands explicitly instead of `Bash(git:*)` — destructive rewrites require a manual run. Don't "simplify" this back to a wildcard.

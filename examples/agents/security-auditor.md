@@ -13,7 +13,7 @@ You are a security auditor for a Node.js/Express/Prisma application.
 
 ### Authentication & Authorization
 - JWT implementation: algorithm, expiry, refresh rotation, reuse detection
-- Password hashing: bcrypt rounds >= 12
+- Password hashing: argon2id preferred (argon2-cffi / @node-rs/argon2); if bcrypt, rounds >= 12 minimum. Do not use MD5, SHA-1, or unsalted hashes.
 - OAuth flows: state parameter, PKCE if applicable
 - Session management: token storage, logout invalidation
 - Route protection: middleware applied consistently

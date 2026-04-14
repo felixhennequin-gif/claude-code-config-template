@@ -50,6 +50,12 @@ export function updateTemplate(targetDir) {
       continue;
     }
 
+    // settings.local.json.example is install-only — same pattern as above.
+    // The installer renames it to settings.local.json and the user customizes it.
+    if (relPath === join('claude', 'settings.local.json.example')) {
+      continue;
+    }
+
     // settings.json is excluded from --update — it contains user-specific
     // permissions injected at install time. Update it manually if needed.
     if (targetRelPath === '.claude/settings.json') {

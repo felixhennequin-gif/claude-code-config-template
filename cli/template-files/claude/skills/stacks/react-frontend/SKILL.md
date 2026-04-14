@@ -38,7 +38,7 @@ function ItemCard(props) {
 ## Hooks
 
 - Prefix with `use`. One hook = one responsibility.
-- Return a named object, not an array (except simple two-value hooks).
+- Prefer returning a named object over an array (except simple two-value hooks like useState) — makes destructuring self-documenting. This is a team preference, not a framework rule.
 
 ## State management
 

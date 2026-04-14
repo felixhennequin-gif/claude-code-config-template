@@ -1,0 +1,8 @@
+{
+  "// comment": "User-level overrides — gitignored, never commit this file.",
+  "// usage": "Add personal permissions or hook overrides here. See README for examples.",
+  "permissions": {
+    "allow": [],
+    "deny": []
+  }
+}

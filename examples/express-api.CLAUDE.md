@@ -64,7 +64,7 @@ npx prisma migrate deploy # Apply migrations in CI/prod
 ## Gotchas
 
 - Express 5 changes error handling — async route handlers now propagate rejections automatically, so the old `express-async-handler` wrapper is unnecessary
-- Prisma singleton in `lib/prisma.js` — creating a new client per request exhausts the connection pool fast
+- Prisma singleton in `src/lib/prisma.js` — creating a new client per request exhausts the connection pool fast
 - Integration tests hit a real DB (not a mock) — use a separate `DATABASE_URL_TEST` and truncate tables in `beforeEach`
 - JWT secret rotation: verify with both the current and previous secret during the rotation window
 - `express.json()` limit defaults to 100kb — bump it explicitly for endpoints that accept larger payloads

@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.7] — 2026-04-14
+
 ### Fixed
 - `.claude/skills/core/code-review/SKILL.md` — genericised so the skill installs
   untouched on any downstream repo, per the `core/` vs `stacks/` split in
@@ -32,6 +34,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   was the past `reviewer` vs `express-api` try/catch contradiction). The PR
   prompt now notes its `gh` CLI assumption and uses `<default-branch>` instead
   of hard-coding `master`.
+
+## [0.9.6] — 2026-04-14
+
+Backfilled — `v0.9.6` was tagged but never got its own CHANGELOG section.
+This entry summarises the 11 commits between `v0.9.5` and `v0.9.6` (PRs #16–#26).
+
+### Added
+- `.claude/skills/core/code-review/SKILL.md` (PR #26) — core skill for acting
+  on an external code review: three phases (analyse → roadmap → execute),
+  severity/effort triage table, `/tmp/roadmap.md` output contract, and
+  execution/PR prompts.
+- `.claude/skills/core/git-workflow/SKILL.md` (PR #25) — language-agnostic
+  branching, Conventional Commits, rebase-vs-merge, PR, and merge-conflict
+  conventions. Defers to `CONTRIBUTING.md` when a project specifies otherwise.
+
+### Fixed
+- `ci-cd-pipeline` skill (PR #22) — recategorised from `core/` to `stacks/`,
+  since its YAML snippets are GitHub Actions / GitLab CI-specific and not
+  universal.
+- `ci-cd-pipeline` skill (PR #16) — translated from French to English for
+  downstream compatibility.
+- `.claude/hooks/bash-safety.sh` (PR #21) — renamed to `dangerous-rm-guard.sh`
+  to reflect the hook's narrow scope (famous footguns only, not a
+  comprehensive safety net). Header comment documents the non-coverage.
+- `prisma-patterns` skill (PR #20) — corrected claims about unreleased
+  Prisma features.
+- `.github/workflows/lint.yml` (PR #19) — added CI smoke test for the
+  `settings.json` PreToolUse branch-guard one-liner, with a stubbed
+  `$TEST_BRANCH` so the case-statement classifier can be exercised
+  independently of the runner's actual git state.
+- `.claude/commands/audit.md` + `.claude/hooks/lint-on-edit.sh` (PR #18) —
+  audit secret-scan now includes plain `.env` files (not just `*.env*`);
+  lint hook warns on empty `file_path` payloads instead of silently
+  exiting 0.
+- `testing` + `wrap` (PR #17) — resolved a coverage self-contradiction
+  in `testing/SKILL.md` and added an 80-line pruning rule to `wrap.md`
+  so `CLAUDE.md` growth is bounded.
+- Core skills (PR #23) — added Python examples to `testing` and
+  `error-handling` so the `core/` category is genuinely language-agnostic.
+
+### Changed
+- P2 quick wins (PR #24) — cross-references added between `debugging` and
+  `error-handling`, CI try/catch-convention check added to
+  `.github/workflows/lint.yml` (prevents future `reviewer` vs `express-api`
+  drift), and a Windows-portability note added where `/tmp` paths appear.
 
 ## [0.9.5] — 2026-04-14
 
@@ -343,7 +390,9 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.5...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.7...HEAD
+[0.9.7]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.6...v0.9.7
+[0.9.6]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.5...v0.9.6
 [0.9.5]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.4...v0.9.5
 [0.9.4]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.2...v0.9.3

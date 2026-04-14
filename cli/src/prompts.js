@@ -4,6 +4,7 @@ const STACKS = [
   { value: 'express-api', title: 'Express 5 (Node.js)' },
   { value: 'prisma-patterns', title: 'Prisma 7' },
   { value: 'react-frontend', title: 'React 19 + Tailwind v4' },
+  { value: 'symfony-api', title: 'Symfony 5.4+ (PHP)' },
 ];
 
 export async function askQuestions() {

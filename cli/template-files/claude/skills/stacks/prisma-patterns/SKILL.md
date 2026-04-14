@@ -1,16 +1,18 @@
 ---
 name: prisma-patterns
-description: Prisma 7 conventions and patterns. Activates when working on the Prisma schema, migrations, queries, or services that call Prisma.
+description: Prisma ORM conventions and patterns. Activates when working on the Prisma schema, migrations, queries, or services that call Prisma.
 ---
 
-# Prisma 7 — Project conventions
+# Prisma — Project conventions
+
+Applies to Prisma 5.x and 6.x. Preview-only features are flagged inline.
 
 ## Schema
 
 - One model per domain entity. No technical tables surfaced in the schema (except sessions / tokens).
 - Explicit relations via `@relation`. Always name the relation when there's ambiguity.
 - `@updatedAt` on every model whose content can change.
-- String IDs: prefer `@default(ulid())` (Prisma 7+) or `@default(uuid(7))` for new projects. `@default(cuid())` still works but cuid is in maintenance mode — avoid it in new schemas.
+- String IDs: prefer `@default(uuid(7))` (Prisma 5.18+) for new projects — UUIDv7 is time-ordered, which keeps B-tree indexes happy. `@default(cuid())` still works but cuid is in maintenance mode per the Prisma team — avoid it in new schemas. Do **not** use `@default(ulid())` — ULID is not a native Prisma generator; use `uuid(7)` or wire a manual `@default` via `dbgenerated` if you truly need ULID.
 - Int IDs: `@default(autoincrement())`.
 - Enums for fixed values (roles, statuses, visibility).
 
@@ -37,7 +39,7 @@ description: Prisma 7 conventions and patterns. Activates when working on the Pr
   const hasMore = items.length > limit;
   if (hasMore) items.pop();
   ```
-- **`typedSql`** (Prisma 7+) — for complex queries that don't fit the query builder, use `prisma.$queryRawTyped()` with `.sql` files in `prisma/sql/`. This gives type-safe raw SQL without string interpolation. Prefer this over `$queryRaw` with template literals.
+- **`typedSql`** (preview since Prisma 5.19 — enable with `previewFeatures = ["typedSql"]` in the generator block) — for complex queries that don't fit the query builder, put `.sql` files under `prisma/sql/` and call them via `prisma.$queryRawTyped()`. This gives type-safe raw SQL without string interpolation. Prefer this over `$queryRaw` with template literals where the preview flag is acceptable.
 - **Transactions** for multi-model operations that must be atomic.
 
 ## Migrations
@@ -53,7 +55,7 @@ description: Prisma 7 conventions and patterns. Activates when working on the Pr
 
 ## Anti-patterns
 
-- ❌ `prisma.$queryRaw` with template literals — use typedSql (`$queryRawTyped` + `.sql` files) instead. Only fall back to `$queryRaw` for truly dynamic queries that can't be expressed as static SQL files.
+- ❌ `prisma.$queryRaw` with template literals — use typedSql (`$queryRawTyped` + `.sql` files) instead, where the preview flag is acceptable. Only fall back to `$queryRaw` for truly dynamic queries that can't be expressed as static SQL files.
 - ❌ `deleteMany()` without a `where` — always spell out the filter
 - ❌ Deeply nested writes (> 2 levels) — split into sequential transactions
 - ❌ Missing `@@index` on fields that are frequently filtered

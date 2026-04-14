@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `.claude/hooks/lint-on-edit.sh` (+ `cli/template-files/` mirror) — replaced
+  `npx --no eslint --fix` with `npx --no-install eslint --fix`. `--no` is not
+  a documented npx flag; the hook's v0.1.0 intent (per CHANGELOG) was the
+  `--no-install` guard, which keeps the hook offline-safe and fast by refusing
+  to auto-install eslint when the project hasn't declared it. A prior edit
+  truncated the flag and the error was silently swallowed by `2>&1 || true`.
+
 ## [0.9.7] — 2026-04-14
 
 ### Fixed

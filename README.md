@@ -220,6 +220,7 @@ This template is an **opinionated starter kit** — not a framework, not a guide
 |---------|----------|----------------------|
 | [ChrisWiles/claude-code-showcase](https://github.com/ChrisWiles/claude-code-showcase) | Comprehensive showcase with Actions, scheduled hooks | You want a batteries-included demo with more workflows |
 | [davila7/claude-code-templates](https://github.com/davila7/claude-code-templates) | CLI marketplace with 600+ components | You want to pick individual agents/commands from a catalog |
+| [midudev/autoskills](https://github.com/midudev/autoskills) | Auto-generates skills from your codebase using AI | You want skills generated automatically from your actual code rather than written manually |
 | [serpro69/claude-toolbox](https://github.com/serpro69/claude-toolbox) | Plugin framework with sync infrastructure | You want a managed upgrade path across projects |
 | [abhishekray07/claude-md-templates](https://github.com/abhishekray07/claude-md-templates) | Teaching resource with before/after examples | You're learning Claude Code and want to understand the "why" |
 

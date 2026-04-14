@@ -46,6 +46,16 @@
 - [Feature branch naming — e.g. `feat/xxx`, `fix/xxx`]
 - [PR requirements — reviews, required checks]
 
+## CI/CD conventions
+
+- Build once, deploy many — build the artifact once, promote it across envs (never rebuild per environment)
+- Pin GitHub Actions by SHA, not tag (`actions/checkout@abc123` not `@v4`)
+- Separate build job from deploy job — two distinct responsibilities
+- Parallelize lint / test / security scans, fail fast on cheap checks first
+- Use `npm ci` not `npm install` in CI
+- Scope secrets per environment — staging secrets must differ from prod
+- Test rollback before you need it
+
 ## Gotchas
 
 - Environment variables are not copied by deploy scripts — verify `.env` matches the target
@@ -63,4 +73,5 @@
 
 - See `CONTRIBUTING.md` for the contribution workflow
 - See `.claude/skills/` for stack-specific conventions loaded per task
+- See `.claude/skills/core/ci-cd-pipeline/SKILL.md` for CI/CD patterns (GitHub Actions, GitLab CI, security)
 - [Link to the data model / API spec / architecture doc if any]

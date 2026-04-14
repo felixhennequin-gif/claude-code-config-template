@@ -30,7 +30,7 @@ Setup takes 2 minutes. See [Installation](#installation).
 
 ## What you get
 
-- **Universal core skills** — `coding-principles`, `debugging`, `error-handling`, `testing` — stack-agnostic and loaded on trigger.
+- **Universal core skills** — `coding-principles`, `debugging`, `error-handling`, `testing`, `ci-cd-pipeline` — stack-agnostic and loaded on trigger.
 - **Safety hooks** — branch guard blocks `main`/`master` edits, `bash-safety.sh` blocks destructive commands, `lint-on-edit.sh` auto-formats JS/TS/Python/Go/Rust after every edit, `session-start.sh` injects git context.
 - **One-command install** — `npx create-claude-code-config` copies only the files you need; stack-specific skills (`.claude/skills/stacks/`) are opt-in.
 
@@ -59,7 +59,7 @@ echo "CLAUDE.local.md" >> your-project/.gitignore
 echo ".claude/settings.local.json" >> your-project/.gitignore
 ```
 
-This gives you the stack-agnostic baseline: hooks, commands, rules, and the universal core skills (`coding-principles`, `debugging`, `error-handling`, `testing`).
+This gives you the stack-agnostic baseline: hooks, commands, rules, and the universal core skills (`coding-principles`, `debugging`, `error-handling`, `testing`, `ci-cd-pipeline`).
 
 > The hook in `settings.json` blocks edits on `main` and `master`. If your project uses a different protected branch, update the branch name in `.claude/settings.json`.
 
@@ -143,7 +143,8 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   │   │   ├── coding-principles/SKILL.md # Universal behavioral rules
 │   │   │   ├── debugging/SKILL.md         # Structured debugging workflow
 │   │   │   ├── error-handling/SKILL.md    # Universal error-handling patterns
-│   │   │   └── testing/SKILL.md           # Testing strategy and decisions
+│   │   │   ├── testing/SKILL.md           # Testing strategy and decisions
+│   │   │   └── ci-cd-pipeline/SKILL.md    # GitHub Actions + GitLab CI patterns
 │   │   └── stacks/                        # Optional — delete what you don't use
 │   │       ├── prisma-patterns/SKILL.md   # Prisma 7 conventions
 │   │       ├── express-api/SKILL.md       # Express 5 patterns

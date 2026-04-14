@@ -2,10 +2,9 @@
 
 This directory is empty by default — agents are project-specific.
 
-Example agents for a Node.js/React/PostgreSQL stack are in `examples/agents/`.
-Copy the ones relevant to your stack:
+Example agents are available in the GitHub repository:
+https://github.com/felixhennequin-gif/claude-code-config-template/tree/master/examples/agents/
 
-    cp examples/agents/reviewer.md .claude/agents/
-    cp examples/agents/security-auditor.md .claude/agents/
+Copy the content manually or clone the repo to access them.
 
 Then edit the system prompt to match your actual project.

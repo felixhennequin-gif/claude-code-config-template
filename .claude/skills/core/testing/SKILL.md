@@ -5,6 +5,12 @@ description: Testing strategy and conventions. Activates when writing tests, dec
 
 # Testing
 
+> The code snippets below use JavaScript/Jest syntax as a concrete
+> example, but every rule is language-agnostic. Apply the same
+> principles with `pytest`, `go test`, `cargo test`, `phpunit`, etc.
+> A Python equivalent of each example is shown inline where the
+> shape differs enough to matter.
+
 ## 1. Decide what to test first
 
 Value hierarchy (highest to lowest ROI):
@@ -67,6 +73,14 @@ it('should parse valid age')           // happy path
 it('should throw for negative age')    // edge case
 it('should throw for non-integer age') // edge case
 it('should throw for age over 150')    // boundary
+```
+
+```python
+# Same function, pytest equivalent — same coverage shape, different syntax:
+def test_parses_valid_age(): ...
+def test_raises_for_negative_age(): ...
+def test_raises_for_non_integer_age(): ...
+def test_raises_for_age_over_150(): ...
 ```
 
 See rule 3 above: below 70% on business logic, or 100% without edge-case assertions, both warrant a flag.

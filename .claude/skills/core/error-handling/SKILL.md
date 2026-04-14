@@ -7,6 +7,12 @@ description: Universal error handling patterns. Activates when writing error han
 
 Four rules that apply to every language and stack.
 
+> Code examples below use JavaScript/Express as a concrete shape, but
+> the rules are language-agnostic. A Python equivalent of the typed
+> error class is shown in section 3. The HTTP-boundary classification
+> in section 4 applies identically to FastAPI, Flask, Django, Gin,
+> Axum, or any other framework — only the middleware syntax changes.
+
 ## 1. Fail loudly at the boundary, silently never
 
 Errors should propagate up to the layer that can handle them meaningfully. Never swallow an error silently. The right default in intermediate layers is **no try/catch at all** — not a rethrow. Wrapping a call only to rethrow is a no-op that linters (ESLint `no-useless-catch`) already flag.
@@ -42,6 +48,20 @@ class NotFoundError extends AppError {
   }
 }
 throw new NotFoundError('User');
+```
+
+```python
+# Python equivalent — same shape, same rule:
+class AppError(Exception):
+    def __init__(self, message: str, status: int = 500):
+        super().__init__(message)
+        self.status = status
+
+class NotFoundError(AppError):
+    def __init__(self, resource: str):
+        super().__init__(f"{resource} not found", 404)
+
+raise NotFoundError("User")
 ```
 
 ## 4. Classify at the HTTP boundary, propagate typed errors everywhere else

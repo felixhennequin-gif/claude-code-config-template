@@ -152,6 +152,36 @@ jobs:
 
           exit "$fail"
 
+      - name: Check try/catch convention alignment
+        run: |
+          set -euo pipefail
+
+          # The express-api skill forbids wrapping controllers in try/catch
+          # under Express 5. The reviewer example agent must not contradict
+          # that — if a future edit recommends "wrap every controller in
+          # try/catch" or similar, fail the build. (Past incident: the two
+          # files disagreed on this for several releases, see CHANGELOG.md.)
+          fail=0
+
+          if [ -f examples/agents/reviewer.md ]; then
+            if grep -nHE 'wrap.*try/catch|try/catch.*every (controller|route|handler)' examples/agents/reviewer.md; then
+              echo "::error file=examples/agents/reviewer.md::reviewer recommends try/catch per-controller, which contradicts .claude/skills/stacks/express-api/SKILL.md"
+              fail=1
+            fi
+          fi
+
+          # And the express-api skill must keep the "never wrap controllers"
+          # rule — if that line is deleted, reviewer.md's "errors are thrown,
+          # not caught per-controller" guidance becomes unsupported.
+          if [ -f .claude/skills/stacks/express-api/SKILL.md ]; then
+            if ! grep -qE 'wrap.*controllers.*try/catch|Never.*try/catch' .claude/skills/stacks/express-api/SKILL.md; then
+              echo "::error file=.claude/skills/stacks/express-api/SKILL.md::express-api skill no longer states the 'never wrap controllers in try/catch' rule — reviewer.md depends on it"
+              fail=1
+            fi
+          fi
+
+          exit "$fail"
+
       - name: Secret scan
         run: |
           set -euo pipefail

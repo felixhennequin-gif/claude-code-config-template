@@ -17,7 +17,7 @@ Read the complete error message and the full stack trace. Identify the exact fil
 
 ## 3. Trace to the root cause
 
-Follow the error backward. The symptom is where the error *appears*; the root cause is where the bad data or state *originated*. Fix at the root, not at the symptom.
+Follow the error backward. The symptom is where the error *appears*; the root cause is where the bad data or state *originated*. Fix at the root, not at the symptom. This is the same rule as the `error-handling` skill's "Fix at the root, not the symptom" — debugging and error handling meet here: if the symptom exists because an upstream function returned `null` or swallowed an exception, the fix belongs upstream.
 
 - ❌ BAD: error says `Cannot read property 'name' of undefined` on line 42 → add `if (!user) return null` on line 41.
 - ✅ GOOD: trace back and find that `getUserById` silently returns `undefined` when the ID is missing instead of throwing. Fix the service layer so the bad state never reaches line 42.

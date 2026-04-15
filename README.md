@@ -168,8 +168,7 @@ Ready-to-use prompts live in `routines/` — copy the prompt into
 │   │   ├── notification.sh                # Desktop alert when Claude waits for input
 │   │   └── user-prompt-context.sh         # UserPromptSubmit example (not wired — see file)
 │   └── rules/
-│       ├── banned-patterns.md             # Universal + JS/TS anti-patterns (path-scoped)
-│       └── banned-patterns-python.md      # Python-specific anti-patterns (path-scoped)
+│       └── banned-patterns.md             # Universal + JS/TS + Python anti-patterns (path-scoped)
 ├── routines/
 │   ├── pr-review.md                  # /routine — automated PR code review
 │   ├── dependency-audit.md           # /routine — weekly dep check + security audit

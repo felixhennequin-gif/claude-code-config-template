@@ -12,6 +12,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- `.claude/skills/core/code-review/SKILL.md` (+ `cli/template-files/` mirror) —
+  the "open PRs" execution prompt instructed Claude to run
+  `gh pr merge --squash --delete-branch`, directly contradicting
+  `.claude/rules/git-workflow.md` ("Do not run `gh pr merge` ... unless the
+  user has explicitly said 'merge it now' after the PR exists"). Rewrote the
+  prompt to open PRs, print URLs, and stop — merging is the user's job.
+- `.claude/skills/core/coding-principles/SKILL.md` (+ `cli/template-files/`
+  mirror) — the Rule 1 example used a multi-line comment block to
+  disambiguate `formatUser`, which directly contradicts the skill's own
+  surgical-changes rule on comments. Rewrote the example so the disambiguation
+  lives in the identifier (`formatUserDisplayName`), not a comment.
+- `.claude/skills/core/error-handling/SKILL.md` (+ `cli/template-files/`
+  mirror) — Rule 4 was titled "Classify at the HTTP boundary" and shipped
+  only an Express example, despite the skill claiming to be language-agnostic.
+  Renamed the rule to "Classify at the outermost boundary", added a parallel
+  FastAPI `exception_handler` example, and listed the equivalent hook names
+  for Flask, Django, Gin, and Axum so the pattern is legible on any stack.
 - `.github/workflows/lint.yml` — branch-guard smoke test used an exact-string
   `jq` match on the `Edit|MultiEdit|Write` matcher, which broke after the
   matcher gained `NotebookEdit`. Switched to `contains("Write")` so the test

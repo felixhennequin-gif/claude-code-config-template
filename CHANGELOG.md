@@ -12,21 +12,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- `.claude/skills/stacks/ci-cd-pipeline/SKILL.md` — `actions/setup-node` was
-  pinned to a 39-character SHA, which would fail the skill's own
-  `action-pin-check.sh` (`^[0-9a-f]{40}$`). Replaced with the real 40-char SHA
-  `49933ea5288caeca8642d1e84afbd3f7d6820020` for `actions/setup-node@v4`.
-- `.claude/skills/stacks/prisma-patterns/SKILL.md` — version header said
-  "Applies to Prisma 5.x and 6.x" while the rest of the repo references Prisma
-  7. Updated to "Prisma 6.x and 7.x" (5.x is out of active support; both 6.x
-  and 7.x are current at the time of writing). Also updated the `omit` note
-  from "Prisma 5.13+/7" to "GA in Prisma 6.2+", matching upstream's 2025-01-09
-  GA announcement.
-- `.claude/skills/stacks/react-frontend/SKILL.md` — the `use()` section
-  recommended `useEffect + useState` as a fallback, which is outdated React 19
-  guidance. Rewrote to spell out the Promise-only constraint, the Suspense
-  boundary requirement, and to recommend TanStack Query (not `useEffect`) for
-  ad-hoc client-side fetching.
+- `cli/src/copy.js` + `cli/src/manifest.js` — silent `catch {}` blocks replaced
+  with logged catches. The CLI now reports (instead of swallowing) failures
+  when it can't read the template manifest or update `settings.json` during
+  stack permission merges. Matches `banned-patterns.md` "never catch silently".
+- `.claude/hooks/lint-on-edit.sh` (+ `cli/template-files/` mirror) — added
+  `ruff format` after `ruff check --fix` so Python files get the full
+  format-and-fix pass, mirroring ESLint's behavior for JS/TS. Also added a
+  `command -v npx` gate in the JS branch so the hook stays non-blocking on
+  machines without Node.js installed, matching the existing gates on every
+  other language branch.
+- `examples/agents/reviewer.md` — "No merge commits — rebase workflow"
+  replaced with "follows the project's branching strategy". The original
+  wording assumed a single branching model; the template ships stack- and
+  workflow-agnostic, so the reviewer agent should defer to whatever the
+  project actually uses.
+- `CLAUDE.md` — gotcha about the `git` allowlist was inaccurate:
+  `Bash(git checkout:*)` and `Bash(git restore:*)` are wildcards, so
+  `git checkout -- .` would be accepted by settings. Rewrote the gotcha to
+  describe the real behavior and point at `.claude/rules/git-workflow.md`
+  as the enforcement layer for "ask before discarding uncommitted work".
+- `ROUTINES.md` — replaced the leftover `[[ROUTINES_DOCS_URL]]` placeholder
+  with a real link to the Claude Code routines docs.
+- `CHANGELOG.md` — translated the `0.9.4` Fixed and Added sections from
+  French to English so the project history stays readable for all
+  downstream users.
+
+### Fixed
 - `.github/workflows/lint.yml` — branch-guard smoke test used an exact-string
   `jq` match on the `Edit|MultiEdit|Write` matcher, which broke after the
   matcher gained `NotebookEdit`. Switched to `contains("Write")` so the test
@@ -159,43 +171,42 @@ This entry summarises the 11 commits between `v0.9.5` and `v0.9.6` (PRs #16–#2
 ## [0.9.4] — 2026-04-14
 
 ### Fixed
-- `symfony-api/SKILL.md` — réécriture complète depuis zéro avec conventions
-  Symfony 5.4+ stock uniquement. Suppression de toutes les références projet-spécifiques :
-  `LegacyHttpClient`, double entity manager `primary`/`secondary`, `CronJob` entity,
-  `#[AsCronTask]`, `EasyAdmin 3.5`.
-- `examples/symfony-api.CLAUDE.md` — anonymisation complète. Suppression de Lexik/Gesdinet,
-  EasyAdmin, double EM, mailcatcher. Remplacés par des conventions Symfony génériques.
-- `.claude/rules/` — frontmatter corrigé : `globs:` (convention Cursor) remplacé par
-  `paths:` (syntaxe native Claude Code).
+- `symfony-api/SKILL.md` — full rewrite from scratch with stock Symfony 5.4+ conventions
+  only. Removed all project-specific references: `LegacyHttpClient`, dual entity manager
+  `primary`/`secondary`, `CronJob` entity, `#[AsCronTask]`, `EasyAdmin 3.5`.
+- `examples/symfony-api.CLAUDE.md` — full anonymization. Removed Lexik/Gesdinet,
+  EasyAdmin, dual EM, mailcatcher. Replaced with generic Symfony conventions.
+- `.claude/rules/` — frontmatter fixed: `globs:` (Cursor convention) replaced with
+  `paths:` (native Claude Code syntax).
 - `CONTRIBUTING.md` + `RESEARCH.md` + `examples/agents/` + `lint.yml` — contradiction
-  résolue sur le champ `tools:` dans les agents : optionnel (pas obligatoire), aligné
-  dans les quatre sources. CI mise à jour pour valider `examples/agents/` au lieu de
-  `.claude/agents/` (dossier vide par défaut).
-- `.claude/commands/wrap.md` — suppression de l'option auto-commit contradictoire.
-  Le workflow passe à deux options : stage uniquement (défaut) ou skip.
-- `.claude/skills/stacks/react-frontend/SKILL.md` — paragraphe `use()` réécrit.
-  La distinction Suspense boundary vs data fetching ad-hoc est maintenant explicite.
-- `.claude/skills/core/testing/SKILL.md` — fusion avec `rules/test-files.md`.
-  Suppression des doublons AAA / naming / test.skip / isolation. Un seul endroit.
-- `.claude/skills/core/error-handling/SKILL.md` — ajout règle 4 : classification des
-  erreurs à la boundary HTTP. Single mapping en error middleware, anti-pattern status
-  codes dans la service layer.
-- `.claude/settings.json` — `Bash(git:*)` remplacé par une allowlist explicite de 12
-  commandes git. `git reset --hard` et `git clean -fd` exclus intentionnellement.
-- `.claude/commands/deploy.md` — step 5 "Verify" remplacé par des commandes exécutables
-  par Claude (`curl`, `pm2 logs --lines 50`). Suppression du "tail logs 30 seconds"
-  impossible sans agent persistent.
-- `.claude/hooks/lint-on-edit.sh` — ajout de branches Python (`ruff`), Go (`gofmt`),
-  Rust (`rustfmt`). Chaque branche vérifie la disponibilité de l'outil avant d'essayer.
-- `.claude/hooks/session-start.sh` — détection de l'absence de `CLAUDE.local.md` au
-  démarrage de session avec message d'avertissement.
-- `RESEARCH.md` — suppression des statistiques non vérifiables (`~15%`, `~55 repos`).
-  Reformulé comme notes d'observation, pas comme étude formelle.
-- `docs/VALIDATION.md` — titre et framing corrigés. "Real-world validation" → 
-  "Validation checklist & smoke test results". Disclaimer auteur ajouté.
-- `README.md` — callout `root CLAUDE.md vs template/CLAUDE.md` déplacé en première
-  position après les badges. Arbre ASCII déplacé en bas. Section précédence
-  `settings.json` ajoutée.
+  resolved on the `tools:` field in agents: optional (not mandatory), aligned across
+  all four sources. CI updated to validate `examples/agents/` instead of `.claude/agents/`
+  (empty by default).
+- `.claude/commands/wrap.md` — removed the contradictory auto-commit option. The
+  workflow now has two options: stage only (default) or skip.
+- `.claude/skills/stacks/react-frontend/SKILL.md` — `use()` paragraph rewritten. The
+  Suspense boundary vs ad-hoc data fetching distinction is now explicit.
+- `.claude/skills/core/testing/SKILL.md` — merged with `rules/test-files.md`. Removed
+  AAA / naming / test.skip / isolation duplicates. One source of truth.
+- `.claude/skills/core/error-handling/SKILL.md` — added rule 4: error classification
+  at the HTTP boundary. Single mapping in error middleware, status codes in the
+  service layer flagged as an anti-pattern.
+- `.claude/settings.json` — `Bash(git:*)` replaced with an explicit allowlist of 12
+  git commands. `git reset --hard` and `git clean -fd` intentionally excluded.
+- `.claude/commands/deploy.md` — step 5 "Verify" replaced with commands Claude can
+  actually run (`curl`, `pm2 logs --lines 50`). Removed the "tail logs 30 seconds"
+  step that isn't possible without a persistent agent.
+- `.claude/hooks/lint-on-edit.sh` — added Python (`ruff`), Go (`gofmt`), and Rust
+  (`rustfmt`) branches. Each branch checks tool availability before running.
+- `.claude/hooks/session-start.sh` — detects missing `CLAUDE.local.md` at session
+  start and prints a warning.
+- `RESEARCH.md` — removed unverifiable statistics (`~15%`, `~55 repos`). Reworded as
+  observational notes rather than a formal study.
+- `docs/VALIDATION.md` — title and framing fixed. "Real-world validation" →
+  "Validation checklist & smoke test results". Author disclaimer added.
+- `README.md` — `root CLAUDE.md vs template/CLAUDE.md` callout moved to the top
+  (right after the badges). ASCII tree moved to the bottom. `settings.json`
+  precedence section added.
 
 ### Added
 - `.claude/skills/core/ci-cd-pipeline/SKILL.md` — GitHub Actions and GitLab CI patterns:
@@ -203,12 +214,12 @@ This entry summarises the 11 commits between `v0.9.5` and `v0.9.6` (PRs #16–#2
   checklist (SHA pinning, least privilege, scoped secrets), and anti-patterns to flag
   in existing workflows. `template/CLAUDE.md` gains a `## CI/CD conventions` block
   referencing the skill.
-- `.claude/hooks/user-prompt-context.sh` — exemple commenté de `UserPromptSubmit` hook
-  pour injecter du contexte à chaque prompt.
-- `.github/workflows/lint.yml` — step "Smoke-test bash-safety hook" : vérifie les cas
-  PASS et BLOCK documentés dans `CLAUDE.md` à chaque CI run.
-- `cli/src/copy.js` — `symfony-api` ajouté dans `getSkipPaths` et `STACK_PERMISSIONS`
-  (`Bash(composer:*)`, `Bash(php:*)`). Double bug CLI corrigé.
+- `.claude/hooks/user-prompt-context.sh` — commented example of a `UserPromptSubmit`
+  hook for injecting context on every prompt.
+- `.github/workflows/lint.yml` — "Smoke-test bash-safety hook" step: verifies the
+  PASS and BLOCK cases documented in `CLAUDE.md` on every CI run.
+- `cli/src/copy.js` — `symfony-api` added to `getSkipPaths` and `STACK_PERMISSIONS`
+  (`Bash(composer:*)`, `Bash(php:*)`). Dual CLI bug fixed.
 
 ## [0.9.2] — 2026-04-14
 

@@ -26,8 +26,8 @@ Review this pull request against the project's conventions:
 - [ ] No hardcoded values that should be env vars or constants
 
 ### Architecture
-- [ ] Business logic lives in services, not controllers/routes
-- [ ] Database queries use the ORM patterns defined in the project (no raw SQL unless justified)
+- [ ] [your layering convention — e.g., thin controllers, logic in services/use cases]
+- [ ] [project ORM/query patterns — no raw queries unless justified]
 - [ ] New dependencies are justified — check if existing deps already cover the use case
 - [ ] File placement follows the project structure conventions
 

@@ -58,6 +58,7 @@
     ]
   },
   "permissions": {
+    "_comment": "Broad git wildcards (checkout:*, restore:*, reset:*) are intentional. The safety net is .claude/hooks/dangerous-rm-guard.sh (PreToolUse on Bash) plus the deny list below, not the allow-list patterns. Tightening every git subcommand here would bloat the config without adding real safety.",
     "allow": [
       "Read",
       "Grep",

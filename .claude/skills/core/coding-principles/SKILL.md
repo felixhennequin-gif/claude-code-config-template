@@ -3,12 +3,9 @@ name: coding-principles
 description: Core behavioral rules for any coding task — think before coding, simplicity first, surgical changes, goal-driven execution. Activates on every feature, fix, refactor, or code edit, regardless of stack.
 ---
 
-<!-- Adapted from Andrej Karpathy's observations on LLM coding pitfalls,
-     via forrestchang/andrej-karpathy-skills. Credit to the original author. -->
-
 # Coding principles
 
-Four rules that apply to every code change, regardless of stack.
+Four rules that apply to every code change, regardless of stack. Each rule has a concrete test — if you can't answer the test honestly, you're violating the rule.
 
 ## 1. Think before coding
 
@@ -114,3 +111,19 @@ Transform imperative tasks into verifiable goals before starting:
 "GET /items?page=2 returns items 21–40, page 3 returns 41–60.
 Write a test that fails for both cases, then make it pass."
 ```
+
+## Anti-patterns
+
+Concrete behaviors that violate the rules above. Each one is a real failure mode seen in practice, not a hypothetical.
+
+- ❌ **Silent disambiguation.** Picking one interpretation of an ambiguous request and implementing it without surfacing the choice. "Format the user" → implementing `formatUser()` as display-name without asking whether the caller wanted a slug, a CSV row, or an API payload. The diff looks fine; the caller rewrites it.
+
+- ❌ **Defensive scaffolding for impossible states.** Wrapping internal code in `try/catch`, adding null checks, or validating types that the function signature already guarantees. This bloats the diff, hides real errors, and teaches readers that the "can't happen" case might actually happen.
+
+- ❌ **Speculative flexibility.** Adding a `config` object, a strategy pattern, or a second parameter "in case we need it later" when the current task has exactly one caller. Three call sites with slightly different needs is the moment to abstract — not one.
+
+- ❌ **Drive-by cleanup.** Fixing a one-line bug and also renaming variables, reformatting imports, bumping a comment, or "improving" an unrelated helper on the way past. Every extra hunk makes the diff harder to review and the bisect harder to read.
+
+- ❌ **Imperative task acceptance.** Starting work on "add validation" or "fix the bug" without first rewriting it as a verifiable goal with a pass/fail check. Without a success criterion, "done" becomes a feeling, and the loop closes only when the user notices it's still broken.
+
+- ❌ **Error handling for UX at the wrong layer.** Catching an exception in a deep utility so the caller "doesn't have to worry about it" — then logging and returning `null`. The caller now has a silent failure instead of a loud one, and the bug surfaces three layers up with no stack trace.

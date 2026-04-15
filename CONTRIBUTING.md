@@ -52,6 +52,10 @@ Open the PR against `master`. In the description, answer:
 3. **How to test** — drop this skill/agent/command into a project, describe
    the prompt you used, and paste the observed Claude Code behavior.
 
+**Before submitting**: run `make check` locally. It runs the same checks CI
+runs, plus the hook smoke tests, so you can catch registry drift, broken
+frontmatter, or template-sync issues before they hit the pipeline.
+
 Every PR goes through `.github/PULL_REQUEST_TEMPLATE.md`. Check every box or
 justify why it doesn't apply.
 

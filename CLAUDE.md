@@ -92,6 +92,12 @@ The `create-claude-code-config` npm package lives here. It's published independe
 
 No build step in the root — every file is Markdown, JSON, or shell. The `cli/` subdirectory has its own `package.json`. Most changes are content quality, not code.
 
+**Primary command**: `make check` — runs the same static checks as CI (JSON, shellcheck, frontmatter, registry, template sync) plus the hook smoke tests. Run it before committing.
+
+Individual targets: `make lint`, `make test-hooks`, `make sync`.
+
+The raw commands below remain as a reference in case you want to run one step on its own or CI ever drifts from the Makefile:
+
 ```bash
 # Validate settings.json
 python3 -c "import json; json.load(open('.claude/settings.json'))"

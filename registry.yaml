@@ -75,6 +75,10 @@ commands:
     path: .claude/commands/audit.md
   - name: deploy
     path: .claude/commands/deploy.md
+  - name: lint-config
+    path: .claude/commands/lint-config.md
+  - name: skill-check
+    path: .claude/commands/skill-check.md
   - name: test
     path: .claude/commands/test.md
   - name: wrap

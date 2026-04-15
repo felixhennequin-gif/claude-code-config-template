@@ -32,7 +32,7 @@ template/
   settings.json                 # SessionStart + PreToolUse (main/master guard, bash safety) + PostToolUse lint
   agents/
     README.md                   # Empty by default — pointer to examples/agents/
-  commands/                     # /audit, /deploy, /test, /wrap (stack-agnostic, configurable paths)
+  commands/                     # /audit, /deploy, /lint-config, /skill-check, /test, /wrap (stack-agnostic)
   skills/
     core/
       README.md                 # What "core" means

@@ -90,17 +90,17 @@ commands:
 
 routines:
   - name: bug-triage
-    path: routines/bug-triage.md
+    path: examples/routines/bug-triage.md
     trigger: schedule
   - name: dependency-audit
-    path: routines/dependency-audit.md
+    path: examples/routines/dependency-audit.md
     trigger: schedule
   - name: deploy-verify
-    path: routines/deploy-verify.md
+    path: examples/routines/deploy-verify.md
     trigger: api
   - name: docs-drift
-    path: routines/docs-drift.md
+    path: examples/routines/docs-drift.md
     trigger: schedule
   - name: pr-review
-    path: routines/pr-review.md
+    path: examples/routines/pr-review.md
     trigger: github

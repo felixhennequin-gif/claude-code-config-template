@@ -4,16 +4,22 @@ Post-deploy smoke tests and error log scanning.
 
 ## Trigger
 
-**API**: call from your CD pipeline after each deploy
+**API**: call from your CD pipeline after each deploy.
+
+> **Speculative — verify before using.** Routines are a research-preview
+> feature and the exact API fire-endpoint shape (URL, headers, auth) is
+> not stable. Check the upstream docs at
+> <https://code.claude.com/docs/en/routines> for the current request
+> format before wiring this into a CD pipeline. The snippet below is a
+> placeholder illustrating the *shape* of a POST call, not a verified
+> contract — do not copy-paste it into production.
 
 ```bash
-# Example: call after deploy script completes
-curl -X POST https://api.anthropic.com/v1/claude_code/routines/YOUR_TRIGGER_ID/fire \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "anthropic-beta: experimental-cc-routine-2026-04-01" \
-  -H "anthropic-version: 2023-06-01" \
+# Placeholder — replace with the real endpoint and headers from the routines docs.
+curl -X POST <routine-fire-endpoint> \
+  -H "Authorization: Bearer <your-token>" \
   -H "Content-Type: application/json" \
-  -d '{"text": "Deploy v1.4.2 to production completed at 2026-04-15T22:30:00Z"}'
+  -d '{"text": "Deploy <version> to <env> completed at <ISO-timestamp>"}'
 ```
 
 ## Prompt

@@ -186,7 +186,7 @@ jobs:
 
           while IFS= read -r f; do
             registered "$f" || { echo "::error file=$f::routine not registered in registry.yaml"; fail=1; }
-          done < <(find routines -maxdepth 1 -name '*.md')
+          done < <(find examples/routines -maxdepth 1 -name '*.md')
 
           exit "$fail"
 

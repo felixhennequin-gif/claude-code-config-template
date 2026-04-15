@@ -29,7 +29,7 @@ Every night, pick one bug and try to fix it.
    - If it fails any of those criteria: add a comment explaining why, add `needs-discussion` label, stop
 
 3. **Fix the bug**
-   - Create a branch named `claude/fix-[issue-number]`
+   - Create a branch named `fix/issue-[issue-number]` (matches the project's `fix/` convention — see `.claude/rules/git-workflow.md`)
    - Write the minimal fix — don't refactor surrounding code
    - Add or update tests that reproduce the bug and verify the fix
    - Run the full test suite to check for regressions

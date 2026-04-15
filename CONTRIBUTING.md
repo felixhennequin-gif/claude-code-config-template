@@ -11,6 +11,12 @@ wiring Claude Code into a project — every file here ends up in real developers
   Elixir/Phoenix, Next.js App Router, SvelteKit, Astro, etc.
 - **New agents** (`.claude/agents/*.md`) for focused use cases: perf auditor,
   migration planner, accessibility checker, i18n reviewer, etc.
+- **MCP-connected agents** — agents that depend on an MCP server (Sentry,
+  Linear, GitHub, Datadog, etc.) for their core behavior. Put them under
+  `examples/agents/` with a header comment listing the exact MCP server
+  config required, and list the tool (e.g. `mcp__sentry`) in the frontmatter
+  `tools:` field. If the MCP tool is not available at runtime, the agent
+  must stop and say so — never fall back to scraping or fabricating data.
 - **New commands** (`.claude/commands/*.md`) that codify a repeatable workflow.
 - **New examples** (`examples/*.CLAUDE.md`) — fully anonymized `CLAUDE.md` files
   showing the template adapted to a real project shape.

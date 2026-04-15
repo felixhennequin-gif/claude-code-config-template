@@ -69,6 +69,10 @@ agents:
   - name: fastapi-reviewer
     path: examples/agents/fastapi-reviewer.md
     languages: [python]
+  - name: sentry-triage
+    path: examples/agents/sentry-triage.md
+    languages: [any]
+    requires_mcp: [sentry]
 
 commands:
   - name: audit

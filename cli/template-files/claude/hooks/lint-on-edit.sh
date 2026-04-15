@@ -27,11 +27,14 @@ cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
 
 case "$FILE" in
   *.js|*.ts|*.jsx|*.tsx|*.mjs|*.cjs)
-    npx --no-install eslint --fix "$FILE" >/dev/null 2>&1 || true
+    if command -v npx >/dev/null 2>&1; then
+      npx --no-install eslint --fix "$FILE" >/dev/null 2>&1 || true
+    fi
     ;;
   *.py)
     if command -v ruff >/dev/null 2>&1; then
       ruff check --fix "$FILE" >/dev/null 2>&1 || true
+      ruff format "$FILE" >/dev/null 2>&1 || true
     fi
     ;;
   *.go)

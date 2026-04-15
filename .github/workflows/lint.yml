@@ -186,9 +186,28 @@ jobs:
 
           while IFS= read -r f; do
             registered "$f" || { echo "::error file=$f::routine not registered in registry.yaml"; fail=1; }
-          done < <(find routines -maxdepth 1 -name '*.md')
+          done < <(find examples/routines -maxdepth 1 -name '*.md')
 
           exit "$fail"
+
+      - name: Validate skill body sections
+        run: |
+          set -euo pipefail
+
+          # Every SKILL.md must contain an "## Anti-patterns" section.
+          # CONTRIBUTING.md lists anti-patterns as a mandatory quality bar
+          # item; this check makes the rule enforceable instead of aspirational.
+          fail=0
+          while IFS= read -r f; do
+            if ! grep -qE '^## Anti-patterns' "$f"; then
+              echo "::error file=$f::SKILL.md missing required '## Anti-patterns' section (see CONTRIBUTING.md → Quality bar → Skills)"
+              fail=1
+            fi
+          done < <(find .claude/skills -name SKILL.md)
+          exit "$fail"
+
+      - name: Check internal markdown links
+        run: python3 scripts/check-links.py
 
       - name: Check try/catch convention alignment
         run: |

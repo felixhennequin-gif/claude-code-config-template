@@ -3,12 +3,9 @@ name: coding-principles
 description: Core behavioral rules for any coding task — think before coding, simplicity first, surgical changes, goal-driven execution. Activates on every feature, fix, refactor, or code edit, regardless of stack.
 ---
 
-<!-- Adapted from Andrej Karpathy's observations on LLM coding pitfalls,
-     via forrestchang/andrej-karpathy-skills. Credit to the original author. -->
-
 # Coding principles
 
-Four rules that apply to every code change, regardless of stack.
+Four rules that apply to every code change, regardless of stack. Each rule has a concrete test — if you can't answer the test honestly, you're violating the rule.
 
 ## 1. Think before coding
 
@@ -17,19 +14,20 @@ Four rules that apply to every code change, regardless of stack.
 
 **Test:** Could the user point at your diff and say "I didn't ask for that interpretation"? If yes, you assumed instead of asking.
 
+Request: **"format the user"**. "Format" is ambiguous — it could mean a display
+name for UI, a URL slug for routing, a serialized object for the API, or
+something else. The right move is to ask the user which one they want *before*
+writing code. If the answer is "display name" and you must proceed without a
+reply, disambiguate in the function name — not in a comment block.
+
 ```js
-// BAD — silent assumption, user never confirmed this format
+// BAD — silent assumption baked into a generic name
 function formatUser(user) {
   return `${user.firstName} ${user.lastName}`;
 }
 
-// GOOD — name the ambiguity, stop before implementing
-// Request: "format the user"
-// Ambiguity: "format" could mean:
-//   1. Display name for UI ("First Last")
-//   2. URL slug for routing ("first-last")
-//   3. Serialized object for the API ({ id, name, email })
-// Proceeding with assumption 1 — confirm before merging.
+// GOOD — the name itself tells the caller which "format" this is.
+// No comment needed; the ambiguity is resolved by the identifier.
 function formatUserDisplayName(user) {
   return `${user.firstName} ${user.lastName}`;
 }
@@ -113,3 +111,19 @@ Transform imperative tasks into verifiable goals before starting:
 "GET /items?page=2 returns items 21–40, page 3 returns 41–60.
 Write a test that fails for both cases, then make it pass."
 ```
+
+## Anti-patterns
+
+Concrete behaviors that violate the rules above. Each one is a real failure mode seen in practice, not a hypothetical.
+
+- ❌ **Silent disambiguation.** Picking one interpretation of an ambiguous request and implementing it without surfacing the choice. "Format the user" → implementing `formatUser()` as display-name without asking whether the caller wanted a slug, a CSV row, or an API payload. The diff looks fine; the caller rewrites it.
+
+- ❌ **Defensive scaffolding for impossible states.** Wrapping internal code in `try/catch`, adding null checks, or validating types that the function signature already guarantees. This bloats the diff, hides real errors, and teaches readers that the "can't happen" case might actually happen.
+
+- ❌ **Speculative flexibility.** Adding a `config` object, a strategy pattern, or a second parameter "in case we need it later" when the current task has exactly one caller. Three call sites with slightly different needs is the moment to abstract — not one.
+
+- ❌ **Drive-by cleanup.** Fixing a one-line bug and also renaming variables, reformatting imports, bumping a comment, or "improving" an unrelated helper on the way past. Every extra hunk makes the diff harder to review and the bisect harder to read.
+
+- ❌ **Imperative task acceptance.** Starting work on "add validation" or "fix the bug" without first rewriting it as a verifiable goal with a pass/fail check. Without a success criterion, "done" becomes a feeling, and the loop closes only when the user notices it's still broken.
+
+- ❌ **Error handling for UX at the wrong layer.** Catching an exception in a deep utility so the caller "doesn't have to worry about it" — then logging and returning `null`. The caller now has a silent failure instead of a loud one, and the bug surfaces three layers up with no stack trace.

@@ -19,10 +19,10 @@ cp "$REPO_ROOT/template/CLAUDE.md" "$TARGET/CLAUDE.md"
 cp "$REPO_ROOT/template/CLAUDE.local.md.example" "$TARGET/CLAUDE.local.md.example"
 cp "$REPO_ROOT/template/.claudeignore" "$TARGET/.claudeignore"
 
-# Copy routines
+# Routines are no longer shipped to CLI installs — they live under
+# examples/routines/ as a speculative preview. See CHANGELOG.md.
 rm -rf "$TARGET/routines"
-cp -r "$REPO_ROOT/routines" "$TARGET/"
-cp "$REPO_ROOT/ROUTINES.md" "$TARGET/"
+rm -f "$TARGET/ROUTINES.md"
 
 # Copy .claude/ contents (without dot prefix)
 cp -r "$REPO_ROOT/.claude/"* "$TARGET/claude/"

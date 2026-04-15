@@ -1,6 +1,14 @@
-# Machine-readable registry of skills, agents, commands, and routines.
-# CI validates that every `path` exists on disk and every asset on disk has an entry.
-# Update this file whenever you add, rename, or remove a skill, agent, command, or routine.
+# CI drift-detection manifest for skills, agents, commands, and routines.
+#
+# NOTE: Claude Code does NOT read this file. It is not an index, not a loader,
+# and not part of the runtime. Its sole purpose is letting CI catch drift
+# between what the README advertises, what the CLI copies, and what actually
+# exists on disk. If you're looking for "how Claude discovers skills", the
+# answer is frontmatter in each SKILL.md file — not this manifest.
+#
+# CI validates that every `path` exists on disk and every asset on disk has an
+# entry. Update this file whenever you add, rename, or remove an asset, or CI
+# will fail.
 
 skills:
   - name: code-review
@@ -90,17 +98,17 @@ commands:
 
 routines:
   - name: bug-triage
-    path: routines/bug-triage.md
+    path: examples/routines/bug-triage.md
     trigger: schedule
   - name: dependency-audit
-    path: routines/dependency-audit.md
+    path: examples/routines/dependency-audit.md
     trigger: schedule
   - name: deploy-verify
-    path: routines/deploy-verify.md
+    path: examples/routines/deploy-verify.md
     trigger: api
   - name: docs-drift
-    path: routines/docs-drift.md
+    path: examples/routines/docs-drift.md
     trigger: schedule
   - name: pr-review
-    path: routines/pr-review.md
+    path: examples/routines/pr-review.md
     trigger: github

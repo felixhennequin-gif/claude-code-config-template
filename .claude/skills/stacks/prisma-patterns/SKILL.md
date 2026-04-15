@@ -39,7 +39,7 @@ Applies to Prisma 6.x and 7.x. Preview-only features are flagged inline.
   const hasMore = items.length > limit;
   if (hasMore) items.pop();
   ```
-- **`typedSql`** (preview since Prisma 5.19 — enable with `previewFeatures = ["typedSql"]` in the generator block) — for complex queries that don't fit the query builder, put `.sql` files under `prisma/sql/` and call them via `prisma.$queryRawTyped()`. This gives type-safe raw SQL without string interpolation. Prefer this over `$queryRaw` with template literals where the preview flag is acceptable.
+- **`typedSql`** ⚠️ **Preview feature** since Prisma 5.19 — still preview as of **last verified 2026-04-15**. Re-check [Prisma's preview-features list](https://www.prisma.io/docs/orm/reference/preview-features) before adopting, because preview flags can break, rename, or get removed between minor releases. When you're comfortable pinning a Prisma version and revisiting on upgrades, enable with `previewFeatures = ["typedSql"]` in the generator block, put `.sql` files under `prisma/sql/`, and call them via `prisma.$queryRawTyped()` — this gives type-safe raw SQL without string interpolation. On a production codebase that can't absorb preview churn, stay on `$queryRaw` with careful review instead.
 - **Transactions** for multi-model operations that must be atomic.
 
 ## Migrations
@@ -55,7 +55,7 @@ Applies to Prisma 6.x and 7.x. Preview-only features are flagged inline.
 
 ## Anti-patterns
 
-- ❌ `prisma.$queryRaw` with template literals — use typedSql (`$queryRawTyped` + `.sql` files) instead, where the preview flag is acceptable. Only fall back to `$queryRaw` for truly dynamic queries that can't be expressed as static SQL files.
+- ❌ `prisma.$queryRaw` with unchecked template literals — if the `typedSql` preview flag is acceptable for your project, prefer `$queryRawTyped` + `.sql` files. If you can't depend on preview flags, stay on `$queryRaw` but sanitize inputs yourself and review each call carefully. Either way, only use raw SQL when the query builder can't express the query.
 - ❌ `deleteMany()` without a `where` — always spell out the filter
 - ❌ Deeply nested writes (> 2 levels) — split into sequential transactions
 - ❌ Missing `@@index` on fields that are frequently filtered

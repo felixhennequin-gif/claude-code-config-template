@@ -18,11 +18,45 @@ set -euo pipefail
 # Fail-closed: if the payload can't be parsed, block the call.
 
 INPUT=$(cat)
-COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // .command // empty' 2>/dev/null || echo "$INPUT" | node -e "
-  let d=''; process.stdin.on('data',c=>d+=c); process.stdin.on('end',()=>{
-    try { const j=JSON.parse(d); console.log((j.tool_input && j.tool_input.command) || j.command || ''); } catch { console.log(''); }
-  });
-" 2>/dev/null)
+
+# Extract a JSON string field from $INPUT. Uses awk (POSIX base utility) so
+# the hook stays stack-agnostic — no jq, no node, no python. Handles the
+# common escape sequences (\" \\ \n \t \r). Not a full JSON parser; good
+# enough for Claude Code's well-formed hook payloads.
+extract_json_string() {
+  local key="$1"
+  printf '%s' "$INPUT" | awk -v key="$key" '
+    { buf = buf $0 "\n" }
+    END {
+      pat = "\"" key "\"[[:space:]]*:[[:space:]]*\""
+      if (match(buf, pat)) {
+        s = substr(buf, RSTART + RLENGTH)
+        out = ""
+        i = 1
+        n = length(s)
+        while (i <= n) {
+          c = substr(s, i, 1)
+          if (c == "\\" && i < n) {
+            nc = substr(s, i + 1, 1)
+            if (nc == "n") out = out "\n"
+            else if (nc == "t") out = out "\t"
+            else if (nc == "r") out = out "\r"
+            else out = out nc
+            i += 2
+          } else if (c == "\"") {
+            print out
+            exit
+          } else {
+            out = out c
+            i += 1
+          }
+        }
+      }
+    }
+  '
+}
+
+COMMAND=$(extract_json_string command)
 
 if [ -z "$COMMAND" ]; then
   echo "BLOCKED: dangerous-rm-guard hook could not parse command from stdin (fail-closed)." >&2

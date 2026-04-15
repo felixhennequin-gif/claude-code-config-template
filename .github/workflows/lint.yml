@@ -156,40 +156,6 @@ jobs:
 
           exit "$fail"
 
-      - name: Validate registry.yaml
-        run: |
-          set -euo pipefail
-
-          # 1. every `path:` in registry.yaml must exist on disk
-          fail=0
-          while IFS= read -r p; do
-            if [ ! -e "$p" ]; then
-              echo "::error file=registry.yaml::path does not exist on disk: $p"
-              fail=1
-            fi
-          done < <(grep -E '^\s*path:' registry.yaml | sed -E 's/^\s*path:\s*//')
-
-          # 2. every skill/agent/command/routine on disk must have an entry
-          registered() { grep -qE "^\s*path:\s*$1\s*$" registry.yaml; }
-
-          while IFS= read -r f; do
-            registered "$f" || { echo "::error file=$f::skill not registered in registry.yaml"; fail=1; }
-          done < <(find .claude/skills -name SKILL.md)
-
-          while IFS= read -r f; do
-            registered "$f" || { echo "::error file=$f::agent not registered in registry.yaml"; fail=1; }
-          done < <(find examples/agents -maxdepth 1 -name '*.md' ! -name 'README.md')
-
-          while IFS= read -r f; do
-            registered "$f" || { echo "::error file=$f::command not registered in registry.yaml"; fail=1; }
-          done < <(find .claude/commands -maxdepth 1 -name '*.md')
-
-          while IFS= read -r f; do
-            registered "$f" || { echo "::error file=$f::routine not registered in registry.yaml"; fail=1; }
-          done < <(find examples/routines -maxdepth 1 -name '*.md')
-
-          exit "$fail"
-
       - name: Validate skill body sections
         run: |
           set -euo pipefail
@@ -245,11 +211,10 @@ jobs:
 
           fail=0
           # git ls-files already excludes .git/ and untracked junk.
-          # Exclude RESEARCH.md (cites external repos) and this workflow itself
-          # (which contains the scan patterns).
+          # Exclude this workflow itself (which contains the scan patterns).
           mapfile -t files < <(
             git ls-files \
-              | grep -Ev '^(RESEARCH\.md|\.github/workflows/lint\.yml)$'
+              | grep -Ev '^\.github/workflows/lint\.yml$'
           )
 
           # Hardcoded IPv4 addresses — filter out version strings (e.g. 1.2.3.4

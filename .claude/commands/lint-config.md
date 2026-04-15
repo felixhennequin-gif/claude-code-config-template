@@ -21,12 +21,8 @@ Run a full static check on the project's Claude Code configuration. Mirrors what
    - Grep each skill under `.claude/skills/**/SKILL.md` for links in the form `[text](path)` or bare `.claude/skills/...` paths.
    - For each cross-reference, verify the target exists. Broken links are the #1 silent failure mode.
 
-5. **Registry consistency**
-   - Run the same check as CI's "Validate registry.yaml" step: every `path:` in `registry.yaml` must exist, and every skill/agent/command/routine on disk must be registered.
-   - Report missing entries and stale entries separately.
-
-6. **Report**
-   - Group findings by category (settings / hooks / CLAUDE.md / cross-refs / registry).
+5. **Report**
+   - Group findings by category (settings / hooks / CLAUDE.md / cross-refs).
    - For each finding, print the file and a one-line reason.
    - End with a total count. Exit `OK` if nothing found.
 

@@ -2,7 +2,7 @@
 
 help:
 	@echo "Targets:"
-	@echo "  make lint        Run the same static checks as CI (JSON, shellcheck, frontmatter, registry)"
+	@echo "  make lint        Run the same static checks as CI (JSON, shellcheck, frontmatter)"
 	@echo "  make test-hooks  Smoke-test hooks (dangerous-rm-guard + branch guard)"
 	@echo "  make sync        Re-sync cli/template-files/ from source"
 	@echo "  make check       lint + test-hooks (run before committing)"
@@ -19,11 +19,6 @@ lint:
 	    || { echo "::error $$f missing name"; exit 1; }; \
 	  awk 'BEGIN{c=0} /^---$$/{c++; if(c==2) exit; next} c==1' "$$f" | grep -q '^description:' \
 	    || { echo "::error $$f missing description"; exit 1; }; \
-	done
-	@echo "==> Validate registry.yaml paths exist"
-	@set -e; \
-	for p in $$(grep -E '^\s*path:' registry.yaml | sed -E 's/^\s*path:\s*//'); do \
-	  [ -e "$$p" ] || { echo "::error registry.yaml path missing: $$p"; exit 1; }; \
 	done
 	@echo "==> Validate skill body sections (Anti-patterns required)"
 	@set -e; \

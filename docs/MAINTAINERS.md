@@ -13,21 +13,20 @@ template/                         # Downstream-facing blank template (CLAUDE.md,
 .claude/
   settings.json                   # SessionStart + PreToolUse guards + PostToolUse lint
   agents/                         # reviewer (stack-agnostic default); examples/agents/ for stack-flavored
-  commands/                       # /audit, /deploy, /lint-config, /skill-check, /test, /wrap
+  commands/                       # /audit, /deploy, /lint-config, /skill-check
   skills/core/                    # coding-principles, debugging, error-handling, testing, git-workflow, code-review
   skills/stacks/                  # prisma-patterns, express-api, react-frontend, symfony-api, ci-cd-pipeline
   hooks/                          # lint-on-edit, session-start, dangerous-rm-guard, notification
   rules/                          # banned-patterns, git-workflow, test-files
 docs/                             # CONTEXT-BUDGET.md, VALIDATION.md, HACKING.md (working-on-this-repo guide)
 examples/routines/ + ROUTINES.md  # Speculative-preview cloud automation prompts (not CLI-copied)
-registry.yaml                     # Machine-readable index of every skill/agent/command/routine (CI-enforced)
 examples/                         # CLAUDE.md examples (express, next, fastapi, go, symfony) + example subagents
 cli/                              # create-claude-code-config npm package; template-files/ mirrors .claude/ and template/
 ```
 
 ## Working on this repo
 
-No build step — every file is Markdown, JSON, or shell. `make check` runs the same static checks as CI (JSON, shellcheck, frontmatter, registry, template sync) plus the hook smoke tests; run it before committing. Individual targets: `make lint`, `make test-hooks`, `make sync`. Always run `bash cli/sync-templates.sh` after editing anything under `template/` or `.claude/` — CI fails if `cli/template-files/` drifts. Detailed smoke-test recipes and CLI notes live in [`HACKING.md`](./HACKING.md).
+No build step — every file is Markdown, JSON, or shell. `make check` runs the same static checks as CI (JSON, shellcheck, frontmatter, template sync) plus the hook smoke tests; run it before committing. Individual targets: `make lint`, `make test-hooks`, `make sync`. Always run `bash cli/sync-templates.sh` after editing anything under `template/` or `.claude/` — CI fails if `cli/template-files/` drifts. Detailed smoke-test recipes and CLI notes live in [`HACKING.md`](./HACKING.md).
 
 ## Conventions specific to this repo
 

@@ -12,7 +12,7 @@ Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every
 
 Writing all of this from scratch takes hours and you'll miss things (branch guards, stdin-parsing hooks, skill frontmatter quirks). This template is the shortcut: a minimal, honest baseline you can read in 10 minutes, install in 2, and prune down to what your project actually uses.
 
-Based on notes from reviewing notable open-source Claude Code configurations (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI, and others) — see [RESEARCH.md](./RESEARCH.md). Contributor context for working on this repo lives in [`docs/MAINTAINERS.md`](./docs/MAINTAINERS.md).
+Based on notes from reviewing notable open-source Claude Code configurations (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI, and others). Contributor context for working on this repo lives in [`docs/MAINTAINERS.md`](./docs/MAINTAINERS.md).
 
 ## What this changes vs bare Claude Code
 
@@ -26,7 +26,7 @@ Without this template, Claude Code starts every session with zero project contex
 | Claude forgets your conventions between sessions | Skills enforce patterns (naming, architecture, error handling) |
 | No dynamic context | SessionStart hook shows branch, last commit, uncommitted changes |
 | UserPromptSubmit rarely used | Ships an opt-in example hook (`user-prompt-context.sh`) for injecting task context at every prompt |
-| You re-explain testing/deploy workflow each time | `/test` and `/deploy` commands available instantly |
+| You re-explain the deploy workflow each time | `/deploy` command available instantly |
 
 Setup takes 2 minutes. See [Installation](#installation).
 
@@ -124,7 +124,6 @@ This template is a **starting point, not a minimum viable install**. Every file 
 | `.claude/agents/` | It's empty by default. See `examples/agents/` if you want stack-flavored subagents — copy only what applies. |
 | `examples/` | Always, after reading them once. They're references for authoring new skills/agents/CLAUDE.md files, not runtime files. |
 | `ROUTINES.md` + `examples/routines/` | You're not using cloud-based routines. These are a speculative preview. |
-| `RESEARCH.md` | After reading it once. It's a research note, not project context. |
 
 **Rule of thumb:** if you haven't touched a file in a month and can't explain what triggers it, delete it. You can always re-copy from this repo.
 
@@ -169,8 +168,7 @@ configure your trigger.
 │   │   └── README.md                      # Empty by default — see examples/agents/
 │   ├── commands/
 │   │   ├── deploy.md                      # /deploy — deployment workflow
-│   │   ├── audit.md                       # /audit — full quality audit
-│   │   └── test.md                        # /test — run tests + coverage
+│   │   └── audit.md                       # /audit — full quality audit
 │   ├── skills/
 │   │   ├── core/
 │   │   │   ├── coding-principles/SKILL.md # Universal behavioral rules
@@ -215,7 +213,6 @@ configure your trigger.
 ├── .github/                               # Issue/PR templates, CI workflow
 ├── CONTRIBUTING.md
 ├── CHANGELOG.md
-├── RESEARCH.md
 └── README.md
 ```
 
@@ -270,7 +267,7 @@ See [Anthropic MCP docs](https://docs.anthropic.com/en/docs/claude-code/mcp) for
 
 ## Credits
 
-Research based on analysis of: Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 official skills), OpenAI (openai-agents-python), and other notable community templates (see [RESEARCH.md](./RESEARCH.md) for the full list).
+Research based on analysis of: Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 official skills), OpenAI (openai-agents-python), and other notable community templates.
 
 ## Compared to alternatives
 

@@ -113,49 +113,6 @@ Every skill must:
 - Must be under ~80 lines — examples are reference material, not
   documentation dumps, and Claude Code drops context beyond that.
 
-## Update the registry
-
-Every skill, agent, command, and routine must have a corresponding entry in
-`registry.yaml` at the repo root. CI fails if a file on disk is missing from
-the registry or if a registered `path:` no longer exists.
-
-Schema:
-
-```yaml
-skills:
-  - name: <slug>                 # matches SKILL.md frontmatter name
-    path: .claude/skills/<core|stacks>/<slug>/SKILL.md
-    type: core | stack
-    languages: [any]             # or specific: [javascript, typescript], [python], [php], ...
-    description: <one-liner>
-
-agents:
-  - name: <slug>
-    path: examples/agents/<slug>.md
-    languages: [...]
-
-commands:
-  - name: <slug>
-    path: .claude/commands/<slug>.md
-
-routines:
-  - name: <slug>
-    path: routines/<slug>.md
-    trigger: schedule | api | github
-```
-
-Example — adding a new skill:
-
-```yaml
-  - name: fastapi-backend
-    path: .claude/skills/stacks/fastapi-backend/SKILL.md
-    type: stack
-    languages: [python]
-    description: FastAPI conventions — routers, dependencies, Pydantic schemas.
-```
-
-When renaming or removing an asset, update `registry.yaml` in the same PR.
-
 ## File structure requirements
 
 ### SKILL.md frontmatter

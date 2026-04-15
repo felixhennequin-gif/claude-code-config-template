@@ -11,7 +11,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.1] — 2026-04-15
+### Removed
+
+- **`RESEARCH.md`** — research notes behind the template's design decisions.
+  Read-once reference material that had already been absorbed into `README.md`
+  and `docs/MAINTAINERS.md`; keeping it in the repo just cost contributors a
+  file to scan and required a dedicated exception in the CI secret-scan
+  allowlist. Credibility sentences in `README.md` kept intact, just without
+  the dangling `[RESEARCH.md]` link.
+- **`.claude/commands/test.md` and `.claude/commands/wrap.md`** (plus their
+  `cli/template-files/` mirrors). `/test` was a generic "run the project's
+  test command and summarize" shell — strictly worse than Claude reading
+  `package.json` / `Makefile` and running the actual command. `/wrap` was a
+  session-wrap summariser that duplicated what `/commit` and PR descriptions
+  already cover. Downstream users copying the template inherited both as
+  dead weight.
+- **`registry.yaml`** and its CI validator. The registry duplicated what a
+  directory walk already proves: `lint.yml`'s frontmatter validator finds
+  every `SKILL.md`, agent, command, and rule on disk and enforces required
+  fields directly. The registry's only extra job was flagging files missing
+  from the index — but the same drift now shows up as a lint failure the
+  moment a new file lands without frontmatter, so the second source of truth
+  was pure bookkeeping. Removing it deletes one class of CI failure
+  (registry/filesystem mismatch) without losing any guarantee.
+
+
 
 Five review batches plus a backlog of earlier `[Unreleased]` fixes. The batches
 come from a consolidated self-audit that flagged factual errors, internal

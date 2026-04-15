@@ -14,6 +14,7 @@ This `CLAUDE.md` is **not** the downstream-facing template — it's the one Clau
 - **`.claude/agents/`** — empty by default, just a README pointing to `examples/agents/`
 - **`examples/*.CLAUDE.md`** — stack-specific ready-to-adapt alternatives to `template/CLAUDE.md`
 - **`examples/agents/`** — Node/React/PostgreSQL-flavored subagents (`reviewer`, `security-auditor`) users copy into `.claude/agents/` and edit for their stack
+- **`routines/` + `ROUTINES.md`** — 5 ready-to-use automation routines (bug-triage, dependency-audit, deploy-verify, docs-drift, pr-review) for Claude Code cloud runs, plus the index/docs page
 - **Community infra** — `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CHANGELOG.md`, `.github/` templates
 - **`RESEARCH.md`** — raw research data behind the template's design choices
 
@@ -57,6 +58,8 @@ template/
 docs/
   CONTEXT-BUDGET.md             # Token estimates per component + budget profiles
   VALIDATION.md                 # Real-world test results template (fill after testing)
+routines/                       # Stack-agnostic automation prompts (bug-triage, dependency-audit, deploy-verify, docs-drift, pr-review)
+ROUTINES.md                     # Index + usage docs for routines/
 examples/
   README.md                     # Index + usage instructions
   express-api.CLAUDE.md         # Under 80 lines, concrete gotchas
@@ -129,6 +132,7 @@ echo '' | bash .claude/hooks/dangerous-rm-guard.sh
 - **Keep `template/CLAUDE.md` under ~80 lines** and examples under ~80 lines — Claude Code drops context beyond that.
 - **Don't duplicate linters.** If ESLint / Prettier / the hook already enforces a rule, don't write it into a skill.
 - **Conventions across files must agree.** A contradiction between a skill and an agent is a bug (see past incident in `CHANGELOG.md` Unreleased: `reviewer` vs `express-api` on `try/catch`).
+- **`routines/` — stack-agnostic automation prompts. No framework-specific idioms in core routines.**
 - **Core vs. stacks/ split is load-bearing.** `.claude/skills/core/` (currently `coding-principles`, `debugging`, `error-handling`, `testing`, `git-workflow`, `code-review`) and everything outside `.claude/skills/stacks/` must stay stack-agnostic so downstream users on any language can install them untouched. Anything tool-specific — Node/Python/Go/Rust patterns, specific ORMs, specific CI platforms — belongs under `.claude/skills/stacks/<name>/` or, for subagents, `examples/agents/`. `ci-cd-pipeline` sits under `stacks/` precisely because its YAML snippets assume GitHub Actions or GitLab CI — it is not universal.
 - **`.claude/agents/` is empty by default.** Stack-flavored subagents live under `examples/agents/` and must include a `<!-- Example agent for <stack>... -->` header comment. Don't re-add defaults to `.claude/agents/` without making them truly stack-agnostic.
 

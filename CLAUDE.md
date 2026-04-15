@@ -40,6 +40,8 @@ template/
       debugging/                # Structured debugging workflow (always copy)
       error-handling/           # Universal error-handling patterns (always copy)
       testing/                  # Testing strategy and decisions (always copy)
+        scripts/
+          coverage-check.sh     # Enforces a coverage floor from CI output
       git-workflow/             # Branch naming, Conventional Commits, PR conventions (always copy)
       code-review/              # Analyse → roadmap → execute workflow for external reviews (always copy)
     stacks/
@@ -48,6 +50,8 @@ template/
       express-api/              # Optional
       react-frontend/           # Optional
       ci-cd-pipeline/           # GitHub Actions + GitLab CI patterns (delete if you use Jenkins/Drone/etc.)
+        scripts/
+          action-pin-check.sh   # Flags unpinned GitHub Actions (not on a full SHA)
   hooks/
     lint-on-edit.sh             # Stdin-parsing ESLint hook (PostToolUse)
     session-start.sh            # Injects git context (SessionStart)

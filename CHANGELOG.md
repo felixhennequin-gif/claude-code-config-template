@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] — 2026-04-16
+
+### Added
+
+- **`.claude/agents/architect.md`** — stack-agnostic architecture reviewer.
+  Second default agent alongside `reviewer`, split by scope: `reviewer`
+  catches code-level issues (banned patterns, security, error handling,
+  test coverage, convention drift), `architect` catches shape-level ones
+  (layering, separation of concerns, dependency direction, pattern
+  consistency). Each agent's anti-patterns section explicitly delegates
+  the other half back to its sibling so the checklists don't overlap and
+  both stay under the 80-line ceiling. `docs/MAINTAINERS.md` documents
+  the split.
+
 ### Removed
 
 - **`RESEARCH.md`** — research notes behind the template's design decisions.
@@ -35,7 +49,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   was pure bookkeeping. Removing it deletes one class of CI failure
   (registry/filesystem mismatch) without losing any guarantee.
 
+### Fixed
 
+- Restored missing `## [1.1.1] — 2026-04-15` header in `CHANGELOG.md`
+  (accidentally dropped while drafting the [Unreleased] section).
+
+## [1.1.1] — 2026-04-15
 
 Five review batches plus a backlog of earlier `[Unreleased]` fixes. The batches
 come from a consolidated self-audit that flagged factual errors, internal
@@ -569,7 +588,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.7...v1.1.1
 [0.9.7]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.6...v0.9.7
 [0.9.6]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.5...v0.9.6

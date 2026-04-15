@@ -106,7 +106,7 @@ Available stack skills:
 | [`stacks/symfony-api`](./.claude/skills/stacks/symfony-api/SKILL.md) | Symfony 5.4+ controllers, services, Doctrine entities, API Platform resources |
 | [`stacks/ci-cd-pipeline`](./.claude/skills/stacks/ci-cd-pipeline/SKILL.md) | GitHub Actions + GitLab CI workflows, audits, debugging |
 
-Missing your stack? Contributions for FastAPI, Django, Rails, Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+**Why these stacks?** The shipped list reflects what the maintainer has production experience with — not a claim that Express, React, Prisma, Symfony, and GitHub Actions are the "right" stack. The value of a skill comes from rules grounded in real use, so adding a stack speculatively would dilute quality. Missing your stack? Contributions for FastAPI, Django, Rails, NestJS, Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the quality bar and [`CONTRIBUTING.md#adding-a-new-stack`](./CONTRIBUTING.md#adding-a-new-stack) for the checklist.
 
 ## Principles
 
@@ -198,7 +198,7 @@ configure your trigger.
 └── README.md
 ```
 
-## Optional: global config
+## Global config and settings composition
 
 Create `~/.claude/CLAUDE.md` for cross-project preferences:
 

@@ -242,3 +242,7 @@ If you see any of these in an existing workflow, flag them:
 - Pipeline > 30 min without parallelization → propose a DAG
 - No `needs` → fully sequential, wasted wall-clock time
 - `npm install` instead of `npm ci` → not reproducible
+
+## Helper scripts
+
+- `scripts/action-pin-check.sh <workflow.yml>...` — scans GitHub Actions workflows for `uses:` references that aren't pinned to a full 40-character SHA. Run it in CI to automate the SHA-pinning rule from the security checklist above.

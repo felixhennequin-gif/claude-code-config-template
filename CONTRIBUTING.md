@@ -11,6 +11,12 @@ wiring Claude Code into a project — every file here ends up in real developers
   Elixir/Phoenix, Next.js App Router, SvelteKit, Astro, etc.
 - **New agents** (`.claude/agents/*.md`) for focused use cases: perf auditor,
   migration planner, accessibility checker, i18n reviewer, etc.
+- **MCP-connected agents** — agents that depend on an MCP server (Sentry,
+  Linear, GitHub, Datadog, etc.) for their core behavior. Put them under
+  `examples/agents/` with a header comment listing the exact MCP server
+  config required, and list the tool (e.g. `mcp__sentry`) in the frontmatter
+  `tools:` field. If the MCP tool is not available at runtime, the agent
+  must stop and say so — never fall back to scraping or fabricating data.
 - **New commands** (`.claude/commands/*.md`) that codify a repeatable workflow.
 - **New examples** (`examples/*.CLAUDE.md`) — fully anonymized `CLAUDE.md` files
   showing the template adapted to a real project shape.
@@ -51,6 +57,10 @@ Open the PR against `master`. In the description, answer:
 2. **Why** — what problem does it solve? What stack is it for?
 3. **How to test** — drop this skill/agent/command into a project, describe
    the prompt you used, and paste the observed Claude Code behavior.
+
+**Before submitting**: run `make check` locally. It runs the same checks CI
+runs, plus the hook smoke tests, so you can catch registry drift, broken
+frontmatter, or template-sync issues before they hit the pipeline.
 
 Every PR goes through `.github/PULL_REQUEST_TEMPLATE.md`. Check every box or
 justify why it doesn't apply.
@@ -102,6 +112,49 @@ Every skill must:
   seed data, or unreleased business information.
 - Must be under ~80 lines — examples are reference material, not
   documentation dumps, and Claude Code drops context beyond that.
+
+## Update the registry
+
+Every skill, agent, command, and routine must have a corresponding entry in
+`registry.yaml` at the repo root. CI fails if a file on disk is missing from
+the registry or if a registered `path:` no longer exists.
+
+Schema:
+
+```yaml
+skills:
+  - name: <slug>                 # matches SKILL.md frontmatter name
+    path: .claude/skills/<core|stacks>/<slug>/SKILL.md
+    type: core | stack
+    languages: [any]             # or specific: [javascript, typescript], [python], [php], ...
+    description: <one-liner>
+
+agents:
+  - name: <slug>
+    path: examples/agents/<slug>.md
+    languages: [...]
+
+commands:
+  - name: <slug>
+    path: .claude/commands/<slug>.md
+
+routines:
+  - name: <slug>
+    path: routines/<slug>.md
+    trigger: schedule | api | github
+```
+
+Example — adding a new skill:
+
+```yaml
+  - name: fastapi-backend
+    path: .claude/skills/stacks/fastapi-backend/SKILL.md
+    type: stack
+    languages: [python]
+    description: FastAPI conventions — routers, dependencies, Pydantic schemas.
+```
+
+When renaming or removing an asset, update `registry.yaml` in the same PR.
 
 ## File structure requirements
 

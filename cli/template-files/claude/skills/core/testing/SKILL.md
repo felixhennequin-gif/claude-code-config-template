@@ -144,3 +144,7 @@ and breaks on every refactor.
 - ❌ `test.skip` left indefinitely — fix it or delete it
 - ❌ One giant test that asserts 15 things — split into focused tests
 - ❌ Testing the framework ("does express call next()?") — it does, trust it
+
+## Helper scripts
+
+- `scripts/coverage-check.sh <min-percent>` — reads coverage output from stdin (Istanbul/c8, pytest-cov, or go cover format), exits non-zero if below the threshold. Pipe your coverage command into it: `npm test -- --coverage | scripts/coverage-check.sh 80`. Makes the "coverage is a floor" rule enforceable in CI.

@@ -15,6 +15,7 @@ This `CLAUDE.md` is **not** the downstream-facing template — it's the one Clau
 - **`examples/*.CLAUDE.md`** — stack-specific ready-to-adapt alternatives to `template/CLAUDE.md`
 - **`examples/agents/`** — Node/React/PostgreSQL-flavored subagents (`reviewer`, `security-auditor`) users copy into `.claude/agents/` and edit for their stack
 - **`routines/` + `ROUTINES.md`** — 5 ready-to-use automation routines (bug-triage, dependency-audit, deploy-verify, docs-drift, pr-review) for Claude Code cloud runs, plus the index/docs page
+- **`registry.yaml`** — machine-readable index of every skill, agent, command, and routine. CI enforces that disk and registry stay in sync — update it in the same PR whenever you add/rename/remove one.
 - **Community infra** — `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CHANGELOG.md`, `.github/` templates
 - **`RESEARCH.md`** — raw research data behind the template's design choices
 
@@ -31,7 +32,7 @@ template/
   settings.json                 # SessionStart + PreToolUse (main/master guard, bash safety) + PostToolUse lint
   agents/
     README.md                   # Empty by default — pointer to examples/agents/
-  commands/                     # /audit, /deploy, /test, /wrap (stack-agnostic, configurable paths)
+  commands/                     # /audit, /deploy, /lint-config, /skill-check, /test, /wrap (stack-agnostic)
   skills/
     core/
       README.md                 # What "core" means
@@ -39,6 +40,8 @@ template/
       debugging/                # Structured debugging workflow (always copy)
       error-handling/           # Universal error-handling patterns (always copy)
       testing/                  # Testing strategy and decisions (always copy)
+        scripts/
+          coverage-check.sh     # Enforces a coverage floor from CI output
       git-workflow/             # Branch naming, Conventional Commits, PR conventions (always copy)
       code-review/              # Analyse → roadmap → execute workflow for external reviews (always copy)
     stacks/
@@ -47,6 +50,8 @@ template/
       express-api/              # Optional
       react-frontend/           # Optional
       ci-cd-pipeline/           # GitHub Actions + GitLab CI patterns (delete if you use Jenkins/Drone/etc.)
+        scripts/
+          action-pin-check.sh   # Flags unpinned GitHub Actions (not on a full SHA)
   hooks/
     lint-on-edit.sh             # Stdin-parsing ESLint hook (PostToolUse)
     session-start.sh            # Injects git context (SessionStart)
@@ -59,6 +64,7 @@ docs/
   VALIDATION.md                 # Real-world test results template (fill after testing)
 routines/                       # Stack-agnostic automation prompts (bug-triage, dependency-audit, deploy-verify, docs-drift, pr-review)
 ROUTINES.md                     # Index + usage docs for routines/
+registry.yaml                   # Machine-readable index of skills/agents/commands/routines (CI-enforced)
 examples/
   README.md                     # Index + usage instructions
   express-api.CLAUDE.md         # Under 80 lines, concrete gotchas
@@ -89,6 +95,12 @@ The `create-claude-code-config` npm package lives here. It's published independe
 ## Working on this repo
 
 No build step in the root — every file is Markdown, JSON, or shell. The `cli/` subdirectory has its own `package.json`. Most changes are content quality, not code.
+
+**Primary command**: `make check` — runs the same static checks as CI (JSON, shellcheck, frontmatter, registry, template sync) plus the hook smoke tests. Run it before committing.
+
+Individual targets: `make lint`, `make test-hooks`, `make sync`.
+
+The raw commands below remain as a reference in case you want to run one step on its own or CI ever drifts from the Makefile:
 
 ```bash
 # Validate settings.json

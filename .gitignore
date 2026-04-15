@@ -1,6 +1,10 @@
 CLAUDE.local.md
 .claude/settings.local.json
 .claude/.template-manifest.json
+.claude/worktrees/
+.claude/scheduled_tasks.lock
+cli/template-files/claude/worktrees/
+cli/template-files/claude/scheduled_tasks.lock
 node_modules/
 .env
 .env.*

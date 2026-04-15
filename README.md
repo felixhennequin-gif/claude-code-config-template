@@ -65,7 +65,7 @@ This gives you the stack-agnostic baseline: hooks, commands, rules, and the univ
 
 > **Windows users:** the manual snippet above uses `cp` / `echo >>`, which work in Git Bash and WSL. In native PowerShell, replace `cp -r` with `Copy-Item -Recurse` and `echo "x" >> file` with `Add-Content file "x"`. The hooks in `.claude/hooks/` are bash scripts — they run under Git Bash, WSL, or Cygwin, not native PowerShell or cmd.exe. The `create-claude-code-config` CLI installs the files fine from PowerShell, but the hooks themselves still need a bash runtime to execute.
 
-> The hook in `settings.json` blocks edits on `main` and `master`. If your project uses a different protected branch, update the branch name in `.claude/settings.json`.
+> The hook in `settings.json` blocks edits on `main` and `master`. If your project uses a different protected branch, update the branch name in `.claude/settings.json`. To bypass temporarily (solo repos, docs-only commits), export `ALLOW_MAIN_EDIT=true` before launching Claude Code — the guard short-circuits when that variable is set.
 
 > `settings.json` ships with a stack-agnostic `permissions.allow` list (`Read`, `Grep`, `Glob`, plus an explicit list of safe `git` subcommands — `status`, `diff`, `log`, `show`, `add`, `commit`, `push`, `fetch`, `pull`, `branch`, `checkout`, `switch`, `stash`, `merge`, `rebase`, `tag`, `remote`, `restore`). Destructive git commands like `git reset --hard`, `git clean -fd`, `git branch -D`, and `git checkout --` are **not** in the allowlist — run them manually if you really need them. Add entries for your own stack's commands — examples:
 >

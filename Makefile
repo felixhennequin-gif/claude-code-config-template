@@ -25,6 +25,14 @@ lint:
 	for p in $$(grep -E '^\s*path:' registry.yaml | sed -E 's/^\s*path:\s*//'); do \
 	  [ -e "$$p" ] || { echo "::error registry.yaml path missing: $$p"; exit 1; }; \
 	done
+	@echo "==> Validate skill body sections (Anti-patterns required)"
+	@set -e; \
+	for f in $$(find .claude/skills -name SKILL.md); do \
+	  grep -qE '^## Anti-patterns' "$$f" \
+	    || { echo "::error $$f missing '## Anti-patterns' section"; exit 1; }; \
+	done
+	@echo "==> Check internal markdown links"
+	@python3 scripts/check-links.py
 	@echo "==> Check CLI template sync"
 	@bash cli/sync-templates.sh > /dev/null
 	@git diff --quiet cli/template-files/ || { echo "::error cli/template-files/ out of sync — run 'make sync' and commit"; exit 1; }

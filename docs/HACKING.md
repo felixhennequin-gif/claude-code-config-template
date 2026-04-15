@@ -1,6 +1,6 @@
 # Hacking on this repo
 
-Detailed notes for contributors working *on* `claude-code-config-template`. The root `CLAUDE.md` points here for anything that doesn't fit inside its 80-line ceiling.
+Detailed notes for contributors working *on* `claude-code-config-template`. [`MAINTAINERS.md`](./MAINTAINERS.md) points here for anything that doesn't fit inside its 80-line ceiling.
 
 ## CLI (`cli/`)
 

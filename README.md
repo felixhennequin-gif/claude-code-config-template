@@ -2,15 +2,17 @@
 
 ![License](https://img.shields.io/github/license/felixhennequin-gif/claude-code-config-template) ![CI](https://img.shields.io/github/actions/workflow/status/felixhennequin-gif/claude-code-config-template/lint.yml?label=lint) ![GitHub stars](https://img.shields.io/github/stars/felixhennequin-gif/claude-code-config-template?style=social)
 
-> **Root `CLAUDE.md` = context for working *on* this template repo.** The file you copy into your own project lives at [`template/CLAUDE.md`](./template/CLAUDE.md).
+> **An opinionated template for Claude Code configuration — not a framework, not a marketplace, not a guide.**
 
-Opinionated starter template for Claude Code — agents, skills, hooks, and commands for any project.
-
-Based on notes from reviewing notable open-source Claude Code configurations (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI, and others) — see [RESEARCH.md](./RESEARCH.md).
+You copy the files into your project, own them, and edit them. There is no runtime, no dependency, and nothing to upgrade. The file you drop into your own project lives at [`template/CLAUDE.md`](./template/CLAUDE.md) — the rest of this repo (skills, hooks, commands, examples) is there for you to cherry-pick or delete.
 
 ## Why
 
-Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every session. Without them, you waste 15 minutes re-contextualizing. With them, Claude knows your stack, conventions, commands, and gotchas from the first message.
+Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every session. Without them, you waste 15 minutes re-contextualizing. With them, Claude knows your stack, conventions, commands, and gotchas from the first message — and safety hooks stop it from editing `main` or running `rm -rf /` before you notice.
+
+Writing all of this from scratch takes hours and you'll miss things (branch guards, stdin-parsing hooks, skill frontmatter quirks). This template is the shortcut: a minimal, honest baseline you can read in 10 minutes, install in 2, and prune down to what your project actually uses.
+
+Based on notes from reviewing notable open-source Claude Code configurations (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI, and others) — see [RESEARCH.md](./RESEARCH.md). Contributor context for working on this repo lives in [`docs/MAINTAINERS.md`](./docs/MAINTAINERS.md).
 
 ## What this changes vs bare Claude Code
 
@@ -106,7 +108,25 @@ Available stack skills:
 | [`stacks/symfony-api`](./.claude/skills/stacks/symfony-api/SKILL.md) | Symfony 5.4+ controllers, services, Doctrine entities, API Platform resources |
 | [`stacks/ci-cd-pipeline`](./.claude/skills/stacks/ci-cd-pipeline/SKILL.md) | GitHub Actions + GitLab CI workflows, audits, debugging |
 
-Missing your stack? Contributions for FastAPI, Django, Rails, Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+**Why these stacks?** The shipped list reflects what the maintainer has production experience with — not a claim that Express, React, Prisma, Symfony, and GitHub Actions are the "right" stack. The value of a skill comes from rules grounded in real use, so adding a stack speculatively would dilute quality. Missing your stack? Contributions for FastAPI, Django, Rails, NestJS, Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the quality bar and [`CONTRIBUTING.md#adding-a-new-stack`](./CONTRIBUTING.md#adding-a-new-stack) for the checklist.
+
+## What to delete
+
+This template is a **starting point, not a minimum viable install**. Every file is cargo unless you actively use it. After installing, walk through the tree and delete anything that doesn't match your project. Here's the triage:
+
+| Path | Delete if |
+|---|---|
+| `.claude/skills/stacks/*` | You don't use that stack (e.g. delete `react-frontend` on a pure backend). Stacks are opt-in — an unused skill still costs context budget. |
+| `.claude/skills/core/*` | Almost never — these are stack-agnostic. The one exception: if your team already has a stricter internal standard that contradicts one, replace it rather than stack contradictions. |
+| `.claude/commands/*` | You already have the workflow documented elsewhere (e.g. delete `/deploy` if your deploy lives in a runbook). |
+| `.claude/hooks/user-prompt-context.sh` | You don't want per-prompt injection (it ships opt-in, unwired). |
+| `.claude/hooks/notification.sh` | You don't want a desktop ping when Claude waits for input. |
+| `.claude/agents/` | It's empty by default. See `examples/agents/` if you want stack-flavored subagents — copy only what applies. |
+| `examples/` | Always, after reading them once. They're references for authoring new skills/agents/CLAUDE.md files, not runtime files. |
+| `ROUTINES.md` + `examples/routines/` | You're not using cloud-based routines. These are a speculative preview. |
+| `RESEARCH.md` | After reading it once. It's a research note, not project context. |
+
+**Rule of thumb:** if you haven't touched a file in a month and can't explain what triggers it, delete it. You can always re-copy from this repo.
 
 ## Principles
 
@@ -134,7 +154,6 @@ configure your trigger.
 
 ```
 .
-├── CLAUDE.md                              # Context for working on this repo itself
 ├── cli/                                   # npx create-claude-code-config (scaffolding CLI)
 │   ├── package.json
 │   ├── bin/
@@ -175,6 +194,8 @@ configure your trigger.
 │       └── banned-patterns.md             # Universal + JS/TS + Python anti-patterns (path-scoped)
 ├── ROUTINES.md                       # Guide to cloud-based routines (speculative preview)
 ├── docs/
+│   ├── MAINTAINERS.md                     # Contributor guide for working on this repo
+│   ├── HACKING.md                         # Smoke tests and CLI notes
 │   ├── CONTEXT-BUDGET.md                  # Token estimates and budget profiles
 │   └── VALIDATION.md                      # Real-world test results (template)
 ├── examples/
@@ -198,7 +219,7 @@ configure your trigger.
 └── README.md
 ```
 
-## Optional: global config
+## Global config and settings composition
 
 Create `~/.claude/CLAUDE.md` for cross-project preferences:
 

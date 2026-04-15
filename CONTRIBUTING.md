@@ -203,6 +203,17 @@ To add support for a new framework/stack:
 
 The skill should be under 80 lines and focus on conventions Claude wouldn't know from its training data — things specific to the framework version, common mistakes, and patterns your team enforces.
 
+## Skill maintenance policy
+
+Skills age. A skill written against Prisma 7 becomes misleading the week Prisma 8 drops; the `typedSql` preview flag may graduate, rename, or be removed. Without a maintenance story, the template quietly accumulates stale advice and everyone who copied it inherits it.
+
+- **Ownership.** Every skill under `.claude/skills/` has an implicit owner — the person who last touched it. If you're editing a skill, you become the new owner. There is no separate registry; `git log --follow` is the source of truth.
+- **Cadence.** Each stack skill should be re-verified at least once per **major version of its underlying framework/library** (Prisma 7 → 8, React 19 → 20, Symfony 5.4 → 6.x, etc.). Core skills (`coding-principles`, `debugging`, etc.) are version-agnostic and only need a pass when the underlying language semantics change.
+- **Last-verified markers.** Any section that cites a feature flag, preview API, deprecated option, or "latest" recommendation must carry a `last verified YYYY-MM-DD` line, so the next maintainer can tell at a glance whether the advice has aged out. See `prisma-patterns/SKILL.md` (`typedSql`) for the shape.
+- **Reporting stale skills.** If you hit a skill that gives wrong advice for the current framework version, open a GitHub Issue titled `skill: <name> outdated for <framework> <version>`. Include the specific line(s) that broke. A stale skill is a bug, not a documentation task — it goes through the normal fix workflow.
+- **Pruning unowned skills.** If a stack skill has had no maintenance commits in 18 months *and* the latest framework version is ≥ 2 majors ahead of what the skill cites, it's a candidate for removal rather than rewrite. Open an issue first; don't silently delete.
+- **CI enforces the quality bar.** `.github/workflows/lint.yml` refuses any skill without an `## Anti-patterns` section and any markdown file with broken internal links. If CI fails, fix the skill — don't loosen the check.
+
 ## Questions
 
 Open a GitHub Discussion or an issue with the `question` label before starting

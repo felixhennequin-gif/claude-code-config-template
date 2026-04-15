@@ -1,3 +1,8 @@
+<!--
+  This is the downstream-facing template users copy into their own project.
+  If you are working on the claude-code-config-template repo itself, read
+  docs/MAINTAINERS.md for contributor context and conventions instead.
+-->
 # [Project name]
 
 [One-liner project description.]

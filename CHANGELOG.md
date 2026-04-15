@@ -11,6 +11,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] — 2026-04-16
+
+### Added
+
+- **`last-verified: YYYY-MM-DD` frontmatter field** on every stack skill
+  under `.claude/skills/stacks/`, plus `scripts/check-skill-freshness.py`
+  wired into `make lint` and `.github/workflows/lint.yml` as an
+  advisory (exit-0) GitHub Actions warning when the field is missing or
+  older than 90 days.
+- **Skill maintenance cadence policy** in `CONTRIBUTING.md`:
+  "per major version of the underlying framework OR every 90 days,
+  whichever comes first." The 90-day floor catches skills whose
+  framework hasn't bumped a major but whose preview flags, deprecations,
+  or "latest" recommendations have moved anyway.
+- **"Settings permissions rationale" section** in `docs/MAINTAINERS.md`
+  explaining why `.claude/settings.json` keeps broad git wildcards
+  (`git checkout:*`, `git restore:*`, `git reset:*`) instead of
+  enumerating every subcommand — the safety net is
+  `dangerous-rm-guard.sh` plus the `deny` list, not the allow-list
+  patterns.
+
+### Fixed
+
+- **Worktree + lockfile leak into the npm package.** Release 1.1.3
+  was cut after `.claude/worktrees/condescending-lichterman` and
+  `.claude/scheduled_tasks.lock` had silently accumulated on disk and
+  been tracked by git. `sync-templates.sh` copied them into
+  `cli/template-files/`, which ballooned the npm tarball from ~50 kB /
+  43 files to ~468 kB / 158 files. The tag was never pushed and the
+  publish was aborted. Fix: untrack both paths, add them to
+  `.gitignore`, and extend `cli/sync-templates.sh` to `rm -rf` them
+  after the `cp -r` so a stray worktree on a maintainer's disk can
+  never ship again.
+- **`_comment` key in `.claude/settings.json`.** JSON has no comment
+  syntax; the key was an ad-hoc lint wart. Rationale moved to the
+  new "Settings permissions rationale" section in
+  `docs/MAINTAINERS.md`.
+
 ## [1.1.2] — 2026-04-16
 
 ### Added
@@ -588,7 +626,8 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v1.1.2...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v1.1.3...HEAD
+[1.1.3]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.7...v1.1.1
 [0.9.7]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.6...v0.9.7

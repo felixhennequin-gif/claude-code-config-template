@@ -15,6 +15,7 @@ This `CLAUDE.md` is **not** the downstream-facing template — it's the one Clau
 - **`examples/*.CLAUDE.md`** — stack-specific ready-to-adapt alternatives to `template/CLAUDE.md`
 - **`examples/agents/`** — Node/React/PostgreSQL-flavored subagents (`reviewer`, `security-auditor`) users copy into `.claude/agents/` and edit for their stack
 - **`routines/` + `ROUTINES.md`** — 5 ready-to-use automation routines (bug-triage, dependency-audit, deploy-verify, docs-drift, pr-review) for Claude Code cloud runs, plus the index/docs page
+- **`registry.yaml`** — machine-readable index of every skill, agent, command, and routine. CI enforces that disk and registry stay in sync — update it in the same PR whenever you add/rename/remove one.
 - **Community infra** — `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CHANGELOG.md`, `.github/` templates
 - **`RESEARCH.md`** — raw research data behind the template's design choices
 
@@ -59,6 +60,7 @@ docs/
   VALIDATION.md                 # Real-world test results template (fill after testing)
 routines/                       # Stack-agnostic automation prompts (bug-triage, dependency-audit, deploy-verify, docs-drift, pr-review)
 ROUTINES.md                     # Index + usage docs for routines/
+registry.yaml                   # Machine-readable index of skills/agents/commands/routines (CI-enforced)
 examples/
   README.md                     # Index + usage instructions
   express-api.CLAUDE.md         # Under 80 lines, concrete gotchas

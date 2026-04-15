@@ -1,0 +1,98 @@
+# Machine-readable registry of skills, agents, commands, and routines.
+# CI validates that every `path` exists on disk and every asset on disk has an entry.
+# Update this file whenever you add, rename, or remove a skill, agent, command, or routine.
+
+skills:
+  - name: code-review
+    path: .claude/skills/core/code-review/SKILL.md
+    type: core
+    languages: [any]
+    description: Structured workflow for acting on an external code review — triage, roadmap, execute.
+  - name: coding-principles
+    path: .claude/skills/core/coding-principles/SKILL.md
+    type: core
+    languages: [any]
+    description: Core behavioral rules for any coding task — think before coding, simplicity first.
+  - name: debugging
+    path: .claude/skills/core/debugging/SKILL.md
+    type: core
+    languages: [any]
+    description: Structured debugging workflow. Activates when fixing bugs or investigating errors.
+  - name: error-handling
+    path: .claude/skills/core/error-handling/SKILL.md
+    type: core
+    languages: [any]
+    description: Universal error handling patterns.
+  - name: git-workflow
+    path: .claude/skills/core/git-workflow/SKILL.md
+    type: core
+    languages: [any]
+    description: Git branching, commit, and PR conventions.
+  - name: testing
+    path: .claude/skills/core/testing/SKILL.md
+    type: core
+    languages: [any]
+    description: Testing strategy and conventions.
+  - name: ci-cd-pipeline
+    path: .claude/skills/stacks/ci-cd-pipeline/SKILL.md
+    type: stack
+    languages: [yaml]
+    description: CI/CD pipeline patterns — GitHub Actions and GitLab CI.
+  - name: express-api
+    path: .claude/skills/stacks/express-api/SKILL.md
+    type: stack
+    languages: [javascript, typescript]
+    description: Express 5 conventions and REST API patterns.
+  - name: prisma-patterns
+    path: .claude/skills/stacks/prisma-patterns/SKILL.md
+    type: stack
+    languages: [javascript, typescript]
+    description: Prisma ORM conventions and patterns.
+  - name: react-frontend
+    path: .claude/skills/stacks/react-frontend/SKILL.md
+    type: stack
+    languages: [javascript, typescript]
+    description: React 19 + Vite + Tailwind v4 frontend conventions.
+  - name: symfony-api
+    path: .claude/skills/stacks/symfony-api/SKILL.md
+    type: stack
+    languages: [php]
+    description: Symfony 5.4+ / 6.x / 7.x API conventions.
+
+agents:
+  - name: reviewer
+    path: examples/agents/reviewer.md
+    languages: [javascript, typescript]
+  - name: security-auditor
+    path: examples/agents/security-auditor.md
+    languages: [javascript, typescript]
+  - name: fastapi-reviewer
+    path: examples/agents/fastapi-reviewer.md
+    languages: [python]
+
+commands:
+  - name: audit
+    path: .claude/commands/audit.md
+  - name: deploy
+    path: .claude/commands/deploy.md
+  - name: test
+    path: .claude/commands/test.md
+  - name: wrap
+    path: .claude/commands/wrap.md
+
+routines:
+  - name: bug-triage
+    path: routines/bug-triage.md
+    trigger: schedule
+  - name: dependency-audit
+    path: routines/dependency-audit.md
+    trigger: schedule
+  - name: deploy-verify
+    path: routines/deploy-verify.md
+    trigger: api
+  - name: docs-drift
+    path: routines/docs-drift.md
+    trigger: schedule
+  - name: pr-review
+    path: routines/pr-review.md
+    trigger: github

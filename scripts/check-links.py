@@ -19,7 +19,10 @@ def tracked_markdown_files():
     out = subprocess.check_output(
         ['git', 'ls-files', '*.md'], text=True
     )
-    return [line for line in out.splitlines() if line]
+    return [
+        line for line in out.splitlines()
+        if line and not line.startswith('cli/template-files/')
+    ]
 
 
 CODE_SPAN_RE = re.compile(r'`[^`\n]*`')

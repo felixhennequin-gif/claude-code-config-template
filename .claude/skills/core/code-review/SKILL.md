@@ -125,23 +125,32 @@ Absolute rules:
 Start with Batch 1 now.
 ```
 
-**Prompt — open PRs and merge in order**
+**Prompt — open PRs (merging is the user's job)**
 
 Assumes GitHub + the `gh` CLI. Adapt the commands to your host's PR tool (`glab`, `bb`, etc.) if you use a different forge.
 
+Merging is **out of scope** for this prompt. The project's `git-workflow` rule
+(`.claude/rules/git-workflow.md`) states: "Do not run `gh pr merge` ... unless
+the user has explicitly said 'merge it now' **after** the PR exists." That
+instruction stands even when the user hands this prompt to Claude — opening a
+PR is not merge authorization. Surface the PR URLs, wait on CI, and stop.
+
 ```
-You have [N] branches ready. Open a PR for each and merge into the default branch in batch order.
+You have [N] branches ready. Open a PR for each, in batch order, and hand the
+URLs back. Do not merge anything — the user does that.
 
 For each branch:
 1. git checkout <branch>
-2. gh pr create --base <default-branch> --title "<conventional title>" --body "Batch [N] — /tmp/roadmap.md"
-3. gh pr checks --watch
-4. If CI passes: gh pr merge --squash --delete-branch
-5. git checkout <default-branch> && git pull
-6. Move to the next branch
+2. gh pr create --base <default-branch> --title "<conventional title>" \
+     --body "Batch [N] — /tmp/roadmap.md"
+3. gh pr checks --watch    # observe only; do not act on the result
+4. Print the PR URL, then move to the next branch
 
-Stop on red CI. Show the failure output and wait for instructions.
-Do not merge out of order.
+When all PRs are open:
+- Return the list of URLs and their CI status (green / red / pending)
+- Stop. Do not run `gh pr merge`, `git merge`, or any fast-forward
+- If the user later says "merge batch N now", treat that as explicit merge
+  authorization per .claude/rules/git-workflow.md and proceed for that one PR
 
 Branch order:
 [numbered list in roadmap order]

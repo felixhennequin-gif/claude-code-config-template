@@ -17,19 +17,20 @@ Four rules that apply to every code change, regardless of stack.
 
 **Test:** Could the user point at your diff and say "I didn't ask for that interpretation"? If yes, you assumed instead of asking.
 
+Request: **"format the user"**. "Format" is ambiguous — it could mean a display
+name for UI, a URL slug for routing, a serialized object for the API, or
+something else. The right move is to ask the user which one they want *before*
+writing code. If the answer is "display name" and you must proceed without a
+reply, disambiguate in the function name — not in a comment block.
+
 ```js
-// BAD — silent assumption, user never confirmed this format
+// BAD — silent assumption baked into a generic name
 function formatUser(user) {
   return `${user.firstName} ${user.lastName}`;
 }
 
-// GOOD — name the ambiguity, stop before implementing
-// Request: "format the user"
-// Ambiguity: "format" could mean:
-//   1. Display name for UI ("First Last")
-//   2. URL slug for routing ("first-last")
-//   3. Serialized object for the API ({ id, name, email })
-// Proceeding with assumption 1 — confirm before merging.
+// GOOD — the name itself tells the caller which "format" this is.
+// No comment needed; the ambiguity is resolved by the identifier.
 function formatUserDisplayName(user) {
   return `${user.firstName} ${user.lastName}`;
 }

@@ -12,33 +12,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- `cli/src/copy.js` + `cli/src/manifest.js` — silent `catch {}` blocks replaced
-  with logged catches. The CLI now reports (instead of swallowing) failures
-  when it can't read the template manifest or update `settings.json` during
-  stack permission merges. Matches `banned-patterns.md` "never catch silently".
-- `.claude/hooks/lint-on-edit.sh` (+ `cli/template-files/` mirror) — added
-  `ruff format` after `ruff check --fix` so Python files get the full
-  format-and-fix pass, mirroring ESLint's behavior for JS/TS. Also added a
-  `command -v npx` gate in the JS branch so the hook stays non-blocking on
-  machines without Node.js installed, matching the existing gates on every
-  other language branch.
-- `examples/agents/reviewer.md` — "No merge commits — rebase workflow"
-  replaced with "follows the project's branching strategy". The original
-  wording assumed a single branching model; the template ships stack- and
-  workflow-agnostic, so the reviewer agent should defer to whatever the
-  project actually uses.
-- `CLAUDE.md` — gotcha about the `git` allowlist was inaccurate:
-  `Bash(git checkout:*)` and `Bash(git restore:*)` are wildcards, so
-  `git checkout -- .` would be accepted by settings. Rewrote the gotcha to
-  describe the real behavior and point at `.claude/rules/git-workflow.md`
-  as the enforcement layer for "ask before discarding uncommitted work".
-- `ROUTINES.md` — replaced the leftover `[[ROUTINES_DOCS_URL]]` placeholder
-  with a real link to the Claude Code routines docs.
-- `CHANGELOG.md` — translated the `0.9.4` Fixed and Added sections from
-  French to English so the project history stays readable for all
-  downstream users.
-
-### Fixed
+- `.claude/skills/core/code-review/SKILL.md` (+ `cli/template-files/` mirror) —
+  the "open PRs" execution prompt instructed Claude to run
+  `gh pr merge --squash --delete-branch`, directly contradicting
+  `.claude/rules/git-workflow.md` ("Do not run `gh pr merge` ... unless the
+  user has explicitly said 'merge it now' after the PR exists"). Rewrote the
+  prompt to open PRs, print URLs, and stop — merging is the user's job.
+- `.claude/skills/core/coding-principles/SKILL.md` (+ `cli/template-files/`
+  mirror) — the Rule 1 example used a multi-line comment block to
+  disambiguate `formatUser`, which directly contradicts the skill's own
+  surgical-changes rule on comments. Rewrote the example so the disambiguation
+  lives in the identifier (`formatUserDisplayName`), not a comment.
+- `.claude/skills/core/error-handling/SKILL.md` (+ `cli/template-files/`
+  mirror) — Rule 4 was titled "Classify at the HTTP boundary" and shipped
+  only an Express example, despite the skill claiming to be language-agnostic.
+  Renamed the rule to "Classify at the outermost boundary", added a parallel
+  FastAPI `exception_handler` example, and listed the equivalent hook names
+  for Flask, Django, Gin, and Axum so the pattern is legible on any stack.
 - `.github/workflows/lint.yml` — branch-guard smoke test used an exact-string
   `jq` match on the `Edit|MultiEdit|Write` matcher, which broke after the
   matcher gained `NotebookEdit`. Switched to `contains("Write")` so the test

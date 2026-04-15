@@ -1,4 +1,4 @@
-# Project — [name]
+# Go REST API
 
 Go API with Chi router, sqlc for queries, and PostgreSQL.
 

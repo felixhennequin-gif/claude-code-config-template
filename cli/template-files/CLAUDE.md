@@ -46,21 +46,11 @@
 - [Feature branch naming — e.g. `feat/xxx`, `fix/xxx`]
 - [PR requirements — reviews, required checks]
 
-## CI/CD conventions
-
-- Build once, deploy many — build the artifact once, promote it across envs (never rebuild per environment)
-- Pin GitHub Actions by SHA, not tag (`actions/checkout@abc123` not `@v4`)
-- Separate build job from deploy job — two distinct responsibilities
-- Parallelize lint / test / security scans, fail fast on cheap checks first
-- Use `npm ci` not `npm install` in CI
-- Scope secrets per environment — staging secrets must differ from prod
-- Test rollback before you need it
-
 ## Automation
 
-- **Hooks** (`.claude/hooks/`) — deterministic, token-free rules: branch guard, lint-on-edit, dangerous-command guard, session context.
-- **Routines** (`routines/` + `ROUTINES.md`) — cloud-based automations running on Anthropic's infra (PR review, dependency audit, deploy verify, bug triage, docs drift). Use for tasks that need judgment; use hooks for tasks that need determinism.
-- **Agents** (`.claude/agents/`) — stack-specific subagents invoked on demand. Empty by default; see `examples/agents/`.
+- **Hooks** (`.claude/hooks/`) — deterministic guards: branch guard, lint-on-edit, dangerous-command guard, session context.
+- **Agents** (`.claude/agents/`) — stack-specific subagents; empty by default, see `examples/agents/`.
+- **CI/CD** — see `.claude/skills/stacks/ci-cd-pipeline/SKILL.md` for patterns (build once / deploy many, SHA-pinned actions, scoped secrets).
 
 ## Gotchas
 
@@ -78,7 +68,5 @@
 ## References
 
 - See `CONTRIBUTING.md` for the contribution workflow
-- See `ROUTINES.md` for cloud-based automation routines (PR review, audits, triage)
 - See `.claude/skills/` for stack-specific conventions loaded per task
-- See `.claude/skills/stacks/ci-cd-pipeline/SKILL.md` for CI/CD patterns (GitHub Actions, GitLab CI, security) — delete if you use another CI platform
 - [Link to the data model / API spec / architecture doc if any]

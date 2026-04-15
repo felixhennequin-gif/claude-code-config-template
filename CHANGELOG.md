@@ -11,7 +11,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Root `CLAUDE.md` trimmed from 176 lines to under 80 so the project
+  dogfoods its own `template/CLAUDE.md ≤ 80 lines` rule. The detailed
+  smoke-test recipes and CLI notes moved to `docs/HACKING.md`, which
+  the root file now points at. The trim removes nothing load-bearing —
+  structure tree, conventions, gotchas, git workflow, and references
+  all stay.
+- `template/CLAUDE.md` trimmed to 72 lines (was 84). The standalone
+  CI/CD section was folded into Automation with a pointer to the
+  `ci-cd-pipeline` skill, and the routines bullet was dropped to match
+  the CLI no longer shipping them.
+- `examples/README.md` now lists all five example `CLAUDE.md` files
+  (express, next, fastapi, go, symfony); the "only Node" framing was
+  stale since v0.3.0/v0.4.0 added the Python and Go examples.
+- `README.md` stack-skills table now lists `stacks/symfony-api` and
+  `stacks/ci-cd-pipeline`, which were already on disk and installable
+  via the CLI but missing from the README's inventory.
+- `template/.claudeignore` (+ `cli/template-files/` mirror) gained
+  Python/Go/Rust/PHP ignore patterns (`target/`, `.pytest_cache/`,
+  `*.egg-info/`, `uv.lock`, `Cargo.lock`, `go.sum`, `composer.lock`,
+  `*.test`, `*.out`). Non-Node projects previously leaked generated
+  artefacts into Claude's context.
+
+### Added
+- `docs/HACKING.md` — working-on-this-repo guide containing the
+  `dangerous-rm-guard.sh` smoke-test matrix and CLI notes that used to
+  live in the root `CLAUDE.md`.
+
 ### Fixed
+- `examples/fastapi-backend.CLAUDE.md` and `examples/go-api.CLAUDE.md`
+  shipped with a stale `# Project — [name]` header copied from the
+  generic template. Aligned with the Node examples (`# FastAPI backend`,
+  `# Go REST API`).
 - `.github/workflows/lint.yml` — branch-guard smoke test used an exact-string
   `jq` match on the `Edit|MultiEdit|Write` matcher, which broke after the
   matcher gained `NotebookEdit`. Switched to `contains("Write")` so the test

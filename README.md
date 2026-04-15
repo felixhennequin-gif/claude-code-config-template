@@ -103,6 +103,8 @@ Available stack skills:
 | [`stacks/prisma-patterns`](./.claude/skills/stacks/prisma-patterns/SKILL.md) | Prisma 7 schema, migrations, queries, services |
 | [`stacks/express-api`](./.claude/skills/stacks/express-api/SKILL.md) | Express 5 routes, controllers, middleware, validators |
 | [`stacks/react-frontend`](./.claude/skills/stacks/react-frontend/SKILL.md) | React 19 + Vite + Tailwind v4 components, hooks, pages |
+| [`stacks/symfony-api`](./.claude/skills/stacks/symfony-api/SKILL.md) | Symfony 5.4+ controllers, services, Doctrine entities, API Platform resources |
+| [`stacks/ci-cd-pipeline`](./.claude/skills/stacks/ci-cd-pipeline/SKILL.md) | GitHub Actions + GitLab CI workflows, audits, debugging |
 
 Missing your stack? Contributions for FastAPI, Django, Rails, Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 

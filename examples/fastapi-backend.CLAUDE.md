@@ -1,4 +1,4 @@
-# Project — [name]
+# FastAPI backend
 
 FastAPI backend with SQLAlchemy + Alembic + PostgreSQL.
 

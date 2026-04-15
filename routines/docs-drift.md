@@ -16,7 +16,8 @@ Detect stale documentation and open update PRs.
 ## Steps
 
 1. **Scan merged PRs from the past week**
-   - List all PRs merged since the last run
+   - Compute a 7-day rolling window: today minus 7 days
+   - List all PRs merged in that window using `git log --since='7 days ago' --merges` or the GitHub API (`merged:>=YYYY-MM-DD` where YYYY-MM-DD is today minus 7 days)
    - Identify which ones changed:
      - API routes / endpoints
      - Database schema (migrations, Prisma schema, etc.)

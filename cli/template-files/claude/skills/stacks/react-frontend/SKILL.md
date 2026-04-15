@@ -48,7 +48,11 @@ function ItemCard(props) {
 
 ## React 19
 
-- **`use()` (React 19)** — unwraps a Promise or a Context inside render. It **requires a parent `<Suspense>` boundary** that renders a fallback while the promise resolves: calling `use(promise)` suspends the component, and the closest `<Suspense>` ancestor catches the suspension and shows its `fallback`. Without a Suspense boundary, the suspension propagates up the tree and nothing renders. In a Vite app without Suspense boundaries configured, `use(promise)` will appear to freeze the whole subtree. For ad-hoc client-side data fetching, prefer TanStack Query / SWR or `useEffect` + `useState`. Reserve `use()` for cases where you pass a promise as a prop from a Server Component or through an explicit Suspense boundary you control.
+- **`use()` (React 19)** — unwraps a Promise or a Context inside render. Key constraints:
+  - **Promise-only for data.** `use()` works on an already-existing Promise (or Context); it is **not** a general side-effect mechanism and is not a replacement for `useEffect`.
+  - **Requires a parent `<Suspense>` boundary.** Calling `use(promise)` suspends the component; the closest `<Suspense>` ancestor catches the suspension and renders its `fallback`. No boundary → the suspension propagates up the tree and nothing renders (in a Vite app without Suspense wrappers, the whole subtree appears frozen).
+  - **Use it when** a promise is passed as a prop from a Server Component, or handed down through an explicit Suspense boundary you control.
+  - **For ad-hoc client-side fetching, use TanStack Query** (or SWR). Do not hand-roll fetch flows inside components.
 - **`useActionState`** — wire forms to async actions, track pending/error state without manual `useState`.
 - **`useFormStatus`** — read parent form's pending state from a child submit button, no prop drilling.
 - **Server Components awareness** — even in a client-heavy Vite app, know the `"use client"` boundary. Eases any later migration to Next.js or React Router framework mode.

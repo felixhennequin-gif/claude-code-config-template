@@ -4,7 +4,7 @@ Reference for contributors working *on this repo*. This file used to live at the
 
 To load this file as context when working on the repo, reference it explicitly at the start of a session (e.g. "read docs/MAINTAINERS.md first") or add a symlink at `CLAUDE.md` → `docs/MAINTAINERS.md` locally.
 
-Core content (always ships, stack-agnostic): `template/CLAUDE.md`, hooks, commands, rules, and the universal skills under `.claude/skills/core/` (`coding-principles`, `debugging`, `error-handling`, `testing`, `git-workflow`, `code-review`). Stack-specific skills under `.claude/skills/stacks/` are optional. `.claude/agents/` ships a single stack-agnostic `reviewer` agent by default; stack-flavored subagents (Node/Prisma reviewer, security auditor, etc.) live under `examples/agents/` and are opt-in.
+Core content (always ships, stack-agnostic): `template/CLAUDE.md`, hooks, commands, rules, and the universal skills under `.claude/skills/core/` (`coding-principles`, `debugging`, `error-handling`, `testing`, `git-workflow`, `code-review`). Stack-specific skills under `.claude/skills/stacks/` are optional. `.claude/agents/` ships two stack-agnostic defaults — `reviewer` (code-level review) and `architect` (structural review) — and stack-flavored subagents (Node/Prisma reviewer, security auditor, etc.) live under `examples/agents/` and are opt-in.
 
 ## Structure
 
@@ -12,7 +12,7 @@ Core content (always ships, stack-agnostic): `template/CLAUDE.md`, hooks, comman
 template/                         # Downstream-facing blank template (CLAUDE.md, .claudeignore, local override)
 .claude/
   settings.json                   # SessionStart + PreToolUse guards + PostToolUse lint
-  agents/                         # reviewer (stack-agnostic default); examples/agents/ for stack-flavored
+  agents/                         # reviewer + architect (stack-agnostic defaults); examples/agents/ for stack-flavored
   commands/                       # /audit, /deploy, /lint-config, /skill-check
   skills/core/                    # coding-principles, debugging, error-handling, testing, git-workflow, code-review
   skills/stacks/                  # prisma-patterns, express-api, react-frontend, symfony-api, ci-cd-pipeline
@@ -36,7 +36,7 @@ No build step — every file is Markdown, JSON, or shell. `make check` runs the 
 - **Don't duplicate linters.** If ESLint / Prettier / a hook already enforces a rule, don't re-write it into a skill.
 - **Conventions across files must agree.** A contradiction between a skill and an agent is a bug (see past `reviewer` vs `express-api` incident in `CHANGELOG.md`).
 - **Core vs. stacks/ split is load-bearing.** `.claude/skills/core/` and everything outside `.claude/skills/stacks/` must stay stack-agnostic so any language can install it untouched. Language/framework/CI specifics belong under `.claude/skills/stacks/<name>/` or `examples/agents/`. `ci-cd-pipeline` sits under `stacks/` because its snippets assume GitHub Actions or GitLab CI.
-- **`.claude/agents/` ships exactly one stack-agnostic default (`reviewer.md`).** It must stay framework-free: it may reference `.claude/rules/banned-patterns.md`, `CLAUDE.md`, and whichever stack skills happen to be present, but never a specific ORM, framework, or language. Stack-flavored subagents stay under `examples/agents/` with a `<!-- Example agent for <stack>... -->` header; don't promote them into `.claude/agents/` without stripping stack assumptions first.
+- **`.claude/agents/` ships two stack-agnostic defaults (`reviewer.md` and `architect.md`).** Both must stay framework-free: they may reference `.claude/rules/banned-patterns.md`, `CLAUDE.md`, and whichever stack skills happen to be present, but never a specific ORM, framework, or language. `reviewer` catches code-level issues (banned patterns, security, error handling, test coverage); `architect` catches structural ones (layering, separation of concerns, dependency direction, pattern consistency) — keep the split clean so each agent stays under the 80-line ceiling and their checklists don't overlap. Stack-flavored subagents stay under `examples/agents/` with a `<!-- Example agent for <stack>... -->` header; don't promote them into `.claude/agents/` without stripping stack assumptions first.
 
 ## Git workflow
 

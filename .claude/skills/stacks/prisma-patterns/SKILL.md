@@ -1,6 +1,7 @@
 ---
 name: prisma-patterns
 description: Prisma ORM conventions and patterns. Activates when working on the Prisma schema, migrations, queries, or services that call Prisma.
+last-verified: 2026-04-16
 ---
 
 # Prisma — Project conventions

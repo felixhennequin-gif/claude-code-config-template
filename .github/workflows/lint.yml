@@ -175,6 +175,9 @@ jobs:
       - name: Check internal markdown links
         run: python3 scripts/check-links.py
 
+      - name: Check stack skill freshness (warning-only)
+        run: python3 scripts/check-skill-freshness.py
+
       - name: Check try/catch convention alignment
         run: |
           set -euo pipefail

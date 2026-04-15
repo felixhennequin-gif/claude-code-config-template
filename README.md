@@ -125,8 +125,10 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 
 Cloud-based automations that run on Anthropic's infrastructure without your machine.
 See [ROUTINES.md](ROUTINES.md) for the full guide and setup instructions.
-Ready-to-use prompts live in `routines/` — copy the prompt into
-[claude.ai/code/routines](https://claude.ai/code/routines) and configure your trigger.
+Example prompts live under `examples/routines/` as a speculative preview —
+the CLI does not copy them into your project. Copy the prompt into
+[claude.ai/code/routines](https://claude.ai/code/routines), adapt it, and
+configure your trigger.
 
 ## What's in this template
 
@@ -171,13 +173,7 @@ Ready-to-use prompts live in `routines/` — copy the prompt into
 │   │   └── user-prompt-context.sh         # UserPromptSubmit example (not wired — see file)
 │   └── rules/
 │       └── banned-patterns.md             # Universal + JS/TS + Python anti-patterns (path-scoped)
-├── routines/
-│   ├── pr-review.md                  # /routine — automated PR code review
-│   ├── dependency-audit.md           # /routine — weekly dep check + security audit
-│   ├── deploy-verify.md              # /routine — post-deploy smoke tests
-│   ├── bug-triage.md                 # /routine — nightly pick-and-fix top bug
-│   └── docs-drift.md                # /routine — weekly stale docs detection
-├── ROUTINES.md                       # Guide to cloud-based routines
+├── ROUTINES.md                       # Guide to cloud-based routines (speculative preview)
 ├── docs/
 │   ├── CONTEXT-BUDGET.md                  # Token estimates and budget profiles
 │   └── VALIDATION.md                      # Real-world test results (template)
@@ -185,6 +181,12 @@ Ready-to-use prompts live in `routines/` — copy the prompt into
 │   ├── agents/
 │   │   ├── reviewer.md                    # Example: Node.js code reviewer
 │   │   └── security-auditor.md            # Example: Node.js security auditor
+│   ├── routines/                          # Speculative preview — not copied by the CLI
+│   │   ├── pr-review.md                   # Automated PR code review
+│   │   ├── dependency-audit.md            # Weekly dep check + security audit
+│   │   ├── deploy-verify.md               # Post-deploy smoke tests
+│   │   ├── bug-triage.md                  # Nightly pick-and-fix top bug
+│   │   └── docs-drift.md                  # Weekly stale docs detection
 │   ├── express-api.CLAUDE.md
 │   ├── nextjs-fullstack.CLAUDE.md
 │   ├── fastapi-backend.CLAUDE.md

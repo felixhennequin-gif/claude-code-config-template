@@ -22,15 +22,21 @@ Use hooks for deterministic guardrails (block `main`, auto-lint). Use routines f
 
 ## Available routine examples
 
-This template ships ready-to-use routine prompts under `routines/`. Each file contains the prompt, recommended trigger, and setup instructions.
+> **Speculative preview.** Routines are a research-preview feature and
+> these files live under `examples/routines/` for that reason — they are
+> *not* copied into your project by the CLI. Treat them as adaptable
+> starting points, not load-bearing infrastructure. Verify the upstream
+> docs before wiring any routine into production.
+
+Each file contains the prompt, recommended trigger, and setup instructions.
 
 | Routine | Trigger | Description |
 |---|---|---|
-| [`pr-review.md`](routines/pr-review.md) | GitHub: `pull_request.opened` | Code review against project conventions |
-| [`dependency-audit.md`](routines/dependency-audit.md) | Schedule: weekly | Check outdated deps + security vulnerabilities |
-| [`deploy-verify.md`](routines/deploy-verify.md) | API: post-deploy | Smoke test endpoints + check logs for errors |
-| [`bug-triage.md`](routines/bug-triage.md) | Schedule: nightly | Pick top bug, attempt fix, open draft PR |
-| [`docs-drift.md`](routines/docs-drift.md) | Schedule: weekly | Detect stale docs after API/schema changes |
+| [`pr-review.md`](examples/routines/pr-review.md) | GitHub: `pull_request.opened` | Code review against project conventions |
+| [`dependency-audit.md`](examples/routines/dependency-audit.md) | Schedule: weekly | Check outdated deps + security vulnerabilities |
+| [`deploy-verify.md`](examples/routines/deploy-verify.md) | API: post-deploy | Smoke test endpoints + check logs for errors |
+| [`bug-triage.md`](examples/routines/bug-triage.md) | Schedule: nightly | Pick top bug, attempt fix, open draft PR |
+| [`docs-drift.md`](examples/routines/docs-drift.md) | Schedule: weekly | Detect stale docs after API/schema changes |
 
 ## Setup
 

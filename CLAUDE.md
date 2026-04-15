@@ -17,7 +17,7 @@ template/                         # Downstream-facing blank template (CLAUDE.md,
   hooks/                          # lint-on-edit, session-start, dangerous-rm-guard, notification
   rules/                          # banned-patterns, git-workflow, test-files
 docs/                             # CONTEXT-BUDGET.md, VALIDATION.md, HACKING.md (working-on-this-repo guide)
-routines/ + ROUTINES.md           # Stack-agnostic cloud automation prompts + guide
+examples/routines/ + ROUTINES.md  # Speculative-preview cloud automation prompts (not CLI-copied)
 registry.yaml                     # Machine-readable index of every skill/agent/command/routine (CI-enforced)
 examples/                         # CLAUDE.md examples (express, next, fastapi, go, symfony) + example subagents
 cli/                              # create-claude-code-config npm package; template-files/ mirrors .claude/ and template/

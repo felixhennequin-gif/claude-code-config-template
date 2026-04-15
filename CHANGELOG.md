@@ -44,6 +44,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   shipped with a stale `# Project — [name]` header copied from the
   generic template. Aligned with the Node examples (`# FastAPI backend`,
   `# Go REST API`).
+- `.claude/commands/deploy.md` (+ `cli/template-files/` mirror) — step 4
+  used to list "SSH to the server, pull latest, install deps, run
+  migrations, then restart the process manager" as a fallback path,
+  inviting Claude to hallucinate deploy steps for environments it
+  cannot know. Replaced with a "stop and ask the user" gate when no
+  deploy script is found at the usual locations.
+- `examples/routines/deploy-verify.md` — the API example used a
+  fabricated `anthropic-beta: experimental-cc-routine-2026-04-01`
+  header against a fake fire endpoint. Replaced with a clearly labelled
+  speculative placeholder that points users at the upstream routines
+  docs before wiring anything into a CD pipeline.
+- `examples/routines/bug-triage.md` — the routine created branches with
+  a `claude/fix-[n]` prefix, contradicting the project's `fix/`
+  convention and the `git-workflow` rule. Aligned to `fix/issue-[n]`.
 - `.github/workflows/lint.yml` — branch-guard smoke test used an exact-string
   `jq` match on the `Edit|MultiEdit|Write` matcher, which broke after the
   matcher gained `NotebookEdit`. Switched to `contains("Write")` so the test

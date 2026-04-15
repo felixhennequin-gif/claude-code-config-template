@@ -1,16 +1,13 @@
 ---
 name: error-handling
-description: Universal error handling patterns. Activates when writing error handling code, creating error classes, working with try/catch blocks, or implementing error middleware in any language or stack.
+description: Error handling patterns for HTTP services. Activates when writing error handling code, creating error classes, working with try/catch blocks, or implementing error middleware in an HTTP backend (Express, FastAPI, Flask, Django, Gin, Axum, etc.).
 ---
 
-# Error handling
+# Error handling (HTTP services)
 
-Four rules that apply to every language and stack.
+Four rules for HTTP backends, with parallel JavaScript (Express) and Python (FastAPI) examples.
 
-> The rules are language-agnostic. Sections 3 and 4 show parallel
-> JavaScript and Python examples to make that concrete. The same shape
-> maps to Flask, Django, Gin, Axum, and any other framework — only the
-> hook name for the centralized error handler changes.
+> **Scope.** This skill covers HTTP request/response error handling — the centralized-handler pattern, typed errors, and status-code mapping. It deliberately does **not** cover gRPC, GraphQL, message queues, or CLI tools; those have different boundary semantics (DLQs, error extensions, exit codes) and deserve their own skill rather than a handwave at the end of this one. Rules 1–3 are portable in spirit, but the examples and Rule 4's handler shape assume an HTTP framework.
 
 ## 1. Fail loudly at the boundary, silently never
 
@@ -65,7 +62,7 @@ raise NotFoundError("User")
 
 ## 4. Classify at the outermost boundary, propagate typed errors everywhere else
 
-A single **centralized error handler** at the outermost layer maps error types to the protocol's response codes. Business logic throws typed errors; the handler translates them. Service and repository layers must not know about the protocol. Every mainstream web framework ships a hook for this handler — Express middleware, FastAPI `exception_handler`, Flask `errorhandler`, Django middleware, Gin `Use(ErrorHandler())`, Axum `HandleErrorLayer` — the name varies, the shape doesn't.
+A single **centralized error handler** at the outermost layer maps error types to HTTP status codes. Business logic throws typed errors; the handler translates them. Service and repository layers must not know about HTTP. Every mainstream web framework ships a hook for this handler — Express middleware, FastAPI `exception_handler`, Flask `errorhandler`, Django middleware, Gin `Use(ErrorHandler())`, Axum `HandleErrorLayer` — the name varies, the shape doesn't.
 
 **Shared service layer (language-neutral in intent):**
 
@@ -127,7 +124,7 @@ async def app_error_handler(request: Request, exc: AppError):
     return JSONResponse(status_code=status, content={"error": str(exc)})
 ```
 
-The same pattern applies to any boundary that speaks a protocol: gRPC status codes, GraphQL error extensions, message-queue DLQ routing. Only one place per boundary owns the mapping.
+One place per service owns the HTTP status mapping. Non-HTTP boundaries (gRPC, GraphQL, message queues) need their own classification layer — don't paste the HTTP shape into them and hope.
 
 ## Anti-patterns
 

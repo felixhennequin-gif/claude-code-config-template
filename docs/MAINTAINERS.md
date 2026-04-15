@@ -55,6 +55,16 @@ No build step — every file is Markdown, JSON, or shell. `make check` runs the 
 - **Settings precedence**: `~/.claude/settings.json` → `.claude/settings.json` → `.claude/settings.local.json`, later wins. Don't assume the project file is the full allowlist when debugging permissions.
 - **This file (`docs/MAINTAINERS.md`) is the contributor guide, not `template/CLAUDE.md`.** Downstream users copy `template/CLAUDE.md` into their own project — don't conflate the two. The repo root intentionally has no `CLAUDE.md` so there's no ambiguity about which file to copy.
 
+## Settings permissions rationale
+
+`.claude/settings.json` intentionally keeps its `permissions.allow` list terse rather than enumerating every git subcommand. A few choices that look sloppy on first read but are load-bearing:
+
+- **Broad git wildcards (`Bash(git checkout:*)`, `Bash(git restore:*)`, `Bash(git reset:*)`) are intentional.** The safety net is `.claude/hooks/dangerous-rm-guard.sh` (PreToolUse on every Bash call) plus the `deny` list, not the allow-list patterns. Tightening every git subcommand here would bloat the config without adding real safety — the destructive shapes (`git reset --hard`, `git clean -fd`, `git branch -D`, `git checkout -- .`) are blocked by the guard regardless of what the allow list says.
+- **`Bash(git:*)` is NOT used** — the explicit subcommand list exists so the permission prompt surface stays readable when a user reviews `claude permissions`. Don't "simplify" it back to a single wildcard.
+- **`deny` > `allow`** — when in doubt about whether a new pattern is safe, add it to `deny` and call it done. Allow-list churn is a code smell; deny-list entries are cheap.
+
+Keep this section in sync whenever you touch `permissions` in `.claude/settings.json` — the rationale used to live inline as a `_comment` key, but JSON has no comment syntax and the key was a lint-test wart. It lives here now.
+
 ## References
 
 - [`HACKING.md`](./HACKING.md) — working-on-this-repo guide (smoke tests, CLI notes)

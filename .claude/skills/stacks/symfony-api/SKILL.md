@@ -1,6 +1,7 @@
 ---
 name: symfony-api
 description: Symfony 5.4+ / 6.x / 7.x API conventions. Activates when working on controllers, services, entities, repositories, console commands, migrations, or dependency injection in a Symfony backend.
+last-verified: 2026-04-16
 ---
 
 # Symfony (5.4+) — API conventions

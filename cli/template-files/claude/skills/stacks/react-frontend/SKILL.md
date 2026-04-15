@@ -1,6 +1,7 @@
 ---
 name: react-frontend
 description: React 19 + Vite + Tailwind v4 frontend conventions. Activates when working on components, pages, hooks, state management, or styling.
+last-verified: 2026-04-16
 ---
 
 # React 19 + Vite + Tailwind v4 — Frontend conventions

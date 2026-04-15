@@ -28,6 +28,8 @@ lint:
 	done
 	@echo "==> Check internal markdown links"
 	@python3 scripts/check-links.py
+	@echo "==> Check stack skill freshness (warning-only)"
+	@python3 scripts/check-skill-freshness.py
 	@echo "==> Check CLI template sync"
 	@bash cli/sync-templates.sh > /dev/null
 	@git diff --quiet cli/template-files/ || { echo "::error cli/template-files/ out of sync — run 'make sync' and commit"; exit 1; }

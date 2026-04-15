@@ -1,6 +1,7 @@
 ---
 name: ci-cd-pipeline
 description: CI/CD pipeline patterns for GitHub Actions and GitLab CI. Activates when editing .github/workflows/*, .gitlab-ci.yml, or when auditing or debugging a pipeline.
+last-verified: 2026-04-16
 ---
 
 # CI/CD pipelines (GitHub Actions + GitLab CI)

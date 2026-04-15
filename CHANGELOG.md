@@ -12,6 +12,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- `.claude/skills/stacks/ci-cd-pipeline/SKILL.md` — `actions/setup-node` was
+  pinned to a 39-character SHA, which would fail the skill's own
+  `action-pin-check.sh` (`^[0-9a-f]{40}$`). Replaced with the real 40-char SHA
+  `49933ea5288caeca8642d1e84afbd3f7d6820020` for `actions/setup-node@v4`.
+- `.claude/skills/stacks/prisma-patterns/SKILL.md` — version header said
+  "Applies to Prisma 5.x and 6.x" while the rest of the repo references Prisma
+  7. Updated to "Prisma 6.x and 7.x" (5.x is out of active support; both 6.x
+  and 7.x are current at the time of writing). Also updated the `omit` note
+  from "Prisma 5.13+/7" to "GA in Prisma 6.2+", matching upstream's 2025-01-09
+  GA announcement.
+- `.claude/skills/stacks/react-frontend/SKILL.md` — the `use()` section
+  recommended `useEffect + useState` as a fallback, which is outdated React 19
+  guidance. Rewrote to spell out the Promise-only constraint, the Suspense
+  boundary requirement, and to recommend TanStack Query (not `useEffect`) for
+  ad-hoc client-side fetching.
 - `.github/workflows/lint.yml` — branch-guard smoke test used an exact-string
   `jq` match on the `Edit|MultiEdit|Write` matcher, which broke after the
   matcher gained `NotebookEdit`. Switched to `contains("Write")` so the test

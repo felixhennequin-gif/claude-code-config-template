@@ -53,8 +53,7 @@ template/
     dangerous-rm-guard.sh       # Blocks destructive commands (PreToolUse Bash)
     notification.sh             # Desktop alert when Claude waits for input (Notification)
   rules/
-    banned-patterns.md          # Universal + JS/TS anti-patterns (path-scoped)
-    banned-patterns-python.md   # Python-specific anti-patterns (path-scoped)
+    banned-patterns.md          # Universal + JS/TS + Python anti-patterns (path-scoped to those files)
 docs/
   CONTEXT-BUDGET.md             # Token estimates per component + budget profiles
   VALIDATION.md                 # Real-world test results template (fill after testing)

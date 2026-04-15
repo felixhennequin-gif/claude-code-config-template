@@ -57,6 +57,8 @@ This template ships ready-to-use routine prompts under `routines/`. Each file co
 
 ### Limits
 
+Daily run caps as of April 2026 (see [[ROUTINES_DOCS_URL]](https://code.claude.com/docs/en/routines) for the current values):
+
 | Plan | Daily runs |
 |---|---|
 | Pro | 5 |
@@ -65,9 +67,21 @@ This template ships ready-to-use routine prompts under `routines/`. Each file co
 
 Runs consume the same quota as interactive sessions.
 
+### Budgeting
+
+Enabling all five routines on a Pro plan will regularly hit the daily cap. Start with 2–3 and expand as needed.
+
+### Commands vs routines
+
+Commands run interactively from your terminal (`/deploy`). Routines run unattended in the cloud (CI calls the API). Use commands to kick things off, routines to follow up without a human present.
+
 ## Customizing prompts
 
-Each routine prompt is self-contained. Adapt it by:
+Prompts are self-contained. External configuration (tokens, connectors, labels) is listed in each routine's Setup notes.
+
+`[PROJECT_NAME]` is the only placeholder the prompts use explicitly. If a routine needs the default branch or repo URL, it infers them from the repo context at run time.
+
+Adapt a routine by:
 
 1. Replacing `[placeholder]` values with your project specifics
 2. Adding or removing checklist items

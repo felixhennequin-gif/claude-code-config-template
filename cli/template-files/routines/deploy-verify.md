@@ -38,7 +38,7 @@ Adapt this list to your actual API routes.
 - If migrations were part of this deploy, verify they ran successfully
 
 ### 3. Error log scan
-- Check application logs for the last 10 minutes
+- If a logging connector (Sentry, Datadog, CloudWatch, etc.) is available, check application logs for the last 10 minutes. Otherwise, skip this step.
 - Flag any new error patterns that weren't present before the deploy
 - Ignore known/expected errors (list them in your CLAUDE.md)
 
@@ -66,3 +66,4 @@ Post results to [Slack channel / GitHub issue / wherever]:
 - Set `BASE_URL` as an environment variable in the routine's cloud environment
 - If your app uses authentication, store a read-only API key in environment variables
 - Wire the API call into your deploy script, CI pipeline, or post-deploy GitHub Action
+- The error log scan step requires a logging MCP connector (Sentry, Datadog, CloudWatch) wired into the routine environment. Without it, the routine will skip the log-scan step.

@@ -25,8 +25,8 @@ Every night, pick one bug and try to fix it.
 2. **Assess feasibility**
    - Read the issue description and any linked reproduction steps
    - Locate the relevant code in the repository
-   - Estimate if this is fixable in a single session (< 30 min of work)
-   - If not feasible: add a comment explaining why, add `needs-discussion` label, stop
+   - Likely fits in one session: touches fewer than ~3 files, has a reproducible failure described in the issue, doesn't require surrounding refactors
+   - If it fails any of those criteria: add a comment explaining why, add `needs-discussion` label, stop
 
 3. **Fix the bug**
    - Create a branch named `claude/fix-[issue-number]`

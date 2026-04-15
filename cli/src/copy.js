@@ -82,7 +82,8 @@ function injectStackPermissions(targetDir, selectedStacks) {
     }
     writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n');
     return added;
-  } catch {
+  } catch (err) {
+    console.error(`  warning: could not update ${settingsPath}: ${err.message}`);
     return [];
   }
 }

@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
-      - uses: actions/setup-node@1a4442cacd436585916779262731145c7197628    # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020    # v4
         with:
           node-version: '20'
           cache: 'npm'
@@ -66,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: actions/setup-node@1a4442cacd436585916779262731145c7197628
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
           cache: 'npm'

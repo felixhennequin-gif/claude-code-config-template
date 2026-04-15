@@ -57,7 +57,7 @@ This template ships ready-to-use routine prompts under `routines/`. Each file co
 
 ### Limits
 
-Daily run caps as of April 2026 (see [[ROUTINES_DOCS_URL]](https://code.claude.com/docs/en/routines) for the current values):
+Daily run caps as of April 2026 (see the [Claude Code routines docs](https://code.claude.com/docs/en/routines) for the current values):
 
 | Plan | Daily runs |
 |---|---|

@@ -1,13 +1,18 @@
-PR Review Routine
+# PR Review Routine
+
 Automated code review against your project's conventions.
-Trigger
-GitHub: pull_request.opened
+
+## Trigger
+
+**GitHub**: `pull_request.opened`
+
 Optional filters:
+- `is_draft: false` — skip draft PRs
+- `from_fork: true` — extra scrutiny on external contributions
 
-is_draft: false — skip draft PRs
-from_fork: true — extra scrutiny on external contributions
+## Prompt
 
-Prompt
+```
 You are a code reviewer for [PROJECT_NAME].
 
 Review this pull request against the project's conventions:
@@ -51,8 +56,10 @@ Review this pull request against the project's conventions:
 - Be direct. "This will break if X" > "You might want to consider..."
 - Only flag real issues. Style preferences that a linter should handle are not review comments.
 - If unsure about project context, say so rather than guessing.
-Setup notes
+```
 
-Works best with the repo's CLAUDE.md and skills already committed — the routine reads them automatically
-For monorepos, add path filters to the GitHub trigger to avoid reviewing irrelevant changes
-Combine with the lint-on-edit hook for a complete review pipeline: hook handles formatting, routine handles logic
+## Setup notes
+
+- Works best with the repo's CLAUDE.md and skills already committed — the routine reads them automatically
+- For monorepos, add path filters to the GitHub trigger to avoid reviewing irrelevant changes
+- Combine with the lint-on-edit hook for a complete review pipeline: hook handles formatting, routine handles logic

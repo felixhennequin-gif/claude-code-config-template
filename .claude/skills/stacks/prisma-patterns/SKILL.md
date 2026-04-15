@@ -5,7 +5,7 @@ description: Prisma ORM conventions and patterns. Activates when working on the 
 
 # Prisma — Project conventions
 
-Applies to Prisma 5.x and 6.x. Preview-only features are flagged inline.
+Applies to Prisma 6.x and 7.x. Preview-only features are flagged inline.
 
 ## Schema
 
@@ -19,7 +19,7 @@ Applies to Prisma 5.x and 6.x. Preview-only features are flagged inline.
 ## Queries
 
 - **Always use an explicit `select` or `include`.** Never `findMany()` without a filter on a large table.
-- **`omit` for sensitive fields** (Prisma 5.13+/7) — exclude fields like `password` or `secret` at the query level instead of manual `select`:
+- **`omit` for sensitive fields** (GA in Prisma 6.2+) — exclude fields like `password` or `secret` at the query level instead of manual `select`:
   ```js
   const user = await prisma.user.findUnique({
     where: { id },

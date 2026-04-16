@@ -4,9 +4,21 @@
 
 > **An opinionated template for Claude Code configuration — not a framework, not a marketplace, not a guide.**
 
+**TL;DR** — `npx create-claude-code-config` drops a battle-tested CLAUDE.md, safety hooks (block edits on `main`, block `rm -rf /`), and 6 universal skills into your project. No runtime, no dependency, no upgrade path. Read in 10 minutes, install in 2.
+
 You copy the files into your project, own them, and edit them. There is no runtime, no dependency, and nothing to upgrade. The file you drop into your own project lives at [`template/CLAUDE.md`](./template/CLAUDE.md) — the rest of this repo (skills, hooks, commands, examples) is there for you to cherry-pick or delete.
 
+## Quickstart
+
+```bash
+npx create-claude-code-config
+```
+
+Picks your stack interactively, copies only what you need. See [Installation](#installation) for manual setup or Windows/PowerShell notes.
+
 ## Why
+
+I burned ~15 minutes per Claude Code session re-explaining my stack, conventions, and "don't touch main" until I built this. Then I noticed every notable open-source project I checked (Supabase, Bitwarden, Vercel, Anthropic) had converged on similar patterns — but no one had packaged the patterns themselves. So I did.
 
 Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every session. Without them, you waste 15 minutes re-contextualizing. With them, Claude knows your stack, conventions, commands, and gotchas from the first message — and safety hooks stop it from editing `main` or running `rm -rf /` before you notice.
 
@@ -140,15 +152,6 @@ This template is a **starting point, not a minimum viable install**. Every file 
 
 See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fill it after testing on your own project.
 
-### Routines (new — April 2026)
-
-Cloud-based automations that run on Anthropic's infrastructure without your machine.
-See [ROUTINES.md](ROUTINES.md) for the full guide and setup instructions.
-Example prompts live under `examples/routines/` as a speculative preview —
-the CLI does not copy them into your project. Copy the prompt into
-[claude.ai/code/routines](https://claude.ai/code/routines), adapt it, and
-configure your trigger.
-
 ## What's in this template
 
 ```
@@ -268,6 +271,15 @@ See [Anthropic MCP docs](https://docs.anthropic.com/en/docs/claude-code/mcp) for
 ## Credits
 
 Research based on analysis of: Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 official skills), OpenAI (openai-agents-python), and other notable community templates.
+
+## Experimental — Routines (preview)
+
+Cloud-based automations that run on Anthropic's infrastructure without your machine.
+See [ROUTINES.md](ROUTINES.md) for the full guide and setup instructions.
+Example prompts live under `examples/routines/` as a speculative preview —
+the CLI does not copy them into your project. Copy the prompt into
+[claude.ai/code/routines](https://claude.ai/code/routines), adapt it, and
+configure your trigger.
 
 ## Compared to alternatives
 

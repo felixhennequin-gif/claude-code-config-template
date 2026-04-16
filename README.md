@@ -8,6 +8,10 @@
 
 You copy the files into your project, own them, and edit them. There is no runtime, no dependency, and nothing to upgrade. The file you drop into your own project lives at [`template/CLAUDE.md`](./template/CLAUDE.md) — the rest of this repo (skills, hooks, commands, examples) is there for you to cherry-pick or delete.
 
+![Branch guard hook blocking master edits, then bypassed with ALLOW_MAIN_EDIT](./docs/assets/branch-guard-demo.gif)
+
+*The branch guard hook stops Claude from editing protected branches by default. Set `ALLOW_MAIN_EDIT=true` to bypass for solo repos or docs-only commits.*
+
 ## Quickstart
 
 ```bash

@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-04-16
+
+### Fixed
+- Branch guard hook now correctly honors `ALLOW_MAIN_EDIT=true` bypass as documented in the README. The previous version unconditionally blocked edits on `main`/`master`.
+
 ## [1.1.3] — 2026-04-16
 
 ### Added

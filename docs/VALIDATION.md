@@ -13,7 +13,7 @@ For each project:
 
 ---
 
-## CLI validation — LeCabanon (Node.js / Express 5 / Prisma 7 / React 19)
+## CLI validation — Neighborhood Web App (Node.js / Express 5 / Prisma 7 / React 19)
 
 **Date**: April 2026
 **Stack**: Node.js ESM, TypeScript, Express 5, Prisma 7, PostgreSQL, Socket.io, React 19, Vite 8, Tailwind v4, Zod 4
@@ -51,12 +51,6 @@ under the 80-line limit.
 - The branch guard hook (`settings.json` PreToolUse) blocked direct edits on `main`
 - Claude Code opened a PR via `gh pr create` instead of pushing directly
 - CLAUDE.md convention ("main = production, tout passe par PR") was respected without manual intervention
-
----
-
-## Project 2 — [pending]
-
-A non-Node project (Go, Python, or Rust) will be added here after testing.
 
 ---
 

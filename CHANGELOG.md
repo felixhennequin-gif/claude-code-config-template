@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`session-wrap` core skill** — end-of-session workflow that analyses the session and proposes changes to the project's `.claude/` config as a reviewable checklist in `~/.claude/template-proposals/`. Two phases: `/wrap` generates proposals, `/wrap-apply` applies `[x]`-checked ones. Scope-limited to `.claude/**`, `CLAUDE.md`, `CLAUDE.local.md`, `CHANGELOG.md`. Never commits. Note: the previous `/wrap` command (session summariser, removed in an earlier release) is unrelated — this one has a different scope.
+- **`/wrap` command** — triggers the proposal phase.
+- **`/wrap-apply` command** — applies the checklist from a wrap file.
+- **`scripts/wrap-dedup-check.sh`** — helper to flag proposals whose added lines already exist verbatim in the target file. Uses POSIX awk (mawk/gawk/busybox compatible). Copied into downstream projects by the CLI and synced from repo root by `cli/sync-templates.sh`.
+
 ## [1.1.4] - 2026-04-16
 
 ### Fixed

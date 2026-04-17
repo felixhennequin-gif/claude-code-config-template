@@ -48,9 +48,26 @@ Setup takes 2 minutes. See [Installation](#installation).
 
 ## What you get
 
-- **Universal core skills** — `coding-principles`, `debugging`, `error-handling`, `testing`, `git-workflow`, `code-review` — stack-agnostic and loaded on trigger.
+- **Universal core skills** — `coding-principles`, `debugging`, `error-handling`, `testing`, `git-workflow`, `code-review`, `session-wrap` — stack-agnostic and loaded on trigger.
 - **Safety hooks** — branch guard blocks `main`/`master` edits, `dangerous-rm-guard.sh` blocks destructive commands, `lint-on-edit.sh` auto-formats JS/TS/Python/Go/Rust after every edit, `session-start.sh` injects git context.
 - **One-command install** — `npx create-claude-code-config` copies only the files you need; stack-specific skills (`.claude/skills/stacks/`) are opt-in.
+
+## The end-of-session loop
+
+`/wrap` analyses the session and proposes improvements to your project's Claude config — new rules for `CLAUDE.md`, new skills, tweaks to existing commands. Proposals land as a checklist in `~/.claude/template-proposals/`.
+
+You check `[x]` what you want to keep, then run `/wrap-apply <path>` to apply the checked items. Nothing auto-commits. Nothing touches the upstream template.
+
+```bash
+# End of session
+/wrap
+# → ~/.claude/template-proposals/2026-04-17T1912-myproject.md
+
+# Review, check [x], save.
+
+# Apply
+/wrap-apply ~/.claude/template-proposals/2026-04-17T1912-myproject.md
+```
 
 ## Installation
 
@@ -175,7 +192,9 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   │   └── README.md                      # Empty by default — see examples/agents/
 │   ├── commands/
 │   │   ├── deploy.md                      # /deploy — deployment workflow
-│   │   └── audit.md                       # /audit — full quality audit
+│   │   ├── audit.md                       # /audit — full quality audit
+│   │   ├── wrap.md                        # /wrap — propose config improvements
+│   │   └── wrap-apply.md                  # /wrap-apply — apply [x]-checked proposals
 │   ├── skills/
 │   │   ├── core/
 │   │   │   ├── coding-principles/SKILL.md # Universal behavioral rules
@@ -183,7 +202,8 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   │   │   ├── error-handling/SKILL.md    # Universal error-handling patterns
 │   │   │   ├── testing/SKILL.md           # Testing strategy and decisions
 │   │   │   ├── git-workflow/SKILL.md      # Branches, commits, PRs, rebasing
-│   │   │   └── code-review/SKILL.md       # Triage external reviews → roadmap → execute
+│   │   │   ├── code-review/SKILL.md       # Triage external reviews → roadmap → execute
+│   │   │   └── session-wrap/SKILL.md      # /wrap + /wrap-apply end-of-session config loop
 │   │   └── stacks/                        # Optional — delete what you don't use
 │   │       ├── prisma-patterns/SKILL.md   # Prisma 7 conventions
 │   │       ├── express-api/SKILL.md       # Express 5 patterns

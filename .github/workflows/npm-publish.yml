@@ -4,18 +4,24 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
+    timeout-minutes: 5
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
         with:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
@@ -23,6 +29,7 @@ jobs:
       - name: Verify package version matches release tag
         working-directory: ./cli
         run: |
+          set -euo pipefail
           PKG_VERSION=$(node -p "require('./package.json').version")
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
@@ -38,5 +45,3 @@ jobs:
       - name: Publish
         working-directory: ./cli
         run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, copyFileSync, readdirSync, statSync, appendFileSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, copyFileSync, readdirSync, statSync, appendFileSync, readFileSync, writeFileSync, chmodSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { hashContent, readManifest, writeManifest, MANIFEST_PATH } from './manifest.js';
@@ -226,6 +226,35 @@ export function copyTemplate(targetDir, selectedStacks) {
       results.push({ file: '.claude/settings.json', status: 'updated', reason: `added permissions: ${addedPerms.join(', ')}` });
     } else {
       results.push({ file: '.claude/settings.json', status: 'info', reason: 'edit permissions.allow to add entries for your stack commands' });
+    }
+  }
+
+  // 3b. Copy scripts/ directory (helpers like wrap-dedup-check.sh). Non-destructive:
+  // existing same-named files in the target are left untouched.
+  const scriptsSrc = join(TEMPLATE_DIR, 'scripts');
+  if (existsSync(scriptsSrc)) {
+    const scriptsDest = join(targetDir, 'scripts');
+    if (!existsSync(scriptsDest)) {
+      mkdirSync(scriptsDest, { recursive: true });
+    }
+    for (const entry of readdirSync(scriptsSrc)) {
+      const srcPath = join(scriptsSrc, entry);
+      const destPath = join(scriptsDest, entry);
+      if (existsSync(destPath)) {
+        results.push({ file: `scripts/${entry}`, status: 'skipped', reason: 'already exists' });
+        continue;
+      }
+      if (statSync(srcPath).isDirectory()) continue;
+      copyFileSync(srcPath, destPath);
+      try {
+        const { mode } = statSync(srcPath);
+        // Preserve the executable bit if the source file has it.
+        if (mode & 0o111) chmodSync(destPath, mode);
+      } catch {
+        /* best-effort perm preservation */
+      }
+      results.push({ file: `scripts/${entry}`, status: 'copied' });
+      copiedPaths.push(join('scripts', entry));
     }
   }
 

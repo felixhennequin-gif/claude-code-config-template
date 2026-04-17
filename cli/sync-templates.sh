@@ -40,4 +40,9 @@ rm -f "$TARGET/claude/scheduled_tasks.lock"
 rm -f "$TARGET/claude/settings.local.json"
 cp "$REPO_ROOT/template/settings.local.json.example" "$TARGET/claude/settings.local.json.example"
 
+# Sync scripts/ — helper shell scripts like wrap-dedup-check.sh. -p preserves
+# the executable bit so the CLI install doesn't need a separate chmod step.
+mkdir -p "$TARGET/scripts"
+cp -p "$REPO_ROOT/scripts/wrap-dedup-check.sh" "$TARGET/scripts/wrap-dedup-check.sh"
+
 echo "Done. Verify with: ls -R $TARGET"

@@ -43,8 +43,7 @@ jobs:
         run: npm ci
 
       - name: Publish
-        uses: npm/publish@v1
-        with:
-          working-directory: ./cli
-          access: public
-          provenance: true
+        working-directory: ./cli
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $(curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm" | jq -r '.value')
+          npm publish --provenance --access public

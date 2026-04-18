@@ -43,5 +43,8 @@ jobs:
         run: npm ci
 
       - name: Publish
-        working-directory: ./cli
-        run: npm publish --provenance --access public
+        uses: npm/publish@v1
+        with:
+          working-directory: ./cli
+          access: public
+          provenance: true

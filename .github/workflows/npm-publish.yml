@@ -29,6 +29,9 @@ jobs:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@latest
+
       - name: Verify package version matches release tag
         working-directory: ./cli
         run: |
@@ -47,8 +50,4 @@ jobs:
 
       - name: Publish
         working-directory: ./cli
-        run: |
-          TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm" | jq -r '.value')
-          echo "Token length: ${#TOKEN}"
-          npm config set //registry.npmjs.org/:_authToken "$TOKEN"
-          npm publish --provenance --access public
+        run: npm publish --access public

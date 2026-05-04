@@ -34,7 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to `pr-creator`. The reasoning model coordinates; Haiku does the work.
 - `examples/agents/README.md` — split into "stack-flavored" (Node/React/Postgres
   reviewers) and "stack-agnostic workers" (Haiku tier) sections to make the
-  copy-as-is vs edit-before-use distinction explicit..
+  copy-as-is vs edit-before-use distinction explicit.
+- `.claude/hooks/pre-commit-secret-scan.sh` — PreToolUse Bash hook that scans
+  tracked changes for known credential formats (AWS access keys, GitHub PATs,
+  Stripe live secrets, Slack tokens, RSA/EC/OpenSSH private key blocks) and
+  blocks commits of `.env` files (excluding `.env.example` / `.sample` /
+  `.template`). Token-free, runs internally only on `git commit` invocations
+  so other Bash commands pass through. Wired into `.claude/settings.json`
+  alongside `dangerous-rm-guard.sh`. Smoke tests added to `CLAUDE.md`..
 ## [1.1.4] - 2026-04-16
 
 ### Fixed

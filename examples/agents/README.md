@@ -1,24 +1,43 @@
 # Example agents
 
-These agents are written for a **Node.js / React / PostgreSQL** stack. They are examples, not defaults.
+Two flavors live here:
+
+- **Stack-flavored reviewers** — written for a specific stack. Copy and edit the system prompt to match your project.
+- **Stack-agnostic workers** — mechanical Haiku-tier agents for commits, PRs, and changelog updates. Copy as-is.
 
 ## Usage
 
-Copy the agents you need into your project's `.claude/agents/` directory and edit the system prompt to match your stack:
-
 ```bash
+# Stack-flavored — edit after copying
 cp examples/agents/reviewer.md your-project/.claude/agents/
 cp examples/agents/security-auditor.md your-project/.claude/agents/
+
+# Stack-agnostic — copy as-is
+cp examples/agents/pr-creator.md your-project/.claude/agents/
+cp examples/agents/commit-writer.md your-project/.claude/agents/
+cp examples/agents/changelog-updater.md your-project/.claude/agents/
 ```
 
 ## Available examples
 
-| Agent | Purpose |
-|---|---|
-| `reviewer.md` | Automated code review with Node.js-specific checklist |
-| `security-auditor.md` | Security audit with P0/P1/P2 severity classification |
-| `fastapi-reviewer.md` | Python/FastAPI-flavored reviewer |
-| `sentry-triage.md` | Pulls recent Sentry errors via MCP, ranks by impact, proposes fixes. **Requires a Sentry MCP connector** (see header comment in the file) |
+### Stack-flavored (edit before use)
+
+| Agent | Purpose | Model |
+|---|---|---|
+| `reviewer.md` | Automated code review with Node.js-specific checklist | sonnet |
+| `security-auditor.md` | Security audit with P0/P1/P2 severity classification | sonnet |
+| `fastapi-reviewer.md` | Code review for Python/FastAPI projects | sonnet |
+| `sentry-triage.md` | Pulls recent Sentry errors via MCP, ranks by impact, proposes fixes. **Requires a Sentry MCP connector** (see header comment in the file) | sonnet |
+
+### Stack-agnostic workers (copy as-is)
+
+| Agent | Purpose | Model |
+|---|---|---|
+| `pr-creator.md` | Drafts PR title + body and runs `gh pr create` | haiku |
+| `commit-writer.md` | Reads staged files, drafts a Conventional Commits message, commits | haiku |
+| `changelog-updater.md` | Parses commits since last tag, appends `[Unreleased]` entries to `CHANGELOG.md` | haiku |
+
+These three are designed to be invoked by the `/pr` slash command (or directly via the Task tool). The reasoning model orchestrates; the worker does the grunt work. See `.claude/commands/pr.md` for the canonical orchestration pattern.
 
 ## Writing your own
 

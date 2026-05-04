@@ -22,7 +22,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   transcript, token usage table, wall clock) and the rules that make the
   comparison credible (same task, same SHA, raw stdout, no curation, real
   token counts). The `/pr` command and `commit-writer` agent both reference
-  this directory — creating it closes the loose end.
+  this directory — creating it closes the loose end
+- `examples/agents/pr-creator.md`, `examples/agents/commit-writer.md`,
+  `examples/agents/changelog-updater.md` — three stack-agnostic Haiku worker
+  sub-agents for the mechanical PR / commit / changelog flow. Designed to be
+  orchestrated by the reasoning model rather than invoked directly, so grunt
+  work (drafting commit messages, formatting PR bodies, parsing tags) does not
+  burn reasoning-model tokens.
+- `.claude/commands/pr.md` (`/pr`) — orchestration command that delegates
+  commit drafting to `commit-writer`, then pushes, then delegates PR creation
+  to `pr-creator`. The reasoning model coordinates; Haiku does the work.
+- `examples/agents/README.md` — split into "stack-flavored" (Node/React/Postgres
+  reviewers) and "stack-agnostic workers" (Haiku tier) sections to make the
+  copy-as-is vs edit-before-use distinction explicit..
 ## [1.1.4] - 2026-04-16
 
 ### Fixed

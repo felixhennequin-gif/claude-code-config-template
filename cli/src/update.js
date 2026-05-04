@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, copyFileSync, mkdirSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, copyFileSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readManifest, writeManifest, hashContent, MANIFEST_PATH } from './manifest.js';
@@ -17,6 +17,51 @@ function walkDirSync(dir, base) {
     }
   }
   return results;
+}
+
+// Additive merge of `hooks.{event}[].hooks[]` from the template's settings.json
+// into the user's settings.json. Adds matcher groups and individual hooks that
+// are missing on the user side, identified by `command` string. Never removes,
+// never modifies existing entries, never touches `permissions` or other keys.
+//
+// Trade-off: a user who deliberately removed a default hook will see it
+// re-added. They can re-remove it; this is preferred over leaving new shipped
+// hooks silently unwired.
+function mergeSettingsHooks(userPath, templatePath) {
+  const user = JSON.parse(readFileSync(userPath, 'utf8'));
+  const template = JSON.parse(readFileSync(templatePath, 'utf8'));
+  const added = [];
+
+  user.hooks ??= {};
+
+  for (const event of Object.keys(template.hooks ?? {})) {
+    const tplGroups = template.hooks[event] ?? [];
+    user.hooks[event] ??= [];
+
+    for (const tplGroup of tplGroups) {
+      const userGroup = user.hooks[event].find((g) => (g.matcher ?? '') === (tplGroup.matcher ?? ''));
+
+      if (!userGroup) {
+        user.hooks[event].push(tplGroup);
+        added.push(`${event}/${tplGroup.matcher ?? '(default)'}: full group (${(tplGroup.hooks ?? []).length} hook${(tplGroup.hooks ?? []).length === 1 ? '' : 's'})`);
+        continue;
+      }
+
+      userGroup.hooks ??= [];
+      for (const tplHook of tplGroup.hooks ?? []) {
+        const exists = userGroup.hooks.some((uh) => uh.command === tplHook.command);
+        if (!exists) {
+          userGroup.hooks.push(tplHook);
+          added.push(`${event}/${tplGroup.matcher ?? '(default)'}: ${tplHook.command}`);
+        }
+      }
+    }
+  }
+
+  if (added.length > 0) {
+    writeFileSync(userPath, JSON.stringify(user, null, 2) + '\n');
+  }
+  return added;
 }
 
 export function updateTemplate(targetDir) {
@@ -56,10 +101,28 @@ export function updateTemplate(targetDir) {
       continue;
     }
 
-    // settings.json is excluded from --update — it contains user-specific
-    // permissions injected at install time. Update it manually if needed.
+    // settings.json gets a partial merge: only `hooks` are merged additively
+    // (so new hooks shipped by the template auto-wire). Permissions and other
+    // top-level keys remain user-controlled and untouched.
     if (targetRelPath === '.claude/settings.json') {
-      results.push({ file: targetRelPath, status: 'skipped', reason: 'excluded from auto-update (edit manually)' });
+      const srcPath = join(TEMPLATE_DIR, relPath);
+      const destPath = join(targetDir, targetRelPath);
+      if (!existsSync(destPath)) {
+        mkdirSync(dirname(destPath), { recursive: true });
+        copyFileSync(srcPath, destPath);
+        results.push({ file: targetRelPath, status: 'copied', reason: 'no user settings — copied from template' });
+        continue;
+      }
+      try {
+        const added = mergeSettingsHooks(destPath, srcPath);
+        if (added.length > 0) {
+          results.push({ file: targetRelPath, status: 'updated', reason: `merged ${added.length} new hook entr${added.length === 1 ? 'y' : 'ies'}: ${added.join('; ')}` });
+        } else {
+          results.push({ file: targetRelPath, status: 'ok', reason: 'hooks already in sync; permissions untouched' });
+        }
+      } catch (err) {
+        results.push({ file: targetRelPath, status: 'skipped', reason: `merge failed (${err.message}) — edit manually` });
+      }
       continue;
     }
 

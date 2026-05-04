@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `examples/cost-comparison/README.md` — directory scaffolding for raw
+  side-by-side Claude Code transcripts comparing the same task run with and
+  without the Haiku worker sub-agents. Defines the per-log format (verbatim
+  transcript, token usage table, wall clock) and the rules that make the
+  comparison credible (same task, same SHA, raw stdout, no curation, real
+  token counts). The `/pr` command and `commit-writer` agent both reference
+  this directory — creating it closes the loose end.
+
 ## [0.9.5] — 2026-04-14
 
 ### Added

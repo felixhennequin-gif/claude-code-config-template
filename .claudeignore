@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.venv/
+vendor/
+
+# Build output
+dist/
+build/
+.next/
+out/
+__pycache__/
+*.pyc
+
+# Coverage & artifacts
+coverage/
+.nyc_output/
+htmlcov/
+
+# Large generated files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+poetry.lock
+Pipfile.lock
+
+# Minified & maps
+*.min.js
+*.min.css
+*.map
+
+# IDE & OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,11 @@
+# Gitleaks false positives — documentation placeholders, not real secrets.
+# These entries correspond to the literal string "YOUR_TOKEN" used as a teaching
+# placeholder in curl examples. The files have since been moved to examples/
+# and the placeholders reworded, but the fingerprints remain in Git history.
+#
+# Format: <commit-sha>:<file-path>:<rule-id>:<line>
+
+347fd4ec827df6ffeac3e84e34c3676dcc972d7a:cli/template-files/routines/deploy-verify.md:curl-auth-header:11
+242029f48a650487de7f2ad0bec42681aadec213:routines/deploy-verify.md:curl-auth-header:11
+9432d2318664b96cfefddcc8f74285215b8cbed6:cli/template-files/routines/deploy-verify.md:curl-auth-header:11
+362d5471a9dea84cdc10edd7f70b04ef41f30898:routines/deploy-verify.md:curl-auth-header:11

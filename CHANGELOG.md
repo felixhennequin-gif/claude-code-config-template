@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **`session-wrap` core skill** — end-of-session workflow that analyses the session and proposes changes to the project's `.claude/` config as a reviewable checklist in `~/.claude/template-proposals/`. Two phases: `/wrap` generates proposals, `/wrap-apply` applies `[x]`-checked ones. Scope-limited to `.claude/**`, `CLAUDE.md`, `CLAUDE.local.md`, `CHANGELOG.md`. Never commits. Note: the previous `/wrap` command (session summariser, removed in an earlier release) is unrelated — this one has a different scope.
+- **`/wrap` command** — triggers the proposal phase.
+- **`/wrap-apply` command** — applies the checklist from a wrap file.
+- **`scripts/wrap-dedup-check.sh`** — helper to flag proposals whose added lines already exist verbatim in the target file. Uses POSIX awk (mawk/gawk/busybox compatible). Copied into downstream projects by the CLI and synced from repo root by `cli/sync-templates.sh`.
 - `.claude/hooks/pre-commit-secret-scan.sh` — PreToolUse Bash hook that scans
   tracked changes for known credential formats (AWS access keys, GitHub PATs,
   Stripe live secrets, Slack tokens, RSA/EC/OpenSSH private key blocks) and
@@ -19,6 +23,316 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `.template`). Token-free, runs internally only on `git commit` invocations
   so other Bash commands pass through. Wired into `.claude/settings.json`
   alongside `dangerous-rm-guard.sh`. Smoke tests added to `CLAUDE.md`.
+## [1.1.4] - 2026-04-16
+
+### Fixed
+- Branch guard hook now correctly honors `ALLOW_MAIN_EDIT=true` bypass as documented in the README. The previous version unconditionally blocked edits on `main`/`master`.
+
+## [1.1.3] — 2026-04-16
+
+### Added
+
+- **`last-verified: YYYY-MM-DD` frontmatter field** on every stack skill
+  under `.claude/skills/stacks/`, plus `scripts/check-skill-freshness.py`
+  wired into `make lint` and `.github/workflows/lint.yml` as an
+  advisory (exit-0) GitHub Actions warning when the field is missing or
+  older than 90 days.
+- **Skill maintenance cadence policy** in `CONTRIBUTING.md`:
+  "per major version of the underlying framework OR every 90 days,
+  whichever comes first." The 90-day floor catches skills whose
+  framework hasn't bumped a major but whose preview flags, deprecations,
+  or "latest" recommendations have moved anyway.
+- **"Settings permissions rationale" section** in `docs/MAINTAINERS.md`
+  explaining why `.claude/settings.json` keeps broad git wildcards
+  (`git checkout:*`, `git restore:*`, `git reset:*`) instead of
+  enumerating every subcommand — the safety net is
+  `dangerous-rm-guard.sh` plus the `deny` list, not the allow-list
+  patterns.
+
+### Fixed
+
+- **Worktree + lockfile leak into the npm package.** Release 1.1.3
+  was cut after `.claude/worktrees/condescending-lichterman` and
+  `.claude/scheduled_tasks.lock` had silently accumulated on disk and
+  been tracked by git. `sync-templates.sh` copied them into
+  `cli/template-files/`, which ballooned the npm tarball from ~50 kB /
+  43 files to ~468 kB / 158 files. The tag was never pushed and the
+  publish was aborted. Fix: untrack both paths, add them to
+  `.gitignore`, and extend `cli/sync-templates.sh` to `rm -rf` them
+  after the `cp -r` so a stray worktree on a maintainer's disk can
+  never ship again.
+- **`_comment` key in `.claude/settings.json`.** JSON has no comment
+  syntax; the key was an ad-hoc lint wart. Rationale moved to the
+  new "Settings permissions rationale" section in
+  `docs/MAINTAINERS.md`.
+
+## [1.1.2] — 2026-04-16
+
+### Added
+
+- **`.claude/agents/architect.md`** — stack-agnostic architecture reviewer.
+  Second default agent alongside `reviewer`, split by scope: `reviewer`
+  catches code-level issues (banned patterns, security, error handling,
+  test coverage, convention drift), `architect` catches shape-level ones
+  (layering, separation of concerns, dependency direction, pattern
+  consistency). Each agent's anti-patterns section explicitly delegates
+  the other half back to its sibling so the checklists don't overlap and
+  both stay under the 80-line ceiling. `docs/MAINTAINERS.md` documents
+  the split.
+
+### Removed
+
+- **`RESEARCH.md`** — research notes behind the template's design decisions.
+  Read-once reference material that had already been absorbed into `README.md`
+  and `docs/MAINTAINERS.md`; keeping it in the repo just cost contributors a
+  file to scan and required a dedicated exception in the CI secret-scan
+  allowlist. Credibility sentences in `README.md` kept intact, just without
+  the dangling `[RESEARCH.md]` link.
+- **`.claude/commands/test.md` and `.claude/commands/wrap.md`** (plus their
+  `cli/template-files/` mirrors). `/test` was a generic "run the project's
+  test command and summarize" shell — strictly worse than Claude reading
+  `package.json` / `Makefile` and running the actual command. `/wrap` was a
+  session-wrap summariser that duplicated what `/commit` and PR descriptions
+  already cover. Downstream users copying the template inherited both as
+  dead weight.
+- **`registry.yaml`** and its CI validator. The registry duplicated what a
+  directory walk already proves: `lint.yml`'s frontmatter validator finds
+  every `SKILL.md`, agent, command, and rule on disk and enforces required
+  fields directly. The registry's only extra job was flagging files missing
+  from the index — but the same drift now shows up as a lint failure the
+  moment a new file lands without frontmatter, so the second source of truth
+  was pure bookkeeping. Removing it deletes one class of CI failure
+  (registry/filesystem mismatch) without losing any guarantee.
+
+### Fixed
+
+- Restored missing `## [1.1.1] — 2026-04-15` header in `CHANGELOG.md`
+  (accidentally dropped while drafting the [Unreleased] section).
+
+## [1.1.1] — 2026-04-15
+
+Five review batches plus a backlog of earlier `[Unreleased]` fixes. The batches
+come from a consolidated self-audit that flagged factual errors, internal
+contradictions, over-promised features, and places where the project wasn't
+following its own rules.
+
+### Stack skills — factual errors (#40)
+
+- `stacks/ci-cd-pipeline`: `actions/setup-node` was pinned to a 39-char SHA,
+  which would fail the skill's own `action-pin-check.sh`. Replaced with the
+  real 40-char SHA.
+- `stacks/prisma-patterns`: version header claimed "5.x and 6.x" while the
+  rest of the repo references Prisma 7. Updated to "6.x and 7.x" and
+  corrected the omit-API note to reflect its Prisma 6.2 GA.
+- `stacks/react-frontend`: the `use()` section recommended `useEffect` +
+  `useState` as a fallback (outdated). Rewrote to spell out Promise-only
+  semantics, the Suspense boundary requirement, and TanStack Query for
+  ad-hoc fetching.
+
+### Core skills — self-contradictions (#41)
+
+- `core/code-review`: the "open PRs" prompt instructed Claude to run
+  `gh pr merge`, directly contradicting `.claude/rules/git-workflow.md`.
+  Rewritten to open PRs, print URLs, and stop.
+- `core/coding-principles`: Rule 1's example disambiguated `formatUser`
+  with a multi-line comment block — contradicting the skill's own guidance.
+  Disambiguation moved into the identifier name itself.
+- `core/error-handling`: Rule 4 was HTTP/Express-only despite the skill
+  advertising itself as language-agnostic. Renamed to "outermost boundary",
+  added a parallel FastAPI example, and listed the equivalent hooks for
+  Flask/Django/Gin/Axum.
+
+### Commands & routines — safety (#42)
+
+- `.claude/commands/deploy.md` (+ CLI mirror): step 4 listed "SSH to the
+  server, pull latest, install deps, run migrations, then restart the
+  process manager" as a fallback — a catalogue of things Claude will
+  confidently hallucinate for environments it cannot know. Replaced with
+  a stop-and-ask gate when no project deploy script is found at the usual
+  locations.
+- Routines moved from `routines/` to `examples/routines/`, and the CLI no
+  longer syncs them. Routines are a research preview with daily run caps
+  and an unstable fire-endpoint contract — shipping them at the repo root
+  and copying them into every CLI install overstated their maturity.
+  `ROUTINES.md`, `registry.yaml`, `README.md`, `CLAUDE.md`, and the CI
+  registry check all point at the new path; `ROUTINES.md` now frames the
+  whole set as a speculative preview.
+- `examples/routines/deploy-verify.md`: fabricated
+  `anthropic-beta: experimental-cc-routine-2026-04-01` header and fake
+  fire-endpoint URL replaced with a clearly-labelled placeholder that
+  points at the upstream routines docs before anyone wires this into a
+  CD pipeline.
+- `examples/routines/bug-triage.md`: branch prefix `claude/fix-[n]` →
+  `fix/issue-[n]`, aligning with the project's `fix/` convention and the
+  `git-workflow` rule.
+
+### Dogfood own rules (#43)
+
+- Root `CLAUDE.md` trimmed from 176 lines to 63 so the repo meets the
+  same `≤ 80 lines` ceiling it enforces on `template/CLAUDE.md` and
+  every file in `examples/`. Claude Code working on this repo was
+  tail-dropping its own context — the exact failure mode `RESEARCH.md`
+  documents observing elsewhere. The dangerous-rm-guard smoke-test matrix
+  and detailed CLI notes moved to a new `docs/HACKING.md`, which the root
+  file now links to. Nothing load-bearing was removed.
+- `template/CLAUDE.md` trimmed 84 → 72 lines. The standalone CI/CD
+  section was folded into Automation with a pointer to the
+  `ci-cd-pipeline` skill; the routines bullet was dropped to match the
+  CLI no longer shipping them.
+- `examples/README.md` now lists all five example `CLAUDE.md` files
+  (express, next, fastapi, go, symfony); the "Node-only" framing was
+  stale since v0.3.0 / v0.4.0 added the Python and Go examples.
+- `README.md` stack-skills table now lists `stacks/symfony-api` and
+  `stacks/ci-cd-pipeline`, which were already on disk and installable
+  via the CLI but missing from the README's inventory.
+- `examples/fastapi-backend.CLAUDE.md` and `examples/go-api.CLAUDE.md`
+  shipped with a stale `# Project — [name]` header copied from the
+  generic template. Aligned with the Node examples (`# FastAPI backend`,
+  `# Go REST API`).
+- `template/.claudeignore` (+ CLI mirror) gained Python/Go/Rust/PHP
+  ignore patterns (`target/`, `.pytest_cache/`, `*.egg-info/`, `uv.lock`,
+  `Cargo.lock`, `go.sum`, `composer.lock`, `*.test`, `*.out`). Non-Node
+  projects previously leaked generated artefacts into Claude's context.
+- New `docs/HACKING.md` — working-on-this-repo guide containing the
+  `dangerous-rm-guard.sh` smoke-test matrix and CLI notes.
+
+### Consistency sweep (#44)
+
+- `cli/src/copy.js` + `cli/src/manifest.js`: replaced silent `catch {}`
+  with logged catches so CLI failures surface instead of being swallowed.
+- `.claude/hooks/lint-on-edit.sh` (+ CLI mirror): added `ruff format`
+  after `ruff check --fix` for parity with the JS branch's format-and-fix
+  pass; gated the JS branch on `command -v npx` so the hook stays
+  non-blocking on Node-less machines.
+- `examples/agents/reviewer.md`: dropped the "No merge commits — rebase
+  workflow" line and replaced it with a stack/workflow-agnostic "follows
+  the project's branching strategy".
+- Root `CLAUDE.md`: fixed an inaccurate gotcha about the git allowlist —
+  `checkout`/`restore` wildcards DO exist (kept for rebase ergonomics);
+  the note now points at `.claude/rules/git-workflow.md` as the
+  enforcement layer.
+- `ROUTINES.md`: resolved a leftover `[[ROUTINES_DOCS_URL]]` placeholder.
+- `CHANGELOG.md`: translated the 0.9.4 Fixed/Added entries from French
+  to English so the project history reads consistently for downstream
+  users.
+
+### Prior `[Unreleased]` backlog
+
+Work that had accumulated in `[Unreleased]` before the five batches, now
+released with them:
+
+- **Added** — root `.claudeignore` (previously untracked). Reduces session
+  noise when Claude Code works *on this repo*; complements the downstream
+  `template/.claudeignore`.
+- **Changed** — `.claude/settings.json` (+ CLI mirror): `PreToolUse` and
+  `PostToolUse` matchers now include `NotebookEdit` alongside
+  `Edit|MultiEdit|Write`. Previously both the `main`/`master` branch guard
+  and the auto-lint hook silently skipped `.ipynb` edits, leaving
+  notebook-heavy projects (data science, ML) unprotected.
+- **Fixed** — `.claude/hooks/lint-on-edit.sh` (+ CLI mirror): replaced
+  `npx --no eslint --fix` with `npx --no-install eslint --fix`. `--no` is
+  not a documented npx flag; the hook's v0.1.0 intent was the
+  `--no-install` guard, which keeps it offline-safe and fast by refusing
+  to auto-install eslint when the project hasn't declared it. A prior
+  edit had truncated the flag and the error was silently swallowed by
+  `2>&1 || true`.
+- **Fixed** — `.claude/hooks/lint-on-edit.sh` (+ CLI mirror): hoisted
+  `cd "${CLAUDE_PROJECT_DIR:-.}"` above the `case` so Python/Go/Rust
+  branches also run from the project root. Previously only the JS branch
+  did the `cd`, so `ruff`/`gofmt`/`rustfmt` config lookups resolved
+  against whatever directory Claude Code happened to be running in.
+- **Fixed** — `.claude/skills/core/testing/SKILL.md`: removed a
+  self-referential "See rule 3 above" sentence inside rule 3 itself.
+- **Fixed** — `.github/workflows/lint.yml`: dogfooded the `ci-cd-pipeline`
+  skill the repo ships — pinned `actions/checkout@v4` to a commit SHA,
+  added a top-level `permissions: contents: read` block for least-privilege
+  `GITHUB_TOKEN`, and added a `concurrency` block keyed on
+  `${{ github.workflow }}-${{ github.ref }}` with `cancel-in-progress:
+  true` so rapid pushes stop stacking redundant runs. Also removed the
+  redundant `sudo apt-get install -y shellcheck` step — shellcheck is
+  preinstalled on `ubuntu-latest` runners.
+- **Fixed** — `.github/workflows/lint.yml`: branch-guard smoke test used
+  an exact-string `jq` match on the `Edit|MultiEdit|Write` matcher, which
+  broke after the matcher gained `NotebookEdit`. Switched to
+  `contains("Write")` so the test keeps finding the hook regardless of
+  future matcher additions.
+
+## [0.9.7] — 2026-04-14
+
+### Fixed
+- `.claude/skills/core/code-review/SKILL.md` (+ `cli/template-files/` mirror) —
+  added an anti-pattern against classifying "file X is committed / leaking
+  into git" findings without first running the project's list-tracked-files
+  check (`git ls-files`, `git check-ignore -v`). Filesystem tools like
+  `find`/`ls` show on-disk files, not tracked files — a file can exist
+  locally while already being ignored. Caught during a self-audit where a
+  P1 "untrack `.template-manifest.json`" finding turned out to be a no-op
+  because the path was already in `.gitignore`.
+- `.claude/skills/core/code-review/SKILL.md` — genericised so the skill installs
+  untouched on any downstream repo, per the `core/` vs `stacks/` split in
+  `CLAUDE.md`. Removed repo-specific references to `cli/template-files/`,
+  `cli/sync-templates.sh`, `audit.md`, and the `.claude/settings.json` /
+  `.claude/hooks/*.sh` validation snippets. The GOOD batch example, the
+  execute prompt's sync/validation step, and the "never edit mirrored files"
+  anti-pattern are now phrased in stack-neutral terms. Dropped the HTML comment
+  referencing the v0.9.5 origin session.
+
+### Added
+- `.claude/skills/core/code-review/SKILL.md` — new guidance: a tiebreaker for
+  when file proximity and severity ordering conflict (file proximity wins),
+  batch-size targets (3–7 items, ≤~200 LOC of diff), an explicit "run the
+  project's test suite" instruction in the execute prompt, an extra disagreement
+  criterion for findings that are correct in the abstract but out of the
+  project's stated scope, and an anti-pattern reminding reviewers to cross-check
+  batches against other skills/rules/agents (the incident that motivated this
+  was the past `reviewer` vs `express-api` try/catch contradiction). The PR
+  prompt now notes its `gh` CLI assumption and uses `<default-branch>` instead
+  of hard-coding `master`.
+
+## [0.9.6] — 2026-04-14
+
+Backfilled — `v0.9.6` was tagged but never got its own CHANGELOG section.
+This entry summarises the 11 commits between `v0.9.5` and `v0.9.6` (PRs #16–#26).
+
+### Added
+- `.claude/skills/core/code-review/SKILL.md` (PR #26) — core skill for acting
+  on an external code review: three phases (analyse → roadmap → execute),
+  severity/effort triage table, `/tmp/roadmap.md` output contract, and
+  execution/PR prompts.
+- `.claude/skills/core/git-workflow/SKILL.md` (PR #25) — language-agnostic
+  branching, Conventional Commits, rebase-vs-merge, PR, and merge-conflict
+  conventions. Defers to `CONTRIBUTING.md` when a project specifies otherwise.
+
+### Fixed
+- `ci-cd-pipeline` skill (PR #22) — recategorised from `core/` to `stacks/`,
+  since its YAML snippets are GitHub Actions / GitLab CI-specific and not
+  universal.
+- `ci-cd-pipeline` skill (PR #16) — translated from French to English for
+  downstream compatibility.
+- `.claude/hooks/bash-safety.sh` (PR #21) — renamed to `dangerous-rm-guard.sh`
+  to reflect the hook's narrow scope (famous footguns only, not a
+  comprehensive safety net). Header comment documents the non-coverage.
+- `prisma-patterns` skill (PR #20) — corrected claims about unreleased
+  Prisma features.
+- `.github/workflows/lint.yml` (PR #19) — added CI smoke test for the
+  `settings.json` PreToolUse branch-guard one-liner, with a stubbed
+  `$TEST_BRANCH` so the case-statement classifier can be exercised
+  independently of the runner's actual git state.
+- `.claude/commands/audit.md` + `.claude/hooks/lint-on-edit.sh` (PR #18) —
+  audit secret-scan now includes plain `.env` files (not just `*.env*`);
+  lint hook warns on empty `file_path` payloads instead of silently
+  exiting 0.
+- `testing` + `wrap` (PR #17) — resolved a coverage self-contradiction
+  in `testing/SKILL.md` and added an 80-line pruning rule to `wrap.md`
+  so `CLAUDE.md` growth is bounded.
+- Core skills (PR #23) — added Python examples to `testing` and
+  `error-handling` so the `core/` category is genuinely language-agnostic.
+
+### Changed
+- P2 quick wins (PR #24) — cross-references added between `debugging` and
+  `error-handling`, CI try/catch-convention check added to
+  `.github/workflows/lint.yml` (prevents future `reviewer` vs `express-api`
+  drift), and a Windows-portability note added where `/tmp` paths appear.
 
 ## [0.9.5] — 2026-04-14
 
@@ -33,43 +347,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.9.4] — 2026-04-14
 
 ### Fixed
-- `symfony-api/SKILL.md` — réécriture complète depuis zéro avec conventions
-  Symfony 5.4+ stock uniquement. Suppression de toutes les références projet-spécifiques :
-  `LegacyHttpClient`, double entity manager `primary`/`secondary`, `CronJob` entity,
-  `#[AsCronTask]`, `EasyAdmin 3.5`.
-- `examples/symfony-api.CLAUDE.md` — anonymisation complète. Suppression de Lexik/Gesdinet,
-  EasyAdmin, double EM, mailcatcher. Remplacés par des conventions Symfony génériques.
-- `.claude/rules/` — frontmatter corrigé : `globs:` (convention Cursor) remplacé par
-  `paths:` (syntaxe native Claude Code).
+- `symfony-api/SKILL.md` — full rewrite from scratch with stock Symfony 5.4+ conventions
+  only. Removed all project-specific references: `LegacyHttpClient`, dual entity manager
+  `primary`/`secondary`, `CronJob` entity, `#[AsCronTask]`, `EasyAdmin 3.5`.
+- `examples/symfony-api.CLAUDE.md` — full anonymization. Removed Lexik/Gesdinet,
+  EasyAdmin, dual EM, mailcatcher. Replaced with generic Symfony conventions.
+- `.claude/rules/` — frontmatter fixed: `globs:` (Cursor convention) replaced with
+  `paths:` (native Claude Code syntax).
 - `CONTRIBUTING.md` + `RESEARCH.md` + `examples/agents/` + `lint.yml` — contradiction
-  résolue sur le champ `tools:` dans les agents : optionnel (pas obligatoire), aligné
-  dans les quatre sources. CI mise à jour pour valider `examples/agents/` au lieu de
-  `.claude/agents/` (dossier vide par défaut).
-- `.claude/commands/wrap.md` — suppression de l'option auto-commit contradictoire.
-  Le workflow passe à deux options : stage uniquement (défaut) ou skip.
-- `.claude/skills/stacks/react-frontend/SKILL.md` — paragraphe `use()` réécrit.
-  La distinction Suspense boundary vs data fetching ad-hoc est maintenant explicite.
-- `.claude/skills/core/testing/SKILL.md` — fusion avec `rules/test-files.md`.
-  Suppression des doublons AAA / naming / test.skip / isolation. Un seul endroit.
-- `.claude/skills/core/error-handling/SKILL.md` — ajout règle 4 : classification des
-  erreurs à la boundary HTTP. Single mapping en error middleware, anti-pattern status
-  codes dans la service layer.
-- `.claude/settings.json` — `Bash(git:*)` remplacé par une allowlist explicite de 12
-  commandes git. `git reset --hard` et `git clean -fd` exclus intentionnellement.
-- `.claude/commands/deploy.md` — step 5 "Verify" remplacé par des commandes exécutables
-  par Claude (`curl`, `pm2 logs --lines 50`). Suppression du "tail logs 30 seconds"
-  impossible sans agent persistent.
-- `.claude/hooks/lint-on-edit.sh` — ajout de branches Python (`ruff`), Go (`gofmt`),
-  Rust (`rustfmt`). Chaque branche vérifie la disponibilité de l'outil avant d'essayer.
-- `.claude/hooks/session-start.sh` — détection de l'absence de `CLAUDE.local.md` au
-  démarrage de session avec message d'avertissement.
-- `RESEARCH.md` — suppression des statistiques non vérifiables (`~15%`, `~55 repos`).
-  Reformulé comme notes d'observation, pas comme étude formelle.
-- `docs/VALIDATION.md` — titre et framing corrigés. "Real-world validation" → 
-  "Validation checklist & smoke test results". Disclaimer auteur ajouté.
-- `README.md` — callout `root CLAUDE.md vs template/CLAUDE.md` déplacé en première
-  position après les badges. Arbre ASCII déplacé en bas. Section précédence
-  `settings.json` ajoutée.
+  resolved on the `tools:` field in agents: optional (not mandatory), aligned across
+  all four sources. CI updated to validate `examples/agents/` instead of `.claude/agents/`
+  (empty by default).
+- `.claude/commands/wrap.md` — removed the contradictory auto-commit option. The
+  workflow now has two options: stage only (default) or skip.
+- `.claude/skills/stacks/react-frontend/SKILL.md` — `use()` paragraph rewritten. The
+  Suspense boundary vs ad-hoc data fetching distinction is now explicit.
+- `.claude/skills/core/testing/SKILL.md` — merged with `rules/test-files.md`. Removed
+  AAA / naming / test.skip / isolation duplicates. One source of truth.
+- `.claude/skills/core/error-handling/SKILL.md` — added rule 4: error classification
+  at the HTTP boundary. Single mapping in error middleware, status codes in the
+  service layer flagged as an anti-pattern.
+- `.claude/settings.json` — `Bash(git:*)` replaced with an explicit allowlist of 12
+  git commands. `git reset --hard` and `git clean -fd` intentionally excluded.
+- `.claude/commands/deploy.md` — step 5 "Verify" replaced with commands Claude can
+  actually run (`curl`, `pm2 logs --lines 50`). Removed the "tail logs 30 seconds"
+  step that isn't possible without a persistent agent.
+- `.claude/hooks/lint-on-edit.sh` — added Python (`ruff`), Go (`gofmt`), and Rust
+  (`rustfmt`) branches. Each branch checks tool availability before running.
+- `.claude/hooks/session-start.sh` — detects missing `CLAUDE.local.md` at session
+  start and prints a warning.
+- `RESEARCH.md` — removed unverifiable statistics (`~15%`, `~55 repos`). Reworded as
+  observational notes rather than a formal study.
+- `docs/VALIDATION.md` — title and framing fixed. "Real-world validation" →
+  "Validation checklist & smoke test results". Author disclaimer added.
+- `README.md` — `root CLAUDE.md vs template/CLAUDE.md` callout moved to the top
+  (right after the badges). ASCII tree moved to the bottom. `settings.json`
+  precedence section added.
 
 ### Added
 - `.claude/skills/core/ci-cd-pipeline/SKILL.md` — GitHub Actions and GitLab CI patterns:
@@ -77,12 +390,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   checklist (SHA pinning, least privilege, scoped secrets), and anti-patterns to flag
   in existing workflows. `template/CLAUDE.md` gains a `## CI/CD conventions` block
   referencing the skill.
-- `.claude/hooks/user-prompt-context.sh` — exemple commenté de `UserPromptSubmit` hook
-  pour injecter du contexte à chaque prompt.
-- `.github/workflows/lint.yml` — step "Smoke-test bash-safety hook" : vérifie les cas
-  PASS et BLOCK documentés dans `CLAUDE.md` à chaque CI run.
-- `cli/src/copy.js` — `symfony-api` ajouté dans `getSkipPaths` et `STACK_PERMISSIONS`
-  (`Bash(composer:*)`, `Bash(php:*)`). Double bug CLI corrigé.
+- `.claude/hooks/user-prompt-context.sh` — commented example of a `UserPromptSubmit`
+  hook for injecting context on every prompt.
+- `.github/workflows/lint.yml` — "Smoke-test bash-safety hook" step: verifies the
+  PASS and BLOCK cases documented in `CLAUDE.md` on every CI run.
+- `cli/src/copy.js` — `symfony-api` added to `getSkipPaths` and `STACK_PERMISSIONS`
+  (`Bash(composer:*)`, `Bash(php:*)`). Dual CLI bug fixed.
 
 ## [0.9.2] — 2026-04-14
 
@@ -330,7 +643,12 @@ Initial public release of the template.
 - `.github/FUNDING.yml`
 - `.github/workflows/lint.yml` — CI: JSON validation for `settings.json`, `shellcheck -S error` on hook scripts, required-field frontmatter check on skills / agents / rules, and a baseline secret scan (hardcoded IPv4, secret-looking env assignments, PEM private-key headers)
 
-[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.5...HEAD
+[Unreleased]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v1.1.3...HEAD
+[1.1.3]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.7...v1.1.1
+[0.9.7]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.6...v0.9.7
+[0.9.6]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.5...v0.9.6
 [0.9.5]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.4...v0.9.5
 [0.9.4]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/felixhennequin-gif/claude-code-config-template/compare/v0.9.2...v0.9.3

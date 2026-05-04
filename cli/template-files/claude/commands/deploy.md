@@ -20,14 +20,13 @@ Run the full deployment pipeline for this project.
 
 4. **Deploy**
    - Check if a deploy script exists at common locations (`scripts/deploy.sh`, `deploy.sh`, `Makefile` `deploy` target, `justfile` `deploy` recipe) and run it if found.
-   - Otherwise, follow the project's documented deployment path —
-     typically one of:
-     - SSH to the server, pull latest, install deps, run migrations,
-       then restart the process manager
-     - Push to a branch/tag that triggers a CI/CD pipeline
-     - Push a container image to the registry and restart the service
+   - **If no deploy script is found, stop and ask the user.** Do not SSH
+     to servers, push images, trigger pipelines, or run migrations from
+     memory — those are project-specific and must be driven by a script
+     the project owns. Report what you looked for, what you didn't find,
+     and wait for explicit instructions before taking any further action.
    - Never hardcode the target host or credentials in this file — put
-     them in the project's deploy script or an environment-scoped config
+     them in the project's deploy script or an environment-scoped config.
 
 5. **Verify**
    - Hit the app's health endpoint and report the HTTP status code — e.g. `curl -s -o /dev/null -w "%{http_code}" https://your-app/health`

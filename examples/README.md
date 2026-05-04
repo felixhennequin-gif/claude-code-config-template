@@ -23,10 +23,13 @@ Then:
 |---|---|---|
 | [`express-api.CLAUDE.md`](./express-api.CLAUDE.md) | Node.js 22, Express 5, Prisma 7, PostgreSQL, Zod, JWT | Backend-only REST APIs |
 | [`nextjs-fullstack.CLAUDE.md`](./nextjs-fullstack.CLAUDE.md) | Next.js 15 App Router, Prisma 7, Tailwind v4, Auth.js | Fullstack web apps deployed to Vercel |
+| [`fastapi-backend.CLAUDE.md`](./fastapi-backend.CLAUDE.md) | Python 3.12, FastAPI, SQLAlchemy, PostgreSQL, Pydantic | Async Python REST APIs |
+| [`go-api.CLAUDE.md`](./go-api.CLAUDE.md) | Go 1.22, Chi, sqlc, PostgreSQL | Small, boring, stdlib-first Go services |
+| [`symfony-api.CLAUDE.md`](./symfony-api.CLAUDE.md) | PHP 8.2, Symfony 5.4+, Doctrine, API Platform | Symfony REST backends |
 
 ## Contributing a new example
 
-**New-stack examples are especially welcome.** Right now this directory only covers Node.js-flavored stacks (Express, Next.js). Examples for Python (Django, FastAPI, Flask), Ruby on Rails, Go (chi, gin, echo), Rust (axum, actix), Laravel, Phoenix, Spring Boot, SvelteKit, Astro, and anything else would immediately help people installing the template on a non-Node project. Open a PR — see [`CONTRIBUTING.md`](../CONTRIBUTING.md) for the full workflow.
+**New-stack examples are especially welcome.** The current set covers Node (Express, Next), Python (FastAPI), Go, and PHP (Symfony) — examples for Django, Flask, Rails, Rust (axum, actix), Laravel, Phoenix, Spring Boot, SvelteKit, Astro, and anything else would immediately help people installing the template on a non-covered stack. Open a PR — see [`CONTRIBUTING.md`](../CONTRIBUTING.md) for the full workflow.
 
 In short:
 

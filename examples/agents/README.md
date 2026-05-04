@@ -17,6 +17,8 @@ cp examples/agents/security-auditor.md your-project/.claude/agents/
 |---|---|
 | `reviewer.md` | Automated code review with Node.js-specific checklist |
 | `security-auditor.md` | Security audit with P0/P1/P2 severity classification |
+| `fastapi-reviewer.md` | Python/FastAPI-flavored reviewer |
+| `sentry-triage.md` | Pulls recent Sentry errors via MCP, ranks by impact, proposes fixes. **Requires a Sentry MCP connector** (see header comment in the file) |
 
 ## Writing your own
 

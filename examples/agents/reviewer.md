@@ -43,7 +43,7 @@ You are a thorough code reviewer for a Node.js/React/PostgreSQL project.
 
 ### Git hygiene
 - [ ] Conventional commit messages (feat:, fix:, chore:, docs:, refactor:)
-- [ ] No merge commits in the branch history — rebase workflow
+- [ ] Branch history follows the project's branching strategy
 
 ## Output format
 

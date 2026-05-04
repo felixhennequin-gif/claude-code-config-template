@@ -2,15 +2,33 @@
 
 ![License](https://img.shields.io/github/license/felixhennequin-gif/claude-code-config-template) ![CI](https://img.shields.io/github/actions/workflow/status/felixhennequin-gif/claude-code-config-template/lint.yml?label=lint) ![GitHub stars](https://img.shields.io/github/stars/felixhennequin-gif/claude-code-config-template?style=social)
 
-> **Root `CLAUDE.md` = context for working *on* this template repo.** The file you copy into your own project lives at [`template/CLAUDE.md`](./template/CLAUDE.md).
+> **An opinionated template for Claude Code configuration — not a framework, not a marketplace, not a guide.**
 
-Opinionated starter template for Claude Code — agents, skills, hooks, and commands for any project.
+**TL;DR** — `npx create-claude-code-config` drops a battle-tested CLAUDE.md, safety hooks (block edits on `main`, block `rm -rf /`), and 6 universal skills into your project. No runtime, no dependency, no upgrade path. Read in 10 minutes, install in 2.
 
-Based on notes from reviewing notable open-source Claude Code configurations (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI, and others) — see [RESEARCH.md](./RESEARCH.md).
+You copy the files into your project, own them, and edit them. There is no runtime, no dependency, and nothing to upgrade. The file you drop into your own project lives at [`template/CLAUDE.md`](./template/CLAUDE.md) — the rest of this repo (skills, hooks, commands, examples) is there for you to cherry-pick or delete.
+
+![Branch guard hook blocking master edits, then bypassed with ALLOW_MAIN_EDIT](./docs/assets/branch-guard-demo.gif)
+
+*The branch guard hook stops Claude from editing protected branches by default. Set `ALLOW_MAIN_EDIT=true` to bypass for solo repos or docs-only commits.*
+
+## Quickstart
+
+```bash
+npx create-claude-code-config
+```
+
+Picks your stack interactively, copies only what you need. See [Installation](#installation) for manual setup or Windows/PowerShell notes.
 
 ## Why
 
-Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every session. Without them, you waste 15 minutes re-contextualizing. With them, Claude knows your stack, conventions, commands, and gotchas from the first message.
+I burned ~15 minutes per Claude Code session re-explaining my stack, conventions, and "don't touch main" until I built this. Then I noticed every notable open-source project I checked (Supabase, Bitwarden, Vercel, Anthropic) had converged on similar patterns — but no one had packaged the patterns themselves. So I did.
+
+Claude Code automatically loads `CLAUDE.md` and `.claude/` at the start of every session. Without them, you waste 15 minutes re-contextualizing. With them, Claude knows your stack, conventions, commands, and gotchas from the first message — and safety hooks stop it from editing `main` or running `rm -rf /` before you notice.
+
+Writing all of this from scratch takes hours and you'll miss things (branch guards, stdin-parsing hooks, skill frontmatter quirks). This template is the shortcut: a minimal, honest baseline you can read in 10 minutes, install in 2, and prune down to what your project actually uses.
+
+Based on notes from reviewing notable open-source Claude Code configurations (Supabase, Bitwarden, Vercel, Anthropic, Cloudflare, OpenAI, and others). Contributor context for working on this repo lives in [`docs/MAINTAINERS.md`](./docs/MAINTAINERS.md).
 
 ## What this changes vs bare Claude Code
 
@@ -24,15 +42,32 @@ Without this template, Claude Code starts every session with zero project contex
 | Claude forgets your conventions between sessions | Skills enforce patterns (naming, architecture, error handling) |
 | No dynamic context | SessionStart hook shows branch, last commit, uncommitted changes |
 | UserPromptSubmit rarely used | Ships an opt-in example hook (`user-prompt-context.sh`) for injecting task context at every prompt |
-| You re-explain testing/deploy workflow each time | `/test` and `/deploy` commands available instantly |
+| You re-explain the deploy workflow each time | `/deploy` command available instantly |
 
 Setup takes 2 minutes. See [Installation](#installation).
 
 ## What you get
 
-- **Universal core skills** — `coding-principles`, `debugging`, `error-handling`, `testing`, `git-workflow`, `code-review` — stack-agnostic and loaded on trigger.
+- **Universal core skills** — `coding-principles`, `debugging`, `error-handling`, `testing`, `git-workflow`, `code-review`, `session-wrap` — stack-agnostic and loaded on trigger.
 - **Safety hooks** — branch guard blocks `main`/`master` edits, `dangerous-rm-guard.sh` blocks destructive commands, `lint-on-edit.sh` auto-formats JS/TS/Python/Go/Rust after every edit, `session-start.sh` injects git context.
 - **One-command install** — `npx create-claude-code-config` copies only the files you need; stack-specific skills (`.claude/skills/stacks/`) are opt-in.
+
+## The end-of-session loop
+
+`/wrap` analyses the session and proposes improvements to your project's Claude config — new rules for `CLAUDE.md`, new skills, tweaks to existing commands. Proposals land as a checklist in `~/.claude/template-proposals/`.
+
+You check `[x]` what you want to keep, then run `/wrap-apply <path>` to apply the checked items. Nothing auto-commits. Nothing touches the upstream template.
+
+```bash
+# End of session
+/wrap
+# → ~/.claude/template-proposals/2026-04-17T1912-myproject.md
+
+# Review, check [x], save.
+
+# Apply
+/wrap-apply ~/.claude/template-proposals/2026-04-17T1912-myproject.md
+```
 
 ## Installation
 
@@ -63,7 +98,7 @@ This gives you the stack-agnostic baseline: hooks, commands, rules, and the univ
 
 > **Windows users:** the manual snippet above uses `cp` / `echo >>`, which work in Git Bash and WSL. In native PowerShell, replace `cp -r` with `Copy-Item -Recurse` and `echo "x" >> file` with `Add-Content file "x"`. The hooks in `.claude/hooks/` are bash scripts — they run under Git Bash, WSL, or Cygwin, not native PowerShell or cmd.exe. The `create-claude-code-config` CLI installs the files fine from PowerShell, but the hooks themselves still need a bash runtime to execute.
 
-> The hook in `settings.json` blocks edits on `main` and `master`. If your project uses a different protected branch, update the branch name in `.claude/settings.json`.
+> The hook in `settings.json` blocks edits on `main` and `master`. If your project uses a different protected branch, update the branch name in `.claude/settings.json`. To bypass temporarily (solo repos, docs-only commits), export `ALLOW_MAIN_EDIT=true` before launching Claude Code — the guard short-circuits when that variable is set.
 
 > `settings.json` ships with a stack-agnostic `permissions.allow` list (`Read`, `Grep`, `Glob`, plus an explicit list of safe `git` subcommands — `status`, `diff`, `log`, `show`, `add`, `commit`, `push`, `fetch`, `pull`, `branch`, `checkout`, `switch`, `stash`, `merge`, `rebase`, `tag`, `remote`, `restore`). Destructive git commands like `git reset --hard`, `git clean -fd`, `git branch -D`, and `git checkout --` are **not** in the allowlist — run them manually if you really need them. Add entries for your own stack's commands — examples:
 >
@@ -103,8 +138,27 @@ Available stack skills:
 | [`stacks/prisma-patterns`](./.claude/skills/stacks/prisma-patterns/SKILL.md) | Prisma 7 schema, migrations, queries, services |
 | [`stacks/express-api`](./.claude/skills/stacks/express-api/SKILL.md) | Express 5 routes, controllers, middleware, validators |
 | [`stacks/react-frontend`](./.claude/skills/stacks/react-frontend/SKILL.md) | React 19 + Vite + Tailwind v4 components, hooks, pages |
+| [`stacks/symfony-api`](./.claude/skills/stacks/symfony-api/SKILL.md) | Symfony 5.4+ controllers, services, Doctrine entities, API Platform resources |
+| [`stacks/ci-cd-pipeline`](./.claude/skills/stacks/ci-cd-pipeline/SKILL.md) | GitHub Actions + GitLab CI workflows, audits, debugging |
 
-Missing your stack? Contributions for FastAPI, Django, Rails, Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+**Why these stacks?** The shipped list reflects what the maintainer has production experience with — not a claim that Express, React, Prisma, Symfony, and GitHub Actions are the "right" stack. The value of a skill comes from rules grounded in real use, so adding a stack speculatively would dilute quality. Missing your stack? Contributions for FastAPI, Django, Rails, NestJS, Rust (axum), Laravel, Phoenix, etc. are welcome — see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the quality bar and [`CONTRIBUTING.md#adding-a-new-stack`](./CONTRIBUTING.md#adding-a-new-stack) for the checklist.
+
+## What to delete
+
+This template is a **starting point, not a minimum viable install**. Every file is cargo unless you actively use it. After installing, walk through the tree and delete anything that doesn't match your project. Here's the triage:
+
+| Path | Delete if |
+|---|---|
+| `.claude/skills/stacks/*` | You don't use that stack (e.g. delete `react-frontend` on a pure backend). Stacks are opt-in — an unused skill still costs context budget. |
+| `.claude/skills/core/*` | Almost never — these are stack-agnostic. The one exception: if your team already has a stricter internal standard that contradicts one, replace it rather than stack contradictions. |
+| `.claude/commands/*` | You already have the workflow documented elsewhere (e.g. delete `/deploy` if your deploy lives in a runbook). |
+| `.claude/hooks/user-prompt-context.sh` | You don't want per-prompt injection (it ships opt-in, unwired). |
+| `.claude/hooks/notification.sh` | You don't want a desktop ping when Claude waits for input. |
+| `.claude/agents/` | It's empty by default. See `examples/agents/` if you want stack-flavored subagents — copy only what applies. |
+| `examples/` | Always, after reading them once. They're references for authoring new skills/agents/CLAUDE.md files, not runtime files. |
+| `ROUTINES.md` + `examples/routines/` | You're not using cloud-based routines. These are a speculative preview. |
+
+**Rule of thumb:** if you haven't touched a file in a month and can't explain what triggers it, delete it. You can always re-copy from this repo.
 
 ## Principles
 
@@ -114,7 +168,8 @@ Missing your stack? Contributions for FastAPI, Django, Rails, Rust (axum), Larav
 4. **Build / test / lint commands are the minimum viable.**
 5. **Skills are the best ROI.** A well-written skill gets reused automatically every time its trigger matches.
 6. **Hooks are token-free.** Block main, auto-format — deterministic, no model involvement.
-7. **Know your token budget.** Every skill costs tokens — see [docs/CONTEXT-BUDGET.md](docs/CONTEXT-BUDGET.md).
+7. **Routines are for judgment; hooks are for rules.** Block `main` with a hook (deterministic). Review a PR with a routine (needs the model). Don't use a routine for something a hook handles.
+8. **Know your token budget.** Every skill costs tokens — see [docs/CONTEXT-BUDGET.md](docs/CONTEXT-BUDGET.md).
 
 See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fill it after testing on your own project.
 
@@ -122,7 +177,6 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 
 ```
 .
-├── CLAUDE.md                              # Context for working on this repo itself
 ├── cli/                                   # npx create-claude-code-config (scaffolding CLI)
 │   ├── package.json
 │   ├── bin/
@@ -139,7 +193,8 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   ├── commands/
 │   │   ├── deploy.md                      # /deploy — deployment workflow
 │   │   ├── audit.md                       # /audit — full quality audit
-│   │   └── test.md                        # /test — run tests + coverage
+│   │   ├── wrap.md                        # /wrap — propose config improvements
+│   │   └── wrap-apply.md                  # /wrap-apply — apply [x]-checked proposals
 │   ├── skills/
 │   │   ├── core/
 │   │   │   ├── coding-principles/SKILL.md # Universal behavioral rules
@@ -147,7 +202,8 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   │   │   ├── error-handling/SKILL.md    # Universal error-handling patterns
 │   │   │   ├── testing/SKILL.md           # Testing strategy and decisions
 │   │   │   ├── git-workflow/SKILL.md      # Branches, commits, PRs, rebasing
-│   │   │   └── code-review/SKILL.md       # Triage external reviews → roadmap → execute
+│   │   │   ├── code-review/SKILL.md       # Triage external reviews → roadmap → execute
+│   │   │   └── session-wrap/SKILL.md      # /wrap + /wrap-apply end-of-session config loop
 │   │   └── stacks/                        # Optional — delete what you don't use
 │   │       ├── prisma-patterns/SKILL.md   # Prisma 7 conventions
 │   │       ├── express-api/SKILL.md       # Express 5 patterns
@@ -160,15 +216,23 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 │   │   ├── notification.sh                # Desktop alert when Claude waits for input
 │   │   └── user-prompt-context.sh         # UserPromptSubmit example (not wired — see file)
 │   └── rules/
-│       ├── banned-patterns.md             # Universal + JS/TS anti-patterns (path-scoped)
-│       └── banned-patterns-python.md      # Python-specific anti-patterns (path-scoped)
+│       └── banned-patterns.md             # Universal + JS/TS + Python anti-patterns (path-scoped)
+├── ROUTINES.md                       # Guide to cloud-based routines (speculative preview)
 ├── docs/
+│   ├── MAINTAINERS.md                     # Contributor guide for working on this repo
+│   ├── HACKING.md                         # Smoke tests and CLI notes
 │   ├── CONTEXT-BUDGET.md                  # Token estimates and budget profiles
 │   └── VALIDATION.md                      # Real-world test results (template)
 ├── examples/
 │   ├── agents/
 │   │   ├── reviewer.md                    # Example: Node.js code reviewer
 │   │   └── security-auditor.md            # Example: Node.js security auditor
+│   ├── routines/                          # Speculative preview — not copied by the CLI
+│   │   ├── pr-review.md                   # Automated PR code review
+│   │   ├── dependency-audit.md            # Weekly dep check + security audit
+│   │   ├── deploy-verify.md               # Post-deploy smoke tests
+│   │   ├── bug-triage.md                  # Nightly pick-and-fix top bug
+│   │   └── docs-drift.md                  # Weekly stale docs detection
 │   ├── express-api.CLAUDE.md
 │   ├── nextjs-fullstack.CLAUDE.md
 │   ├── fastapi-backend.CLAUDE.md
@@ -176,11 +240,10 @@ See [docs/VALIDATION.md](docs/VALIDATION.md) for the validation template — fil
 ├── .github/                               # Issue/PR templates, CI workflow
 ├── CONTRIBUTING.md
 ├── CHANGELOG.md
-├── RESEARCH.md
 └── README.md
 ```
 
-## Optional: global config
+## Global config and settings composition
 
 Create `~/.claude/CLAUDE.md` for cross-project preferences:
 
@@ -231,7 +294,16 @@ See [Anthropic MCP docs](https://docs.anthropic.com/en/docs/claude-code/mcp) for
 
 ## Credits
 
-Research based on analysis of: Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 official skills), OpenAI (openai-agents-python), and other notable community templates (see [RESEARCH.md](./RESEARCH.md) for the full list).
+Research based on analysis of: Supabase (supabase-js), Bitwarden (server, android, ai-plugins), Vercel (next-devtools-mcp, agent-skills), Anthropic (claude-code-action), Cloudflare (6 official skills), OpenAI (openai-agents-python), and other notable community templates.
+
+## Experimental — Routines (preview)
+
+Cloud-based automations that run on Anthropic's infrastructure without your machine.
+See [ROUTINES.md](ROUTINES.md) for the full guide and setup instructions.
+Example prompts live under `examples/routines/` as a speculative preview —
+the CLI does not copy them into your project. Copy the prompt into
+[claude.ai/code/routines](https://claude.ai/code/routines), adapt it, and
+configure your trigger.
 
 ## Compared to alternatives
 

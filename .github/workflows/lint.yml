@@ -6,15 +6,19 @@ on:
   pull_request:
     branches: [master]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install shellcheck
-        run: sudo apt-get install -y shellcheck
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Validate settings.json
         run: python3 -m json.tool .claude/settings.json > /dev/null
@@ -48,7 +52,7 @@ jobs:
           # then stub the dynamic branch lookup with an env var so we can drive it
           # with arbitrary branch names. The case-statement classifier is what we
           # actually want to exercise.
-          CMD=$(jq -r '.hooks.PreToolUse[] | select(.matcher=="Edit|MultiEdit|Write") | .hooks[0].command' .claude/settings.json)
+          CMD=$(jq -r '.hooks.PreToolUse[] | select(.matcher | contains("Write")) | .hooks[0].command' .claude/settings.json)
 
           if [ -z "$CMD" ] || [ "$CMD" = "null" ]; then
             echo "::error::could not extract branch-guard command from .claude/settings.json"
@@ -152,6 +156,28 @@ jobs:
 
           exit "$fail"
 
+      - name: Validate skill body sections
+        run: |
+          set -euo pipefail
+
+          # Every SKILL.md must contain an "## Anti-patterns" section.
+          # CONTRIBUTING.md lists anti-patterns as a mandatory quality bar
+          # item; this check makes the rule enforceable instead of aspirational.
+          fail=0
+          while IFS= read -r f; do
+            if ! grep -qE '^## Anti-patterns' "$f"; then
+              echo "::error file=$f::SKILL.md missing required '## Anti-patterns' section (see CONTRIBUTING.md → Quality bar → Skills)"
+              fail=1
+            fi
+          done < <(find .claude/skills -name SKILL.md)
+          exit "$fail"
+
+      - name: Check internal markdown links
+        run: python3 scripts/check-links.py
+
+      - name: Check stack skill freshness (warning-only)
+        run: python3 scripts/check-skill-freshness.py
+
       - name: Check try/catch convention alignment
         run: |
           set -euo pipefail
@@ -188,11 +214,10 @@ jobs:
 
           fail=0
           # git ls-files already excludes .git/ and untracked junk.
-          # Exclude RESEARCH.md (cites external repos) and this workflow itself
-          # (which contains the scan patterns).
+          # Exclude this workflow itself (which contains the scan patterns).
           mapfile -t files < <(
             git ls-files \
-              | grep -Ev '^(RESEARCH\.md|\.github/workflows/lint\.yml)$'
+              | grep -Ev '^\.github/workflows/lint\.yml$'
           )
 
           # Hardcoded IPv4 addresses — filter out version strings (e.g. 1.2.3.4

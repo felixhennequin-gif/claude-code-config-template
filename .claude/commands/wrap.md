@@ -1,38 +1,42 @@
-# Wrap-up workflow
+# Session wrap workflow
 # Usage: /wrap
 
-End-of-session update. Updates CLAUDE.md with what changed during this session,
-then proposes a commit.
+Analyse the session and propose improvements to the project's Claude config. Writes a reviewable checklist to `~/.claude/template-proposals/`. Touches nothing else.
+
+**Rule: no findings, no file.** If the session produced nothing worth proposing, say so and stop — do not invent proposals to fill the page.
+
+**Rule: ask before writing.** The three follow-up questions are mandatory, not optional polish. User input is a first-class signal alongside session analysis.
 
 ## Steps
 
-1. **Summarize the session**
-   - Run `git diff --stat HEAD` to see what files changed
-   - Run `git log --oneline -5` to see recent commits
-   - Identify: what was added, fixed, or refactored during this session
+1. **Detect the project.** `basename $(pwd)` slugified (lowercase, non-alphanumerics → `-`). Used for the output filename.
 
-2. **Update CLAUDE.md**
-   - Read the current CLAUDE.md
-   - Update only the sections that reflect what changed:
-     - Stack versions if a dependency was added or upgraded
-     - Structure if new directories or files were created
-     - Commands if new scripts were added to package.json
-     - Conventions if a new pattern was established during the session
-     - Gotchas if a non-obvious issue was discovered and fixed
-   - Do NOT rewrite sections that didn't change
-   - Do NOT exceed 80 lines total — if CLAUDE.md is already at or near 80 lines, remove the oldest stale gotcha (or the least load-bearing bullet in Conventions/Structure) before adding a new one. Prefer pruning over append-only growth.
-   - If nothing relevant changed for a section, leave it as-is
+2. **Scan the session.** Apply the four detectors from `.claude/skills/core/session-wrap/SKILL.md`:
+   - A: friction observed (agent reminded/corrected ≥ 2× on the same thing)
+   - B: missing rule (a convention rejected that no existing skill covers)
+   - C: reusable pattern (a workflow emerged that could help future sessions)
+   - D: imperfect command/skill (an existing one was used and fell short)
 
-3. **Show changes**
-   - Display the CLAUDE.md diff with `git diff CLAUDE.md`
-   - If there are no changes, say so and exit cleanly
-   - If there are changes, ask: "CLAUDE.md has been updated. Options: (A) stage only, (B) skip"
-   - Option A: `git add CLAUDE.md` — leaves it staged so the user commits it alongside their next real commit
-   - Option B: leave unstaged
-   - If the user wants to commit CLAUDE.md on its own, they can run `git add CLAUDE.md && git commit` themselves with a message of their choosing.
+3. **Ask the user three questions.** One per line, short, no preamble:
+   - "Friction I missed during this session?"
+   - "Workflow we invented here worth making reusable?"
+   - "Command or skill that didn't behave as expected?"
 
-## Rules
-- Never invent information. Only document what actually happened in this session.
-- If nothing changed that affects CLAUDE.md, say so and exit cleanly.
-- Keep it fast — this should take under 30 seconds.
-- `/wrap` never creates a commit on its own. Session-boundary commits clutter history — the update rides along with the user's next real commit.
+   Wait for answers. Do not proceed without them.
+
+4. **Filter findings into proposals.** Drop anything that:
+   - Targets a file outside `.claude/**`, `CLAUDE.md`, `CLAUDE.local.md`, or `CHANGELOG.md`
+   - Duplicates a rule already present in the current `.claude/` tree (diff before writing)
+   - Has no concrete diff ready to apply
+   - Is business-specific to this project but framed as reusable — route to `CLAUDE.md`, not to a skill
+
+5. **Write the output file.** Path: `~/.claude/template-proposals/YYYY-MM-DDTHHMM-<slug>.md`. Format per `.claude/skills/core/session-wrap/SKILL.md` — strict, each proposal a `[ ]` block with target, category, why, diff, CHANGELOG entry.
+
+6. **Report.** Print the absolute path of the file and N proposals / M filtered-out. Stop.
+
+## Never
+
+- Never modify anything outside `~/.claude/template-proposals/`.
+- Never run `/wrap-apply` automatically afterwards.
+- Never target code files, tests, or project config unrelated to Claude.
+- Never propose a change to the upstream template repository. This is strictly local.

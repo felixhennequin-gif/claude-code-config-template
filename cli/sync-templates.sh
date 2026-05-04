@@ -19,12 +19,30 @@ cp "$REPO_ROOT/template/CLAUDE.md" "$TARGET/CLAUDE.md"
 cp "$REPO_ROOT/template/CLAUDE.local.md.example" "$TARGET/CLAUDE.local.md.example"
 cp "$REPO_ROOT/template/.claudeignore" "$TARGET/.claudeignore"
 
+# Routines are no longer shipped to CLI installs — they live under
+# examples/routines/ as a speculative preview. See CHANGELOG.md.
+rm -rf "$TARGET/routines"
+rm -f "$TARGET/ROUTINES.md"
+
 # Copy .claude/ contents (without dot prefix)
 cp -r "$REPO_ROOT/.claude/"* "$TARGET/claude/"
+
+# Strip runtime cruft that must never ship in the npm package:
+#   - worktrees/            — Claude Code's feature-branch worktree cache
+#   - scheduled_tasks.lock  — ephemeral lockfile from the /schedule skill
+# Both are gitignored at the repo root but `cp -r` copies whatever is on disk,
+# so we re-enforce the exclusion here after the copy. See CHANGELOG 1.1.3.
+rm -rf "$TARGET/claude/worktrees"
+rm -f "$TARGET/claude/scheduled_tasks.lock"
 
 # settings.local.json is gitignored and personal. Scrub any stray local copy
 # and ship the clean example — the CLI renames it to settings.local.json on install.
 rm -f "$TARGET/claude/settings.local.json"
 cp "$REPO_ROOT/template/settings.local.json.example" "$TARGET/claude/settings.local.json.example"
+
+# Sync scripts/ — helper shell scripts like wrap-dedup-check.sh. -p preserves
+# the executable bit so the CLI install doesn't need a separate chmod step.
+mkdir -p "$TARGET/scripts"
+cp -p "$REPO_ROOT/scripts/wrap-dedup-check.sh" "$TARGET/scripts/wrap-dedup-check.sh"
 
 echo "Done. Verify with: ls -R $TARGET"

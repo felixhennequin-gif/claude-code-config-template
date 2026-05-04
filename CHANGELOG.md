@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.1] — 2026-05-04
+
+### Fixed
+
+- **Haiku worker agents now ship via npm.** `pr-creator`, `commit-writer`, and `changelog-updater` moved from `examples/agents/` (not embedded in the CLI package) to `.claude/agents/` (defaults). On `npx create-claude-code-config@latest --update` they now arrive automatically; previously `/pr` shipped without its workers and would fail to find them. `examples/agents/README.md` updated to reflect the move.
+- **`--update` now merges new hooks into `settings.json`.** Previously `settings.json` was excluded entirely from `--update` (to preserve user permissions), with the side effect that any new hook shipped by the template stayed silently unwired. The CLI now does an additive merge on `hooks.{event}[].hooks[]`: hooks present in the template but missing in the user's `settings.json` are added; permissions and other top-level keys remain untouched. Idempotent on subsequent runs (matched by `command` string). Trade-off: a user who deliberately removed a default hook will see it re-added — they can re-remove it. Net outcome: `pre-commit-secret-scan` (shipped in 1.5.0) is now active after a single `--update` instead of requiring a manual edit.
+
 ## [1.5.0] — 2026-05-04
 
 ### Added

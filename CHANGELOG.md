@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`/wrap` command** — triggers the proposal phase.
 - **`/wrap-apply` command** — applies the checklist from a wrap file.
 - **`scripts/wrap-dedup-check.sh`** — helper to flag proposals whose added lines already exist verbatim in the target file. Uses POSIX awk (mawk/gawk/busybox compatible). Copied into downstream projects by the CLI and synced from repo root by `cli/sync-templates.sh`.
+- `examples/cost-comparison/README.md` — directory scaffolding for raw
+  side-by-side Claude Code transcripts comparing the same task run with and
+  without the Haiku worker sub-agents. Defines the per-log format (verbatim
+  transcript, token usage table, wall clock) and the rules that make the
+  comparison credible (same task, same SHA, raw stdout, no curation, real
+  token counts). The `/pr` command and `commit-writer` agent both reference
+  this directory — creating it closes the loose end
 - `examples/agents/pr-creator.md`, `examples/agents/commit-writer.md`,
   `examples/agents/changelog-updater.md` — three stack-agnostic Haiku worker
   sub-agents for the mechanical PR / commit / changelog flow. Designed to be
@@ -27,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to `pr-creator`. The reasoning model coordinates; Haiku does the work.
 - `examples/agents/README.md` — split into "stack-flavored" (Node/React/Postgres
   reviewers) and "stack-agnostic workers" (Haiku tier) sections to make the
-  copy-as-is vs edit-before-use distinction explicit.
+  copy-as-is vs edit-before-use distinction explicit..
 ## [1.1.4] - 2026-04-16
 
 ### Fixed

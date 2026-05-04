@@ -118,6 +118,19 @@ echo '{"tool_name":"Bash","tool_input":{"command":"dd if=/dev/zero of=/dev/sda"}
 # Should BLOCK (exit 2) — fail-closed on unparseable input:
 echo 'not json at all' | bash .claude/hooks/dangerous-rm-guard.sh
 echo '' | bash .claude/hooks/dangerous-rm-guard.sh
+
+# Smoke-test pre-commit-secret-scan — every case below must produce the expected exit code.
+# Should PASS (exit 0) — non-commit Bash and clean commits pass through:
+echo '' | bash .claude/hooks/pre-commit-secret-scan.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"echo hello"}}' | bash .claude/hooks/pre-commit-secret-scan.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"git status"}}' | bash .claude/hooks/pre-commit-secret-scan.sh
+echo '{"tool_name":"Bash","tool_input":{"command":"git commit -m test"}}' | bash .claude/hooks/pre-commit-secret-scan.sh   # clean tree
+
+# Should BLOCK (exit 2) — only credential-format strings or .env files trigger:
+# (Run from a temp git repo where the offending file is staged. Pattern coverage:
+# AKIA[0-9A-Z]{16}, ghp_/gho_/ghs_[A-Za-z0-9]{36}, github_pat_[A-Za-z0-9_]{60,},
+# sk_live_[A-Za-z0-9]{24,}, xox[baprs]-[A-Za-z0-9-]{10,}, RSA/EC/OpenSSH PRIVATE KEY blocks,
+# any .env / .env.<env> file except .env.example|.sample|.template.)
 ```
 
 ## Conventions specific to this repo

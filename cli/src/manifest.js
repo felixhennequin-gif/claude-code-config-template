@@ -13,7 +13,8 @@ export function readManifest(targetDir) {
   if (!existsSync(p)) return {};
   try {
     return JSON.parse(readFileSync(p, 'utf8'));
-  } catch {
+  } catch (err) {
+    console.error(`  warning: could not read ${MANIFEST_PATH}: ${err.message}`);
     return {};
   }
 }

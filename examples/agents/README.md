@@ -20,13 +20,14 @@ cp examples/agents/changelog-updater.md your-project/.claude/agents/
 
 ## Available examples
 
-### Stack-flavored (Node.js / React / PostgreSQL — edit before use)
+### Stack-flavored (edit before use)
 
 | Agent | Purpose | Model |
 |---|---|---|
 | `reviewer.md` | Automated code review with Node.js-specific checklist | sonnet |
 | `security-auditor.md` | Security audit with P0/P1/P2 severity classification | sonnet |
 | `fastapi-reviewer.md` | Code review for Python/FastAPI projects | sonnet |
+| `sentry-triage.md` | Pulls recent Sentry errors via MCP, ranks by impact, proposes fixes. **Requires a Sentry MCP connector** (see header comment in the file) | sonnet |
 
 ### Stack-agnostic workers (copy as-is)
 

@@ -1,0 +1,102 @@
+# Routines
+
+> Cloud-based automations that run on Anthropic's infrastructure — your machine doesn't need to be on.
+
+Routines are a [research preview feature](https://code.claude.com/docs/en/routines) launched April 2026. They package a prompt + repos + connectors and execute on three trigger types:
+
+- **Schedule** — cron in the cloud (hourly, daily, weekly)
+- **API** — POST to a dedicated endpoint with a bearer token
+- **GitHub** — react to PR opens, pushes, issues, workflow runs, etc.
+
+## How routines differ from hooks
+
+| | Hooks | Routines |
+|---|---|---|
+| **Runs where** | Your machine (shell commands) | Anthropic cloud |
+| **Triggered by** | Claude Code lifecycle events | Schedule, API call, GitHub webhook |
+| **Needs machine on** | Yes | No |
+| **Token cost** | Zero (deterministic) | Same as interactive sessions |
+| **Best for** | Formatting, blocking, logging | Review, triage, deploy checks |
+
+Use hooks for deterministic guardrails (block `main`, auto-lint). Use routines for judgment-based automation (review PRs, triage bugs, verify deploys).
+
+## Available routine examples
+
+> **Speculative preview.** Routines are a research-preview feature and
+> these files live under `examples/routines/` for that reason — they are
+> *not* copied into your project by the CLI. Treat them as adaptable
+> starting points, not load-bearing infrastructure. Verify the upstream
+> docs before wiring any routine into production.
+
+Each file contains the prompt, recommended trigger, and setup instructions.
+
+| Routine | Trigger | Description |
+|---|---|---|
+| [`pr-review.md`](examples/routines/pr-review.md) | GitHub: `pull_request.opened` | Code review against project conventions |
+| [`dependency-audit.md`](examples/routines/dependency-audit.md) | Schedule: weekly | Check outdated deps + security vulnerabilities |
+| [`deploy-verify.md`](examples/routines/deploy-verify.md) | API: post-deploy | Smoke test endpoints + check logs for errors |
+| [`bug-triage.md`](examples/routines/bug-triage.md) | Schedule: nightly | Pick top bug, attempt fix, open draft PR |
+| [`docs-drift.md`](examples/routines/docs-drift.md) | Schedule: weekly | Detect stale docs after API/schema changes |
+
+## Setup
+
+### From the web
+
+1. Go to [claude.ai/code/routines](https://claude.ai/code/routines)
+2. Click **New routine**
+3. Copy the prompt from the routine file you want
+4. Select your repo and trigger type
+5. Configure connectors (Slack, Linear, etc.) if the routine mentions them
+
+### From the CLI
+
+```bash
+# Create a scheduled routine conversationally
+/schedule
+
+# Or with a description
+/schedule "nightly bug triage at 2am"
+
+# List existing routines
+/schedule list
+```
+
+### Limits
+
+Daily run caps as of April 2026 (see the [Claude Code routines docs](https://code.claude.com/docs/en/routines) for the current values):
+
+| Plan | Daily runs |
+|---|---|
+| Pro | 5 |
+| Max | 15 |
+| Team / Enterprise | 25 |
+
+Runs consume the same quota as interactive sessions.
+
+### Budgeting
+
+Enabling all five routines on a Pro plan will regularly hit the daily cap. Start with 2–3 and expand as needed.
+
+### Commands vs routines
+
+Commands run interactively from your terminal (`/deploy`). Routines run unattended in the cloud (CI calls the API). Use commands to kick things off, routines to follow up without a human present.
+
+## Customizing prompts
+
+Prompts are self-contained. External configuration (tokens, connectors, labels) is listed in each routine's Setup notes.
+
+`[PROJECT_NAME]` is the only placeholder the prompts use explicitly. If a routine needs the default branch or repo URL, it infers them from the repo context at run time.
+
+Adapt a routine by:
+
+1. Replacing `[placeholder]` values with your project specifics
+2. Adding or removing checklist items
+3. Adjusting the output format (PR comments, Slack messages, issues)
+
+Keep prompts explicit about **what success looks like** — routines run unattended, so ambiguity = wasted runs.
+
+## References
+
+- [Official routines docs](https://code.claude.com/docs/en/routines)
+- [Cloud environments](https://code.claude.com/docs/en/claude-code-on-the-web#the-cloud-environment)
+- [MCP connectors](https://code.claude.com/docs/en/mcp)

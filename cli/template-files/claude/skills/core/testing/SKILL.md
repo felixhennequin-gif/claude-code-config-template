@@ -83,8 +83,6 @@ def test_raises_for_non_integer_age(): ...
 def test_raises_for_age_over_150(): ...
 ```
 
-See rule 3 above: below 70% on business logic, or 100% without edge-case assertions, both warrant a flag.
-
 ## 4. Framework, structure, naming
 
 - **Framework** — use the project's existing test runner. Don't switch frameworks without asking. Check `package.json` scripts, `Makefile`, `pyproject.toml`, or CI config for the correct test command. If no test infrastructure exists, ask the user which framework to use before creating test files.
@@ -146,3 +144,7 @@ and breaks on every refactor.
 - ❌ `test.skip` left indefinitely — fix it or delete it
 - ❌ One giant test that asserts 15 things — split into focused tests
 - ❌ Testing the framework ("does express call next()?") — it does, trust it
+
+## Helper scripts
+
+- `scripts/coverage-check.sh <min-percent>` — reads coverage output from stdin (Istanbul/c8, pytest-cov, or go cover format), exits non-zero if below the threshold. Pipe your coverage command into it: `npm test -- --coverage | scripts/coverage-check.sh 80`. Makes the "coverage is a floor" rule enforceable in CI.

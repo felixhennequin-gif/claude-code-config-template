@@ -11,6 +11,12 @@ wiring Claude Code into a project — every file here ends up in real developers
   Elixir/Phoenix, Next.js App Router, SvelteKit, Astro, etc.
 - **New agents** (`.claude/agents/*.md`) for focused use cases: perf auditor,
   migration planner, accessibility checker, i18n reviewer, etc.
+- **MCP-connected agents** — agents that depend on an MCP server (Sentry,
+  Linear, GitHub, Datadog, etc.) for their core behavior. Put them under
+  `examples/agents/` with a header comment listing the exact MCP server
+  config required, and list the tool (e.g. `mcp__sentry`) in the frontmatter
+  `tools:` field. If the MCP tool is not available at runtime, the agent
+  must stop and say so — never fall back to scraping or fabricating data.
 - **New commands** (`.claude/commands/*.md`) that codify a repeatable workflow.
 - **New examples** (`examples/*.CLAUDE.md`) — fully anonymized `CLAUDE.md` files
   showing the template adapted to a real project shape.
@@ -51,6 +57,10 @@ Open the PR against `master`. In the description, answer:
 2. **Why** — what problem does it solve? What stack is it for?
 3. **How to test** — drop this skill/agent/command into a project, describe
    the prompt you used, and paste the observed Claude Code behavior.
+
+**Before submitting**: run `make check` locally. It runs the same checks CI
+runs, plus the hook smoke tests, so you can catch registry drift, broken
+frontmatter, or template-sync issues before they hit the pipeline.
 
 Every PR goes through `.github/PULL_REQUEST_TEMPLATE.md`. Check every box or
 justify why it doesn't apply.
@@ -149,6 +159,18 @@ To add support for a new framework/stack:
 3. **(Optional) Example agent** — If the stack has specific review/audit concerns, add an agent in `examples/agents/`.
 
 The skill should be under 80 lines and focus on conventions Claude wouldn't know from its training data — things specific to the framework version, common mistakes, and patterns your team enforces.
+
+## Skill maintenance policy
+
+Skills age. A skill written against Prisma 7 becomes misleading the week Prisma 8 drops; the `typedSql` preview flag may graduate, rename, or be removed. Without a maintenance story, the template quietly accumulates stale advice and everyone who copied it inherits it.
+
+- **Ownership.** Every skill under `.claude/skills/` has an implicit owner — the person who last touched it. If you're editing a skill, you become the new owner. There is no separate registry; `git log --follow` is the source of truth.
+- **Cadence.** Each stack skill must be re-verified **per major version of its underlying framework/library OR every 90 days, whichever comes first** (Prisma 7 → 8, React 19 → 20, Symfony 5.4 → 6.x, etc.). The 90-day floor catches skills whose framework hasn't bumped a major but whose "latest" recommendations, preview flags, or deprecations have moved anyway. Core skills (`coding-principles`, `debugging`, etc.) are version-agnostic and only need a pass when the underlying language semantics change.
+- **`last-verified` frontmatter field.** Every `.claude/skills/stacks/*/SKILL.md` carries a top-level `last-verified: YYYY-MM-DD` in its YAML frontmatter. Bump it each time you audit the skill against upstream docs — even if no content changed. `scripts/check-skill-freshness.py` (wired into `make lint` and `.github/workflows/lint.yml`) emits a GitHub Actions `::warning::` annotation when the field is missing or older than 90 days. The check is advisory, not blocking — a warning is the signal to re-audit, not to rubber-stamp the date.
+- **Inline `last verified` notes.** Any section that cites a feature flag, preview API, deprecated option, or "latest" recommendation should also carry an inline `last verified YYYY-MM-DD` line so a reader skimming the body can tell which specific claim has aged out (the frontmatter field covers the file as a whole). See `prisma-patterns/SKILL.md` (`typedSql`) for the shape.
+- **Reporting stale skills.** If you hit a skill that gives wrong advice for the current framework version, open a GitHub Issue titled `skill: <name> outdated for <framework> <version>`. Include the specific line(s) that broke. A stale skill is a bug, not a documentation task — it goes through the normal fix workflow.
+- **Pruning unowned skills.** If a stack skill has had no maintenance commits in 18 months *and* the latest framework version is ≥ 2 majors ahead of what the skill cites, it's a candidate for removal rather than rewrite. Open an issue first; don't silently delete.
+- **CI enforces the quality bar.** `.github/workflows/lint.yml` refuses any skill without an `## Anti-patterns` section and any markdown file with broken internal links. If CI fails, fix the skill — don't loosen the check.
 
 ## Questions
 
